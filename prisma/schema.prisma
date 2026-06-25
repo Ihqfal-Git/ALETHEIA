@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Perangkat {
+  id        Int         @id @default(autoincrement())
+  nama      String
+  slug      String      @unique
+  icon      String?
+  createdAt DateTime    @default(now())
+  gejala    Gejala[]
+  kerusakan Kerusakan[]
+  riwayat   Riwayat[]
+}
+
+model Gejala {
+  id          String       @id // e.g. "G01", "G02"
+  perangkatId Int
+  deskripsi   String       @db.VarChar(500)
+  kategori    String
+  createdAt   DateTime     @default(now())
+  perangkat   Perangkat    @relation(fields: [perangkatId], references: [id], onDelete: Cascade)
+  rules       RuleGejala[]
+}
+
+model Kerusakan {
+  id          String      @id // e.g. "K01", "K02"
+  perangkatId Int
+  nama        String
+  deskripsi   String      @db.Text
+  createdAt   DateTime    @default(now())
+  perangkat   Perangkat   @relation(fields: [perangkatId], references: [id], onDelete: Cascade)
+  rules       Rule[]
+  referensi   Referensi[]
+  riwayat     Riwayat[]
+}
+
+model Rule {
+  id              Int          @id @default(autoincrement())
+  kerusakanId     String
+  certaintyFactor Float        @db.Double
+  createdAt       DateTime     @default(now())
+  kerusakan       Kerusakan    @relation(fields: [kerusakanId], references: [id], onDelete: Cascade)
+  ruleGejala      RuleGejala[]
+}
+
+model RuleGejala {
+  id        Int      @id @default(autoincrement())
+  ruleId    Int
+  gejalaId  String
+  rule      Rule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  gejala    Gejala   @relation(fields: [gejalaId], references: [id], onDelete: Cascade)
+}
+
+model Referensi {
+  id          Int       @id @default(autoincrement())
+  kerusakanId String
+  judul       String    @db.VarChar(500)
+  penulis     String?
+  tahun       Int?
+  url         String?   @db.VarChar(500)
+  sumber      String    @default("statis") // 'statis' atau 'ai'
+  createdAt   DateTime  @default(now())
+  kerusakan   Kerusakan @relation(fields: [kerusakanId], references: [id], onDelete: Cascade)
+}
+
+model Riwayat {
+  id          Int        @id @default(autoincrement())
+  userId      String?    @db.VarChar(100)
+  perangkatId Int
+  kerusakanId String?
+  gejalaIds   String     @db.Text
+  solusiType  String?    // 'servis' atau 'mandiri'
+  hasilAI     String?    @db.Text
+  status      String     @default("proses") // 'proses', 'berhasil', 'gagal'
+  createdAt   DateTime   @default(now())
+  perangkat   Perangkat  @relation(fields: [perangkatId], references: [id], onDelete: Cascade)
+  kerusakan   Kerusakan? @relation(fields: [kerusakanId], references: [id], onDelete: SetNull)
+}
