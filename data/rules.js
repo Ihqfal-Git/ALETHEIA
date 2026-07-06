@@ -291,5 +291,107 @@ export const rules = [
       { judul: 'Artificial Intelligence', penulis: 'Kusumadewi, S.', tahun: 2003, penerbit: 'Graha Ilmu', relevansi: 'Diagnosa logika waktu' },
       { judul: 'iFixit Repair Guides', penulis: 'iFixit', tahun: 2023, penerbit: 'iFixit', relevansi: 'Penggantian baterai CMOS PC' }
     ]
+  },
+
+  // ================= TAMBAHAN LAPTOP =================
+  {
+    id: 'L009',
+    perangkat: 'laptop',
+    kerusakan: 'Touchpad Rusak / Tidak Merespon',
+    deskripsi: 'Modul touchpad mengalami kerusakan pada sensor kapasitif atau kabel fleksibel penghubung ke motherboard terlepas/putus, sehingga kursor tidak bergerak dan klik tidak berfungsi.',
+    gejalaIds: ['L19'],
+    certaintyFactor: 0.85,
+    referensiStatis: [
+      { judul: 'Expert Systems: Principles and Programming', penulis: 'Giarratano, J. & Riley, G.', tahun: 2005, penerbit: 'Thomson', relevansi: 'Diagnosa input device peripheral' },
+      { judul: 'iFixit Repair Guides', penulis: 'iFixit', tahun: 2023, penerbit: 'iFixit', relevansi: 'Panduan perbaikan touchpad laptop' }
+    ]
+  },
+  {
+    id: 'L010',
+    perangkat: 'laptop',
+    kerusakan: 'Speaker Internal Rusak',
+    deskripsi: 'Membran speaker internal laptop sobek atau konektor kabel speaker ke motherboard longgar/putus, menyebabkan suara tidak keluar, pecah, atau kresek-kresek.',
+    gejalaIds: ['L20'],
+    certaintyFactor: 0.80,
+    referensiStatis: [
+      { judul: 'Decision Support Systems', penulis: 'Turban, E.', tahun: 2005, penerbit: 'Prentice Hall', relevansi: 'Audio troubleshooting laptop' },
+      { judul: 'iFixit Repair Guides', penulis: 'iFixit', tahun: 2023, penerbit: 'iFixit', relevansi: 'Cara memeriksa dan mengganti speaker laptop' }
+    ]
+  },
+
+  // ================= TAMBAHAN HP (SMARTPHONE) =================
+  {
+    id: 'H009',
+    perangkat: 'hp',
+    kerusakan: 'Sensor Proximity / Ambient Light Rusak',
+    deskripsi: 'Sensor proximity atau ambient light pada bagian atas layar HP mengalami kerusakan fisik atau tertutup debu/kotoran, menyebabkan brightness tidak bisa diatur otomatis dan sensor cahaya tidak merespon.',
+    gejalaIds: ['H10'],
+    certaintyFactor: 0.80,
+    referensiStatis: [
+      { judul: 'Kecerdasan Buatan', penulis: 'Sutojo, T. et al.', tahun: 2011, penerbit: 'Andi Offset', relevansi: 'Analisis sensor perangkat mobile' },
+      { judul: 'iFixit Repair Guides', penulis: 'iFixit', tahun: 2023, penerbit: 'iFixit', relevansi: 'Diagnosa sensor proximity dan ambient light HP' }
+    ]
+  },
+  {
+    id: 'H010',
+    perangkat: 'hp',
+    kerusakan: 'eMMC Rusak / Software Corrupt',
+    deskripsi: 'Chip penyimpanan internal (eMMC) mengalami bad block atau sistem operasi Android/iOS mengalami kerusakan data. Menyebabkan bootloop, lag parah, aplikasi force close, penyimpanan terdeteksi penuh, dan hang total.',
+    gejalaIds: ['H11', 'H12', 'H13', 'H14', 'H15'],
+    certaintyFactor: 0.85,
+    referensiStatis: [
+      { judul: 'Expert Systems: Principles and Programming', penulis: 'Giarratano, J. & Riley, G.', tahun: 2005, penerbit: 'Thomson', relevansi: 'Diagnosa kegagalan storage mobile' },
+      { judul: 'Tom\'s Hardware Troubleshooting Guide', penulis: 'Tom\'s Hardware', tahun: 2022, penerbit: 'Purch', relevansi: 'Identifikasi kerusakan eMMC dan software corruption pada smartphone' }
+    ]
+  },
+
+  // ================= TAMBAHAN PC (DESKTOP) =================
+  {
+    id: 'P009',
+    perangkat: 'pc',
+    kerusakan: 'PSU / Motherboard Tidak Stabil',
+    deskripsi: 'PSU tidak mampu menyuplai daya stabil atau motherboard mengalami short circuit ringan, menyebabkan PC menyala sebentar lalu mati dan restart berulang-ulang (looping).',
+    gejalaIds: ['P02'],
+    certaintyFactor: 0.85,
+    referensiStatis: [
+      { judul: 'Kecerdasan Buatan', penulis: 'Sutojo, T. et al.', tahun: 2011, penerbit: 'Andi Offset', relevansi: 'Analisis power cycling system' },
+      { judul: 'Tom\'s Hardware Troubleshooting Guide', penulis: 'Tom\'s Hardware', tahun: 2022, penerbit: 'Purch', relevansi: 'Diagnosa restart looping pada PC desktop' }
+    ]
+  },
+  {
+    id: 'P010',
+    perangkat: 'pc',
+    kerusakan: 'Kabel VGA / Monitor Bermasalah',
+    deskripsi: 'Kabel penghubung VGA/HDMI/DP ke monitor mengalami patah internal, konektor longgar, atau monitor itu sendiri mengalami kerusakan panel sehingga warna tampil tidak wajar, berbayang, atau terdistorsi.',
+    gejalaIds: ['P10'],
+    certaintyFactor: 0.80,
+    referensiStatis: [
+      { judul: 'Decision Support Systems', penulis: 'Turban, E.', tahun: 2005, penerbit: 'Prentice Hall', relevansi: 'Troubleshooting display output' },
+      { judul: 'iFixit Repair Guides', penulis: 'iFixit', tahun: 2023, penerbit: 'iFixit', relevansi: 'Pemeriksaan kabel display dan panel monitor' }
+    ]
+  },
+  {
+    id: 'P011',
+    perangkat: 'pc',
+    kerusakan: 'Sound Card / Driver Audio Rusak',
+    deskripsi: 'Chipset audio onboard pada motherboard rusak, driver audio corrupt, atau sound card diskret mengalami kegagalan. Speaker terhubung namun tidak mengeluarkan suara sama sekali.',
+    gejalaIds: ['P17'],
+    certaintyFactor: 0.78,
+    referensiStatis: [
+      { judul: 'Artificial Intelligence', penulis: 'Kusumadewi, S.', tahun: 2003, penerbit: 'Graha Ilmu', relevansi: 'Diagnosa peripheral audio' },
+      { judul: 'Tom\'s Hardware Troubleshooting Guide', penulis: 'Tom\'s Hardware', tahun: 2022, penerbit: 'Purch', relevansi: 'Troubleshooting audio device Windows' }
+    ]
+  },
+  {
+    id: 'P012',
+    perangkat: 'pc',
+    kerusakan: 'NIC / Port Ethernet Rusak',
+    deskripsi: 'Chipset LAN onboard pada motherboard rusak atau port RJ-45 mengalami kerusakan fisik (pin patah), sehingga koneksi internet kabel tidak terdeteksi meskipun kabel LAN sudah terpasang dengan benar.',
+    gejalaIds: ['P20'],
+    certaintyFactor: 0.80,
+    referensiStatis: [
+      { judul: 'Expert Systems: Principles and Programming', penulis: 'Giarratano, J. & Riley, G.', tahun: 2005, penerbit: 'Thomson', relevansi: 'Diagnosa konektivitas jaringan' },
+      { judul: 'iFixit Repair Guides', penulis: 'iFixit', tahun: 2023, penerbit: 'iFixit', relevansi: 'Pemeriksaan NIC dan port ethernet PC' }
+    ]
   }
 ];
