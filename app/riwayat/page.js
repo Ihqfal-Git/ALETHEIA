@@ -2,15 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Loader2, Search, ArrowLeft, Calendar, ShieldCheck, ClipboardList, AlertCircle, Laptop, Smartphone, Monitor } from 'lucide-react';
+import { Loader2, Search, ArrowLeft, Calendar, ShieldCheck, ClipboardList, AlertCircle, Laptop, Smartphone, Monitor, Home, ChevronDown, Lock, User, CheckCircle2, Wrench, XCircle } from 'lucide-react';
 import { gejalaLaptop } from '@/data/gejalaLaptop';
 import { gejalaHP } from '@/data/gejalaHP';
 import { gejalaPC } from '@/data/gejalaPC';
 
 const deviceMapping = {
-  laptop: { nama: 'Laptop', emoji: '💻', icon: Laptop },
-  hp: { nama: 'Handphone', emoji: '📱', icon: Smartphone },
-  pc: { nama: 'PC / Desktop', emoji: '🖥️', icon: Monitor },
+  laptop: { nama: 'Laptop', icon: Laptop },
+  hp: { nama: 'Handphone', icon: Smartphone },
+  pc: { nama: 'PC / Desktop', icon: Monitor },
 };
 
 // Menggabungkan semua gejala untuk pencarian deskripsi dari ID
@@ -24,20 +24,45 @@ export default function RiwayatPage() {
   const [deviceFilter, setDeviceFilter] = useState('semua');
   const [activeDetail, setActiveDetail] = useState(null);
 
+  // Auth States
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
-    fetchRiwayat();
+    checkSession();
   }, []);
+
+  const checkSession = async () => {
+    try {
+      const response = await fetch('/api/auth/session');
+      const data = await response.json();
+      if (data.success && data.isLoggedIn) {
+        setIsLoggedIn(true);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('aletheia_logged_in', 'true');
+          localStorage.setItem('aletheia_logged_in_user', data.user.username);
+          localStorage.setItem('aletheia_user_uuid', data.user.username);
+        }
+        await fetchRiwayat();
+      } else {
+        setIsLoggedIn(false);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('aletheia_logged_in');
+          localStorage.removeItem('aletheia_logged_in_user');
+        }
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error('Session check error:', err);
+      setIsLoggedIn(false);
+      setLoading(false);
+    }
+  };
 
   const fetchRiwayat = async () => {
     setLoading(true);
     setError('');
     try {
-      let userId = '';
-      if (typeof window !== 'undefined') {
-        userId = localStorage.getItem('aletheia_user_uuid') || '';
-      }
-
-      const response = await fetch(`/api/riwayat?userId=${userId}`);
+      const response = await fetch('/api/riwayat');
       const data = await response.json();
       if (data.success) {
         setItems(data.data || []);
@@ -55,9 +80,13 @@ export default function RiwayatPage() {
   // Helper mapping status
   const getStatusIcon = (status) => {
     const s = status?.toLowerCase();
-    if (s === 'berhasil' || s === 'success' || s === 'done') return '✅';
-    if (s === 'proses' || s === 'process' || s === 'pending') return '🔧';
-    return '❌';
+    if (s === 'berhasil' || s === 'success' || s === 'done') {
+      return <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 inline-block mr-1 align-text-top" />;
+    }
+    if (s === 'proses' || s === 'process' || s === 'pending') {
+      return <Wrench className="h-3.5 w-3.5 text-neutral-900 inline-block mr-1 align-text-top animate-pulse" />;
+    }
+    return <XCircle className="h-3.5 w-3.5 text-rose-600 inline-block mr-1 align-text-top" />;
   };
 
   const getSymptomTexts = (gejalaIdsJson) => {
@@ -120,7 +149,7 @@ export default function RiwayatPage() {
 
   if (loading) {
     return (
-      <div className="space-y-8 pb-12">
+      <div className="space-y-8 pb-24">
         {/* Header Skeleton */}
         <div className="space-y-2 animate-pulse">
           <div className="h-8 bg-neutral-200 rounded w-1/3"></div>
@@ -154,13 +183,61 @@ export default function RiwayatPage() {
             </div>
           ))}
         </div>
+
+        {/* Sticky Home Button Footer */}
+        <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[240px] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center">
+          <Link 
+            href="/" 
+            className="inline-flex items-center justify-center h-[42px] w-[42px] sm:w-auto sm:px-4 sm:gap-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 hover:text-neutral-950 transition-colors shadow-sm shrink-0"
+            title="Kembali ke Beranda"
+          >
+            <Home className="h-4.5 w-4.5 sm:h-4 sm:w-4" />
+            <span className="hidden sm:block text-xs font-bold">Home</span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 py-8">
+        <div className="w-full max-w-md bg-white border border-neutral-200 rounded-2xl p-8 shadow-sm space-y-6 text-center">
+          <div className="w-14 h-14 rounded-full bg-neutral-100 flex items-center justify-center mx-auto text-neutral-900 border border-neutral-200 shadow-sm">
+            <Lock className="h-6 w-6" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-xl font-black text-neutral-950">Riwayat Diagnosa Terkunci</h2>
+            <p className="text-xs text-neutral-500 max-w-xs mx-auto leading-relaxed">
+              Anda belum masuk ke sistem. Silakan masuk terlebih dahulu untuk dapat melihat catatan riwayat diagnosa perangkat Anda.
+            </p>
+          </div>
+          <Link
+            href="/login"
+            className="w-full inline-flex items-center justify-center py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white font-bold rounded-lg text-xs tracking-wide shadow-sm transition select-none"
+          >
+            Masuk Sekarang
+          </Link>
+        </div>
+
+        {/* Sticky Home Button Footer */}
+        <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[240px] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center">
+          <Link 
+            href="/" 
+            className="inline-flex items-center justify-center h-[42px] w-[42px] sm:w-auto sm:px-4 sm:gap-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 hover:text-neutral-950 transition-colors shadow-sm shrink-0"
+            title="Kembali ke Beranda"
+          >
+            <Home className="h-4.5 w-4.5 sm:h-4 sm:w-4" />
+            <span className="hidden sm:block text-xs font-bold">Home</span>
+          </Link>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="space-y-8 pb-12">
+      <div className="space-y-8 pb-24">
         {/* Header */}
         <div className="space-y-1">
           <h1 className="text-2xl md:text-3xl font-black text-neutral-950 flex items-center gap-2">
@@ -184,6 +261,18 @@ export default function RiwayatPage() {
             Coba Lagi
           </button>
         </div>
+
+        {/* Sticky Home Button Footer */}
+        <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[240px] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center">
+          <Link 
+            href="/" 
+            className="inline-flex items-center justify-center h-[42px] w-[42px] sm:w-auto sm:px-4 sm:gap-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 hover:text-neutral-950 transition-colors shadow-sm shrink-0"
+            title="Kembali ke Beranda"
+          >
+            <Home className="h-4.5 w-4.5 sm:h-4 sm:w-4" />
+            <span className="hidden sm:block text-xs font-bold">Home</span>
+          </Link>
+        </div>
       </div>
     );
   }
@@ -203,7 +292,7 @@ export default function RiwayatPage() {
     });
 
     return (
-      <div className="space-y-8 pb-12">
+      <div className="space-y-8 pb-24">
         {/* Back Button */}
         <div>
           <button
@@ -218,7 +307,7 @@ export default function RiwayatPage() {
         <div className="space-y-1">
           <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block">Detail Riwayat Diagnosa</span>
           <h1 className="text-2xl md:text-3xl font-black text-neutral-950 flex items-center gap-2">
-            {device?.emoji} Diagnosa {item.perangkat?.nama}
+            {device?.icon && <device.icon className="h-6 w-6 text-neutral-900" />} Diagnosa {item.perangkat?.nama}
           </h1>
           <p className="text-xs text-neutral-400 flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5" /> {dateFormatted}
@@ -275,11 +364,21 @@ export default function RiwayatPage() {
           {item.hasilAI && !item.hasilAI.includes('Keluhan tambahan:') && (
             <div className="border border-neutral-200 bg-white rounded-xl p-6 shadow-sm space-y-3">
               <h3 className="font-bold text-xs text-neutral-950 uppercase tracking-wide">Dokumentasi Panduan AI</h3>
-              <div className="prose max-w-none text-xs leading-relaxed text-neutral-700 whitespace-pre-line bg-neutral-50 p-4 rounded-lg border border-neutral-200">
-                {item.hasilAI}
-              </div>
+              <DropdownAIExplanation text={item.hasilAI} />
             </div>
           )}
+        </div>
+
+        {/* Sticky Home Button Footer */}
+        <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[240px] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center">
+          <Link 
+            href="/" 
+            className="inline-flex items-center justify-center h-[42px] w-[42px] sm:w-auto sm:px-4 sm:gap-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 hover:text-neutral-950 transition-colors shadow-sm shrink-0"
+            title="Kembali ke Beranda"
+          >
+            <Home className="h-4.5 w-4.5 sm:h-4 sm:w-4" />
+            <span className="hidden sm:block text-xs font-bold">Home</span>
+          </Link>
         </div>
       </div>
     );
@@ -287,7 +386,7 @@ export default function RiwayatPage() {
 
   // TAMPILAN UTAMA LIST RIWAYAT
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-8 pb-24">
       {/* Header */}
       <div className="space-y-1">
         <h1 className="text-2xl md:text-3xl font-black text-neutral-950 flex items-center gap-2">
@@ -379,6 +478,18 @@ export default function RiwayatPage() {
           </>
         )}
       </div>
+
+      {/* Sticky Home Button Footer */}
+      <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[240px] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center">
+        <Link 
+          href="/" 
+          className="inline-flex items-center justify-center h-[42px] w-[42px] sm:w-auto sm:px-4 sm:gap-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 hover:text-neutral-950 transition-colors shadow-sm shrink-0"
+          title="Kembali ke Beranda"
+        >
+          <Home className="h-4.5 w-4.5 sm:h-4 sm:w-4" />
+          <span className="hidden sm:block text-xs font-bold">Home</span>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -410,9 +521,13 @@ function RiwayatItemCard({ item, onOpenDetail }) {
 
   const getStatusIcon = (status) => {
     const s = status?.toLowerCase();
-    if (s === 'berhasil' || s === 'success' || s === 'done') return '✅';
-    if (s === 'proses' || s === 'process' || s === 'pending') return '🔧';
-    return '❌';
+    if (s === 'berhasil' || s === 'success' || s === 'done') {
+      return <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 inline-block align-middle" />;
+    }
+    if (s === 'proses' || s === 'process' || s === 'pending') {
+      return <Wrench className="h-3.5 w-3.5 text-neutral-900 inline-block align-middle animate-pulse" />;
+    }
+    return <XCircle className="h-3.5 w-3.5 text-rose-600 inline-block align-middle" />;
   };
 
   return (
@@ -420,7 +535,7 @@ function RiwayatItemCard({ item, onOpenDetail }) {
       <div className="flex items-start gap-4">
         {/* Device Icon Block */}
         <div className="p-3 bg-neutral-50 rounded-lg text-neutral-900 border border-neutral-100 flex-shrink-0">
-          <span className="text-xl select-none">{device?.emoji || '💻'}</span>
+          {device?.icon ? <device.icon className="h-5 w-5 text-neutral-900" /> : <Laptop className="h-5 w-5 text-neutral-900" />}
         </div>
         <div className="space-y-1">
           <div className="flex items-center gap-2">
@@ -452,6 +567,84 @@ function RiwayatItemCard({ item, onOpenDetail }) {
           Lihat Detail
         </button>
       </div>
+    </div>
+  );
+}
+
+function parseAIExplanation(text) {
+  if (!text) return [];
+  
+  const blocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+  const parsed = [];
+  let currentTitle = "";
+  
+  const defaultTitles = [
+    "Analisis Kerusakan",
+    "Mekanisme & Dampak Teknis",
+    "Rekomendasi Tindakan"
+  ];
+  
+  blocks.forEach((block) => {
+    const headerMatch = block.match(/^(?:###|##|\*\*|#)\s*(.*?)(?:\*\*|:)?\n([\s\S]*)$/m) 
+                     || block.match(/^(?:###|##|\*\*|#)\s*(.*)$/);
+                     
+    if (headerMatch) {
+      const title = headerMatch[1].replace(/[\*\#\:]/g, '').trim();
+      const content = headerMatch[2] ? headerMatch[2].trim() : "";
+      
+      if (content) {
+        parsed.push({ title, content });
+      } else {
+        currentTitle = title;
+      }
+    } else {
+      const title = currentTitle || defaultTitles[parsed.length] || `Detail Analisis ${parsed.length + 1}`;
+      parsed.push({ title, content: block });
+      currentTitle = "";
+    }
+  });
+  
+  return parsed;
+}
+
+function DropdownAIExplanation({ text }) {
+  const [openSections, setOpenSections] = useState({ 0: true });
+
+  const toggleSection = (index) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  const parsedBlocks = parseAIExplanation(text);
+
+  if (parsedBlocks.length === 0) return null;
+
+  return (
+    <div className="space-y-3">
+      {parsedBlocks.map((block, idx) => {
+        const isOpen = !!openSections[idx];
+        return (
+          <div key={idx} className="border border-neutral-200 bg-white rounded-xl overflow-hidden transition-all duration-200 shadow-sm">
+            <button
+              onClick={() => toggleSection(idx)}
+              className="w-full flex items-center justify-between p-4 text-left font-bold text-xs text-neutral-900 bg-neutral-50/50 hover:bg-neutral-100/70 transition-colors cursor-pointer"
+            >
+              <span className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-neutral-900 text-white text-[10px] font-black">{idx + 1}</span>
+                {block.title}
+              </span>
+              <ChevronDown className={`h-4 w-4 text-neutral-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {isOpen && (
+              <div className="p-4 prose max-w-none text-xs text-neutral-700 leading-relaxed whitespace-pre-line bg-white border-t border-neutral-100">
+                {block.content}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
