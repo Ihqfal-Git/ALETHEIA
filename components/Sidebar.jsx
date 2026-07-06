@@ -3,10 +3,28 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Laptop, Smartphone, Monitor, ClipboardList, Info } from 'lucide-react';
+import { Laptop, Smartphone, Monitor, ClipboardList, Info, LogOut, User, Zap } from 'lucide-react';
 
 export default function Sidebar({ onCloseMobile }) {
   const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [username, setUsername] = React.useState('');
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const loggedIn = localStorage.getItem('aletheia_logged_in') === 'true';
+      setIsLoggedIn(loggedIn);
+      setUsername(localStorage.getItem('aletheia_logged_in_user') || '');
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('aletheia_logged_in');
+    localStorage.removeItem('aletheia_logged_in_user');
+    const newUuid = 'usr_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    localStorage.setItem('aletheia_user_uuid', newUuid);
+    window.location.reload();
+  };
 
   const handleLinkClick = () => {
     if (onCloseMobile) {
@@ -27,10 +45,10 @@ export default function Sidebar({ onCloseMobile }) {
   return (
     <aside className="w-full h-full flex flex-col justify-between bg-white text-neutral-700">
       <div className="flex flex-col">
-        {/* Logo Section */}
         <div className="p-6 border-b border-neutral-100 flex items-center">
-          <Link href="/" onClick={handleLinkClick} className="flex items-center gap-2">
-            <span className="font-black text-xl tracking-tight text-neutral-950">⚡ ALETHEIA</span>
+          <Link href="/" onClick={handleLinkClick} className="flex items-center gap-1.5 font-black text-xl tracking-tight text-neutral-950">
+            <Zap className="h-5 w-5 text-neutral-950 fill-neutral-950" />
+            <span>ALETHEIA</span>
           </Link>
         </div>
 
@@ -129,7 +147,51 @@ export default function Sidebar({ onCloseMobile }) {
         </div>
       </div>
 
-      {/* Footer minimalis */}
+      {/* User Session Area */}
+      <div className="mx-4 p-3 mb-2 bg-neutral-50 border border-neutral-200 rounded-xl flex items-center justify-between gap-2 overflow-hidden shadow-sm">
+        <div className="flex items-center gap-2 overflow-hidden">
+          {isLoggedIn ? (
+            <div className="w-8 h-8 rounded-full bg-neutral-950 text-white flex items-center justify-center font-bold text-xs shrink-0 select-none">
+              {username ? username.charAt(0).toUpperCase() : 'U'}
+            </div>
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-neutral-200 text-neutral-600 flex items-center justify-center shrink-0 select-none">
+              <User className="h-4 w-4" />
+            </div>
+          )}
+          <div className="truncate">
+            {isLoggedIn ? (
+              <>
+                <p className="text-xs font-black text-neutral-900 truncate leading-tight">{username}</p>
+                <p className="text-[10px] text-neutral-500 truncate leading-none mt-0.5">{username.toLowerCase()}@aletheia.com</p>
+              </>
+            ) : (
+              <>
+                <p className="text-xs font-black text-neutral-900 truncate leading-tight">Tamu</p>
+                <p className="text-[10px] text-neutral-400 truncate leading-none mt-0.5">Belum masuk</p>
+              </>
+            )}
+          </div>
+        </div>
+        {isLoggedIn ? (
+          <button 
+            onClick={handleLogout} 
+            className="p-1.5 hover:bg-red-50 hover:text-red-600 text-neutral-400 rounded-lg transition-colors cursor-pointer shrink-0"
+            title="Keluar Akun"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+          </button>
+        ) : (
+          <Link 
+            href="/login"
+            onClick={handleLinkClick}
+            className="px-2.5 py-1.5 bg-neutral-950 hover:bg-neutral-850 text-white font-bold rounded-lg text-[10px] transition cursor-pointer select-none shrink-0"
+          >
+            Masuk
+          </Link>
+        )}
+      </div>
+
       <div className="p-4 border-t border-neutral-100 bg-neutral-50/50">
         <p className="text-[10px] text-center text-neutral-400">© 2026 ALETHEIA</p>
       </div>
