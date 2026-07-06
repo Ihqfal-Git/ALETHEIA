@@ -85,3 +85,10 @@ model Riwayat {
   perangkat   Perangkat  @relation(fields: [perangkatId], references: [id], onDelete: Cascade)
   kerusakan   Kerusakan? @relation(fields: [kerusakanId], references: [id], onDelete: SetNull)
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+}

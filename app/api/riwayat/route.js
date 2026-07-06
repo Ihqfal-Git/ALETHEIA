@@ -1,19 +1,21 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 
 export const revalidate = 0;
 
 export async function GET(request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json({
-        success: true,
-        data: [],
-      });
+    const sessionCookie = cookies().get('aletheia_session');
+    
+    if (!sessionCookie || !sessionCookie.value) {
+      return NextResponse.json(
+        { success: false, error: 'Silakan login terlebih dahulu untuk mengakses riwayat.' },
+        { status: 401 }
+      );
     }
+
+    const userId = sessionCookie.value;
 
     const riwayatList = await prisma.riwayat.findMany({
       where: {
