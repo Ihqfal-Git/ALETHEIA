@@ -1,13 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Info, Cpu, Smartphone, Laptop, Monitor, Layers, Settings, BookOpen } from 'lucide-react';
+import Link from 'next/link';
+import { Info, Cpu, Smartphone, Laptop, Monitor, Layers, Settings, BookOpen, Home } from 'lucide-react';
 
 export default function TentangPage() {
   const supportedDevices = [
-    { name: 'Laptop', emoji: '💻', desc: 'Mendiagnosa kelistrikan baterai, tampilan layar bergaris/mati, keyboard malafungsi, dan overheating.' },
-    { name: 'Handphone', emoji: '📱', desc: 'Mendiagnosa LCD blank, layar sentuh ghost touch, baterai kembung/drop, dan gangguan penerimaan sinyal.' },
-    { name: 'PC / Desktop', emoji: '🖥️', desc: 'Mendiagnosa power supply mati total, kipas berputar bising, beep code bios, dan kegagalan boot RAM.' },
+    { name: 'Laptop', icon: Laptop, desc: 'Mendiagnosa kelistrikan baterai, tampilan layar bergaris/mati, keyboard malafungsi, dan overheating.' },
+    { name: 'Handphone', icon: Smartphone, desc: 'Mendiagnosa LCD blank, layar sentuh ghost touch, baterai kembung/drop, dan gangguan penerimaan sinyal.' },
+    { name: 'PC / Desktop', icon: Monitor, desc: 'Mendiagnosa power supply mati total, kipas berputar bising, beep code bios, dan kegagalan boot RAM.' },
   ];
 
   const techStack = [
@@ -18,7 +19,7 @@ export default function TentangPage() {
   ];
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-8 pb-24">
       {/* Header */}
       <div className="space-y-1">
         <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block">Informasi Sistem</span>
@@ -72,7 +73,9 @@ export default function TentangPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {supportedDevices.map((device, idx) => (
             <div key={idx} className="border border-neutral-100 bg-neutral-50/50 rounded-lg p-4 space-y-2">
-              <div className="text-2xl select-none">{device.emoji}</div>
+              <div className="p-2 bg-neutral-100 rounded-lg inline-flex">
+                <device.icon className="h-5 w-5 text-neutral-900" />
+              </div>
               <h3 className="font-bold text-xs text-neutral-900 uppercase tracking-wide">{device.name}</h3>
               <p className="text-[11px] text-neutral-500 leading-relaxed">{device.desc}</p>
             </div>
@@ -100,6 +103,18 @@ export default function TentangPage() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Sticky Home Button Footer */}
+      <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[240px] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center">
+        <Link 
+          href="/" 
+          className="inline-flex items-center justify-center h-[42px] w-[42px] sm:w-auto sm:px-4 sm:gap-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 hover:text-neutral-950 transition-colors shadow-sm shrink-0"
+          title="Kembali ke Beranda"
+        >
+          <Home className="h-4.5 w-4.5 sm:h-4 sm:w-4" />
+          <span className="hidden sm:block text-xs font-bold">Home</span>
+        </Link>
       </div>
     </div>
   );

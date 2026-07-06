@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Loader2, ArrowLeft, ShieldAlert, BookOpen, AlertCircle, Wrench, ArrowRight, CheckCircle2, XCircle } from 'lucide-react';
+import { Loader2, ArrowLeft, ShieldAlert, BookOpen, AlertCircle, Wrench, ArrowRight, CheckCircle2, XCircle, ChevronDown } from 'lucide-react';
 import { gejalaLaptop } from '@/data/gejalaLaptop';
 import { gejalaHP } from '@/data/gejalaHP';
 import { gejalaPC } from '@/data/gejalaPC';
@@ -218,6 +218,27 @@ export default function HasilPage() {
     }
   };
 
+  const handleSelectAlternative = (index) => {
+    if (!hasil || index <= 0 || index >= hasil.length) return;
+    const newHasil = [...hasil];
+    const temp = newHasil[0];
+    newHasil[0] = newHasil[index];
+    newHasil[index] = temp;
+    setHasil(newHasil);
+
+    // Update sessionStorage agar halaman solusi/mandiri dan solusi/servis menggunakan primaryMatch baru
+    const savedHasilDiagnosa = sessionStorage.getItem('hasilDiagnosa');
+    if (savedHasilDiagnosa) {
+      try {
+        const parsed = JSON.parse(savedHasilDiagnosa);
+        parsed.diagnosa = newHasil;
+        sessionStorage.setItem('hasilDiagnosa', JSON.stringify(parsed));
+      } catch (e) {
+        console.error('Gagal memperbarui hasilDiagnosa di sessionStorage', e);
+      }
+    }
+  };
+
   if (loadingSession) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3">
@@ -250,6 +271,7 @@ export default function HasilPage() {
   }
 
   const primaryMatch = hasil[0];
+  const symptomsList = deviceMapping[deviceSlug]?.data || [];
 
   return (
     <div className="space-y-8 pb-12">
@@ -284,6 +306,25 @@ export default function HasilPage() {
           </div>
         </div>
 
+        {/* Box Gejala yang Dicentang */}
+        <div className="border border-neutral-200 bg-white rounded-xl p-6 shadow-sm space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-neutral-200/60">
+            <CheckCircle2 className="h-4.5 w-4.5 text-neutral-850" />
+            <h3 className="font-bold text-xs text-neutral-950 uppercase tracking-wide">Gejala yang Anda Pilih</h3>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {selectedIds.map((id) => {
+              const match = symptomsList.find(g => g.id === id);
+              return (
+                <span key={id} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-750 text-xs font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
+                  {match ? match.deskripsi : id}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Box Abu: Penjelasan AI (Dengan Skeleton & Error Handling) */}
         <div className="border border-neutral-200 bg-neutral-50 rounded-xl p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-neutral-200/60">
@@ -314,9 +355,7 @@ export default function HasilPage() {
               </button>
             </div>
           ) : (
-            <div className="prose max-w-none text-xs text-neutral-700 leading-relaxed whitespace-pre-line">
-              {explainText}
-            </div>
+            <DropdownAIExplanation text={explainText} />
           )}
         </div>
 
@@ -385,6 +424,40 @@ export default function HasilPage() {
             </ul>
           )}
         </div>
+
+        {/* Kemungkinan Kerusakan Lainnya */}
+        {hasil.length > 1 && (
+          <div className="border border-neutral-200 bg-white rounded-xl p-6 shadow-sm space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b border-neutral-200/60">
+              <ShieldAlert className="h-4.5 w-4.5 text-neutral-850" />
+              <h3 className="font-bold text-xs text-neutral-950 uppercase tracking-wide">Kemungkinan Kerusakan Lainnya</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {hasil.slice(1).map((item, idx) => {
+                const originalIndex = idx + 1;
+                return (
+                  <div key={item.kerusakan.id || idx} className="border border-neutral-200 hover:border-neutral-400 rounded-xl p-4 transition-all duration-200 flex flex-col justify-between gap-3 bg-neutral-50/30">
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-extrabold text-neutral-950">{item.kerusakan.nama}</span>
+                        <span className="text-xs font-black text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-full">{item.persentase}%</span>
+                      </div>
+                      <p className="text-xs text-neutral-500 leading-relaxed line-clamp-2">{item.kerusakan.deskripsi}</p>
+                    </div>
+                    <div className="flex justify-end">
+                      <button
+                        onClick={() => handleSelectAlternative(originalIndex)}
+                        className="px-3 py-1.5 bg-neutral-950 hover:bg-neutral-850 text-white font-bold rounded-lg text-[10px] tracking-wide transition cursor-pointer"
+                      >
+                        Analisis Kerusakan Ini
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* 2 Tombol Besar Opsi Solusi */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
@@ -467,6 +540,84 @@ export default function HasilPage() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function parseAIExplanation(text) {
+  if (!text) return [];
+  
+  const blocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+  const parsed = [];
+  let currentTitle = "";
+  
+  const defaultTitles = [
+    "Analisis Kerusakan",
+    "Mekanisme & Dampak Teknis",
+    "Rekomendasi Tindakan"
+  ];
+  
+  blocks.forEach((block) => {
+    const headerMatch = block.match(/^(?:###|##|\*\*|#)\s*(.*?)(?:\*\*|:)?\n([\s\S]*)$/m) 
+                     || block.match(/^(?:###|##|\*\*|#)\s*(.*)$/);
+                     
+    if (headerMatch) {
+      const title = headerMatch[1].replace(/[\*\#\:]/g, '').trim();
+      const content = headerMatch[2] ? headerMatch[2].trim() : "";
+      
+      if (content) {
+        parsed.push({ title, content });
+      } else {
+        currentTitle = title;
+      }
+    } else {
+      const title = currentTitle || defaultTitles[parsed.length] || `Detail Analisis ${parsed.length + 1}`;
+      parsed.push({ title, content: block });
+      currentTitle = "";
+    }
+  });
+  
+  return parsed;
+}
+
+function DropdownAIExplanation({ text }) {
+  const [openSections, setOpenSections] = useState({ 0: true });
+
+  const toggleSection = (index) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  const parsedBlocks = parseAIExplanation(text);
+
+  if (parsedBlocks.length === 0) return null;
+
+  return (
+    <div className="space-y-3">
+      {parsedBlocks.map((block, idx) => {
+        const isOpen = !!openSections[idx];
+        return (
+          <div key={idx} className="border border-neutral-200 bg-white rounded-xl overflow-hidden transition-all duration-200 shadow-sm">
+            <button
+              onClick={() => toggleSection(idx)}
+              className="w-full flex items-center justify-between p-4 text-left font-bold text-xs text-neutral-900 bg-neutral-50/50 hover:bg-neutral-100/70 transition-colors cursor-pointer"
+            >
+              <span className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-neutral-900 text-white text-[10px] font-black">{idx + 1}</span>
+                {block.title}
+              </span>
+              <ChevronDown className={`h-4 w-4 text-neutral-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {isOpen && (
+              <div className="p-4 prose max-w-none text-xs text-neutral-700 leading-relaxed whitespace-pre-line bg-white border-t border-neutral-100">
+                {block.content}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
