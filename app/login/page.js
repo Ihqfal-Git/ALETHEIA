@@ -108,6 +108,13 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[75vh] px-4 py-8">
+      {/* Back Button */}
+      <div className="w-full max-w-md mb-4 self-center">
+        <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-950 transition">
+          <ArrowLeft className="h-3.5 w-3.5" /> Beranda
+        </Link>
+      </div>
+
       <div className="w-full max-w-md bg-white border border-neutral-200 rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
         <div className="text-center space-y-2">
           <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mx-auto text-neutral-900 border border-neutral-200">
@@ -219,18 +226,6 @@ export default function LoginPage() {
             }
           </button>
         </form>
-      </div>
-
-      {/* Sticky Home Button Footer */}
-      <div className="fixed bottom-16 md:bottom-0 left-0 right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center">
-        <Link 
-          href="/" 
-          className="inline-flex items-center justify-center h-[42px] w-[42px] sm:w-auto sm:px-4 sm:gap-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 hover:text-neutral-950 transition-colors shadow-sm shrink-0"
-          title="Kembali ke Beranda"
-        >
-          <ArrowLeft className="h-4.5 w-4.5 sm:h-4 sm:w-4" />
-          <span className="hidden sm:block text-xs font-bold">Kembali</span>
-        </Link>
       </div>
     </div>
   );
