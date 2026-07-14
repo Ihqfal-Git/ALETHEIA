@@ -4,12 +4,14 @@ import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Sidebar from './Sidebar';
-import { Laptop, Smartphone, Monitor, ClipboardList, Info, Zap, User } from 'lucide-react';
+import { Home, Laptop, Smartphone, Monitor, ClipboardList, Info, Zap, User } from 'lucide-react';
+
 
 export default function SidebarWrapper({ children }) {
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [username, setUsername] = React.useState('');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -20,10 +22,22 @@ export default function SidebarWrapper({ children }) {
       }
       setIsLoggedIn(localStorage.getItem('aletheia_logged_in') === 'true');
       setUsername(localStorage.getItem('aletheia_logged_in_user') || '');
+
+      const savedCollapsed = localStorage.getItem('aletheia_sidebar_collapsed') === 'true';
+      setIsSidebarCollapsed(savedCollapsed);
     }
   }, []);
 
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem('aletheia_sidebar_collapsed', String(next));
+      return next;
+    });
+  };
+
   const navItems = [
+    { href: '/', label: 'Beranda', icon: Home },
     { href: '/diagnosa/laptop', label: 'Laptop', icon: Laptop },
     { href: '/diagnosa/hp', label: 'HP', icon: Smartphone },
     { href: '/diagnosa/pc', label: 'PC', icon: Monitor },
@@ -40,45 +54,6 @@ export default function SidebarWrapper({ children }) {
     );
   }
 
-  // Jika di halaman beranda, layout sangat simpel tanpa sidebar
-  if (pathname === '/') {
-    return (
-      <div className="min-h-screen flex flex-col bg-white">
-        <header className="border-b border-neutral-100 py-5 px-6 md:px-12 bg-white sticky top-0 z-50">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <span className="font-black text-xl tracking-tight text-neutral-950 flex items-center gap-1.5">
-              <Zap className="h-5 w-5 text-neutral-950 fill-neutral-950" />
-              <span>ALETHEIA</span>
-            </span>
-            <div className="flex items-center gap-6">
-              <Link href="/riwayat" className="text-sm font-semibold text-neutral-500 hover:text-neutral-950 transition-colors">
-                Riwayat Diagnosa
-              </Link>
-              <Link href="/tentang" className="text-sm font-semibold text-neutral-500 hover:text-neutral-950 transition-colors">
-                Tentang Sistem
-              </Link>
-              {isLoggedIn ? (
-                <span className="text-xs font-bold text-neutral-950 px-3 py-1.5 bg-neutral-100 rounded-full border border-neutral-200 shadow-sm select-none flex items-center gap-1.5">
-                  <User className="h-3.5 w-3.5 text-neutral-850" />
-                  <span>{username}</span>
-                </span>
-              ) : (
-                <Link 
-                  href="/login" 
-                  className="text-xs font-bold text-white bg-neutral-950 hover:bg-neutral-850 px-4 py-2 rounded-lg transition shadow-sm"
-                >
-                  Masuk
-                </Link>
-              )}
-            </div>
-          </div>
-        </header>
-        <main className="flex-1">
-          {children}
-        </main>
-      </div>
-    );
-  }
 
   // Jika bukan halaman beranda, tampilkan layout dengan sidebar (desktop) atau bottom nav (mobile)
   return (
@@ -92,8 +67,10 @@ export default function SidebarWrapper({ children }) {
       </div>
 
       {/* Sidebar untuk Desktop */}
-      <div className="hidden md:block sticky top-0 left-0 w-[240px] shrink-0 border-r border-neutral-200 bg-white h-screen">
-        <Sidebar />
+      <div className={`hidden md:block sticky top-0 left-0 transition-all duration-300 shrink-0 border-r border-neutral-200 bg-white h-screen ${
+        isSidebarCollapsed ? 'w-[72px]' : 'w-[240px]'
+      }`}>
+        <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
       </div>
 
       {/* Konten Kanan */}
@@ -107,14 +84,13 @@ export default function SidebarWrapper({ children }) {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-neutral-200 h-16 flex items-center justify-around px-2 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname.startsWith(item.href);
+          const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center flex-1 py-1 text-center transition-colors ${
-                isActive ? 'text-neutral-950 font-bold' : 'text-neutral-400 hover:text-neutral-600'
-              }`}
+              className={`flex flex-col items-center justify-center flex-1 py-1 text-center transition-colors ${isActive ? 'text-neutral-950 font-bold' : 'text-neutral-400 hover:text-neutral-600'
+                }`}
             >
               <Icon className={`h-5 w-5 mb-1 ${isActive ? 'stroke-[2.5px]' : 'stroke-[1.8px]'}`} />
               <span className="text-[10px] tracking-tight">{item.label}</span>
