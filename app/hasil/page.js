@@ -23,6 +23,21 @@ export default function HasilPage() {
   const [deviceSlug, setDeviceSlug] = useState('');
   const [loadingSession, setLoadingSession] = useState(true);
 
+  const handleNewDiagnosis = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('hasilDiagnosa');
+      sessionStorage.removeItem('aletheia_diagnosa_hasil');
+      sessionStorage.removeItem('aletheia_diagnosa_riwayat_id');
+      sessionStorage.removeItem('aletheia_diagnosa_selected_ids');
+      sessionStorage.removeItem('aletheia_diagnosa_device_name');
+      sessionStorage.removeItem('aletheia_diagnosa_device_slug');
+      sessionStorage.removeItem('aletheia_diagnosa_tambahan');
+      sessionStorage.removeItem('pilihanSolusi');
+      sessionStorage.removeItem('aletheia_diagnosa_solusi');
+    }
+    router.push(`/diagnosa/${deviceSlug || 'hp'}`);
+  };
+
   // States untuk API AI Explain
   const [explainText, setExplainText] = useState('');
   const [loadingExplain, setLoadingExplain] = useState(true);
@@ -40,6 +55,11 @@ export default function HasilPage() {
 
   // Load session storage data
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('pilihanSolusi');
+      sessionStorage.removeItem('aletheia_diagnosa_solusi');
+    }
+
     const savedHasilDiagnosa = sessionStorage.getItem('hasilDiagnosa');
     
     if (savedHasilDiagnosa) {
@@ -259,12 +279,12 @@ export default function HasilPage() {
           Sistem pakar kami tidak mendeteksi kerusakan yang memiliki kecocokan tinggi dengan gejala yang Anda pilih. Silakan lakukan diagnosa ulang dengan gejala yang lebih detail.
         </p>
         <div className="pt-2">
-          <Link
-            href="/"
-            className="inline-block px-5 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white font-semibold rounded-lg text-xs transition"
+          <button
+            onClick={handleNewDiagnosis}
+            className="inline-block px-5 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white font-semibold rounded-lg text-xs transition cursor-pointer"
           >
             Mulai Diagnosa Ulang
-          </Link>
+          </button>
         </div>
       </div>
     );
@@ -276,10 +296,16 @@ export default function HasilPage() {
   return (
     <div className="space-y-8 pb-12">
       {/* Navigation header */}
-      <div>
+      <div className="flex items-center justify-between pb-2 border-b border-neutral-100">
         <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-950 transition">
           <ArrowLeft className="h-3.5 w-3.5" /> Beranda
         </Link>
+        <button
+          onClick={handleNewDiagnosis}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-950 hover:bg-neutral-850 text-white rounded-lg text-[10px] font-bold shadow transition cursor-pointer select-none"
+        >
+          <span>Diagnosa Baru</span>
+        </button>
       </div>
 
       {/* Main Header */}

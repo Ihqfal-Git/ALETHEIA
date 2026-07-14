@@ -61,7 +61,7 @@ export default function Home() {
         {devices.map((device) => (
           <Link
             key={device.slug}
-            href={`/diagnosa/${device.slug}`}
+            href={`/diagnosa/${device.slug}?new=true`}
             className={`group relative border border-neutral-250 hover:border-neutral-950 rounded-2xl p-7 bg-white/70 backdrop-blur-md transition-all duration-300 flex flex-col items-center justify-between h-64 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-xl hover:-translate-y-1.5 text-center overflow-hidden ${device.bgGlow}`}
           >
             {/* Top Icon Block */}

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Loader2, ArrowLeft, Home, Laptop, Smartphone, Monitor } from 'lucide-react';
+import { Loader2, ArrowLeft, Home, Laptop, Smartphone, Monitor, Battery, Tv, Cpu, Wrench, HelpCircle } from 'lucide-react';
 import { gejalaLaptop } from '@/data/gejalaLaptop';
 import { gejalaHP } from '@/data/gejalaHP';
 import { gejalaPC } from '@/data/gejalaPC';
@@ -12,6 +12,23 @@ const deviceMapping = {
   laptop: { nama: 'Laptop', icon: Laptop, data: gejalaLaptop },
   hp: { nama: 'Handphone', icon: Smartphone, data: gejalaHP },
   pc: { nama: 'PC / Desktop', icon: Monitor, data: gejalaPC },
+};
+
+const getCategoryIcon = (categoryName) => {
+  const name = categoryName.toLowerCase();
+  if (name.includes('baterai') || name.includes('daya') || name.includes('boot')) {
+    return Battery;
+  }
+  if (name.includes('layar') || name.includes('tampilan') || name.includes('sentuh')) {
+    return Tv;
+  }
+  if (name.includes('performa') || name.includes('sistem')) {
+    return Cpu;
+  }
+  if (name.includes('hardware') || name.includes('fisik') || name.includes('konektivitas')) {
+    return Wrench;
+  }
+  return HelpCircle;
 };
 
 // Warna untuk header kategori
@@ -25,7 +42,9 @@ const colorClasses = [
 export default function DiagnosaPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const slug = params?.perangkat;
+  const isNew = searchParams?.get('new') === 'true';
 
   const [deviceInfo, setDeviceInfo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,10 +54,60 @@ export default function DiagnosaPage() {
 
   useEffect(() => {
     if (slug && deviceMapping[slug]) {
+      // Jika parameter 'new=true' aktif, reset sesi diagnostik lama
+      if (typeof window !== 'undefined' && isNew) {
+        sessionStorage.removeItem('hasilDiagnosa');
+        sessionStorage.removeItem('aletheia_diagnosa_hasil');
+        sessionStorage.removeItem('aletheia_diagnosa_riwayat_id');
+        sessionStorage.removeItem('aletheia_diagnosa_selected_ids');
+        sessionStorage.removeItem('aletheia_diagnosa_device_name');
+        sessionStorage.removeItem('aletheia_diagnosa_device_slug');
+        sessionStorage.removeItem('aletheia_diagnosa_tambahan');
+        sessionStorage.removeItem('pilihanSolusi');
+        sessionStorage.removeItem('aletheia_diagnosa_solusi');
+      }
+
+      // Cek apakah ada hasil diagnosa aktif untuk perangkat ini di sessionStorage
+      if (typeof window !== 'undefined' && !isNew) {
+        const savedHasil = sessionStorage.getItem('hasilDiagnosa');
+        if (savedHasil) {
+          try {
+            const parsed = JSON.parse(savedHasil);
+            if (parsed.perangkat === slug) {
+              const solution = sessionStorage.getItem('pilihanSolusi');
+              if (solution === 'mandiri' || solution === 'servis') {
+                router.replace(`/solusi/${solution}`);
+              } else {
+                router.replace('/hasil');
+              }
+              return; // Keluar awal untuk mencegah kedipan tampilan diagnosa
+            }
+          } catch (e) {
+            console.error('Gagal membaca active hasilDiagnosa:', e);
+          }
+        }
+      }
+
       setDeviceInfo(deviceMapping[slug]);
+
+      // Load saved state dari localStorage jika ada
+      if (typeof window !== 'undefined') {
+        const savedGejala = localStorage.getItem(`aletheia_selected_gejala_${slug}`);
+        const savedTambahan = localStorage.getItem(`aletheia_gejala_tambahan_${slug}`);
+        if (savedGejala) {
+          try {
+            setSelectedGejala(JSON.parse(savedGejala));
+          } catch (e) {
+            console.error('Gagal parse saved gejala:', e);
+          }
+        }
+        if (savedTambahan) {
+          setGejalaTambahan(savedTambahan);
+        }
+      }
     }
     setLoading(false);
-  }, [slug]);
+  }, [slug, router]);
 
   if (loading) {
     return (
@@ -76,10 +145,16 @@ export default function DiagnosaPage() {
 
   // Toggle checkbox
   const handleCheckboxChange = (id) => {
-    setSelectedGejala(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
+    setSelectedGejala(prev => {
+      const updated = {
+        ...prev,
+        [id]: !prev[id]
+      };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(`aletheia_selected_gejala_${slug}`, JSON.stringify(updated));
+      }
+      return updated;
+    });
   };
 
   // Hitung jumlah gejala yang dipilih
@@ -126,6 +201,12 @@ export default function DiagnosaPage() {
         sessionStorage.setItem('aletheia_diagnosa_device_slug', slug);
         sessionStorage.setItem('aletheia_diagnosa_tambahan', gejalaTambahan);
 
+        // Clear saved state from localStorage upon successful submission
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem(`aletheia_selected_gejala_${slug}`);
+          localStorage.removeItem(`aletheia_gejala_tambahan_${slug}`);
+        }
+
         router.push('/hasil');
       } else {
         alert(resData.message || 'Gagal menganalisis gejala.');
@@ -154,15 +235,15 @@ export default function DiagnosaPage() {
         {/* Grid Kategori */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {categories.map((cat, idx) => {
-            const color = colorClasses[idx % colorClasses.length];
             const gejalaList = groupedGejala[cat];
+            const CatIcon = getCategoryIcon(cat);
 
             return (
               <div key={cat} className="border border-neutral-200 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col">
                 {/* Header Kategori */}
-                <div className={`border-b border-neutral-200 px-4 py-3 ${color.bg}`}>
-                  <h3 className={`font-bold text-sm uppercase tracking-wide flex items-center gap-2 ${color.text}`}>
-                    <span className={`w-2 h-2 rounded-full bg-current`} />
+                <div className="border-b border-neutral-200 px-4 py-3 bg-neutral-50/70">
+                  <h3 className="font-extrabold text-xs text-neutral-900 uppercase tracking-wide flex items-center gap-2 select-none">
+                    <CatIcon className="h-4.5 w-4.5 text-neutral-500 shrink-0" />
                     {cat}
                   </h3>
                 </div>
@@ -200,23 +281,20 @@ export default function DiagnosaPage() {
             id="lainnya"
             rows={3}
             value={gejalaTambahan}
-            onChange={(e) => setGejalaTambahan(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setGejalaTambahan(val);
+              if (typeof window !== 'undefined') {
+                localStorage.setItem(`aletheia_gejala_tambahan_${slug}`, val);
+              }
+            }}
             placeholder="Tuliskan keluhan atau gejala lain jika ada..."
             className="w-full text-xs p-3 border border-neutral-200 rounded-lg focus:outline-none focus:border-neutral-950 focus:ring-1 focus:ring-neutral-950 bg-neutral-50/50"
           />
         </div>
 
         {/* Sticky Summary & Button di Bawah */}
-        <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[240px] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center justify-between">
-          <Link 
-            href="/" 
-            className="inline-flex items-center justify-center h-[42px] w-[42px] sm:w-auto sm:px-4 sm:gap-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 hover:text-neutral-950 transition-colors shadow-sm shrink-0"
-            title="Kembali ke Beranda"
-          >
-            <Home className="h-4.5 w-4.5 sm:h-4 sm:w-4" />
-            <span className="hidden sm:block text-xs font-bold">Home</span>
-          </Link>
-
+        <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[240px] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center justify-end">
           <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
             <div className="text-right">
               <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider hidden sm:block">Hasil Pemilihan</p>

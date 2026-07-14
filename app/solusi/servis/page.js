@@ -2,14 +2,31 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Loader2, ArrowLeft, Landmark, Wrench, ShieldAlert, Clock, AlertCircle } from 'lucide-react';
 
 export default function SolusiServisPage() {
+  const router = useRouter();
   const [deviceSlug, setDeviceSlug] = useState('');
   const [deviceName, setDeviceName] = useState('');
   const [riwayatId, setRiwayatId] = useState(null);
   const [kerusakanNama, setKerusakanNama] = useState('');
   const [loadingSession, setLoadingSession] = useState(true);
+
+  const handleNewDiagnosis = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('hasilDiagnosa');
+      sessionStorage.removeItem('aletheia_diagnosa_hasil');
+      sessionStorage.removeItem('aletheia_diagnosa_riwayat_id');
+      sessionStorage.removeItem('aletheia_diagnosa_selected_ids');
+      sessionStorage.removeItem('aletheia_diagnosa_device_name');
+      sessionStorage.removeItem('aletheia_diagnosa_device_slug');
+      sessionStorage.removeItem('aletheia_diagnosa_tambahan');
+      sessionStorage.removeItem('pilihanSolusi');
+      sessionStorage.removeItem('aletheia_diagnosa_solusi');
+    }
+    router.push(`/diagnosa/${deviceSlug || 'hp'}`);
+  };
 
   // States untuk API AI
   const [servisData, setServisData] = useState(null);
@@ -132,12 +149,12 @@ export default function SolusiServisPage() {
           Sesi diagnosis tidak ditemukan. Silakan lakukan diagnosis baru.
         </p>
         <div className="pt-2">
-          <Link
-            href="/"
-            className="inline-block px-5 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white font-semibold rounded-lg text-xs transition animate-pulse"
+          <button
+            onClick={handleNewDiagnosis}
+            className="inline-block px-5 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white font-semibold rounded-lg text-xs transition cursor-pointer"
           >
             Mulai Diagnosa Baru
-          </Link>
+          </button>
         </div>
       </div>
     );
@@ -146,10 +163,16 @@ export default function SolusiServisPage() {
   return (
     <div className="space-y-8 pb-12">
       {/* Navigation header */}
-      <div>
+      <div className="flex items-center justify-between pb-2 border-b border-neutral-100">
         <Link href="/hasil" className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-950 transition">
           <ArrowLeft className="h-3.5 w-3.5" /> Hasil Diagnosa
         </Link>
+        <button
+          onClick={handleNewDiagnosis}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-950 hover:bg-neutral-850 text-white rounded-lg text-[10px] font-bold shadow transition cursor-pointer select-none"
+        >
+          <span>Diagnosa Baru</span>
+        </button>
       </div>
 
       {/* Main Header */}
