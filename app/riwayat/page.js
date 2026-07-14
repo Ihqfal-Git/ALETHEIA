@@ -16,6 +16,36 @@ const deviceMapping = {
 // Menggabungkan semua gejala untuk pencarian deskripsi dari ID
 const allGejala = [...gejalaLaptop, ...gejalaHP, ...gejalaPC];
 
+const getSymptomGlobalNumber = (perangkatSlug, symptomId) => {
+  let data = [];
+  if (perangkatSlug === 'laptop') data = gejalaLaptop;
+  else if (perangkatSlug === 'hp') data = gejalaHP;
+  else if (perangkatSlug === 'pc') data = gejalaPC;
+  else return 0;
+
+  const grouped = data.reduce((acc, item) => {
+    if (!acc[item.kategori]) {
+      acc[item.kategori] = [];
+    }
+    acc[item.kategori].push(item);
+    return acc;
+  }, {});
+
+  const categories = Object.keys(grouped);
+  let globalIndex = 1;
+  
+  for (const cat of categories) {
+    const list = grouped[cat];
+    for (const item of list) {
+      if (item.id === symptomId) {
+        return globalIndex;
+      }
+      globalIndex++;
+    }
+  }
+  return 0;
+};
+
 export default function RiwayatPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +56,107 @@ export default function RiwayatPage() {
 
   // Auth States
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // States untuk detail solusi mandiri di dalam riwayat
+  const [mandiriData, setMandiriData] = useState(null);
+  const [loadingMandiri, setLoadingMandiri] = useState(false);
+  const [checkedSteps, setCheckedSteps] = useState([]);
+  const [shakingStep, setShakingStep] = useState(null);
+
+  useEffect(() => {
+    if (activeDetail && activeDetail.solusiType === 'mandiri') {
+      const loadMandiriDetails = async () => {
+        setLoadingMandiri(true);
+        try {
+          const res = await fetch('/api/ai/mandiri', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              perangkat: activeDetail.perangkat?.slug,
+              kerusakan: activeDetail.kerusakan?.nama,
+              riwayatId: activeDetail.id
+            })
+          });
+          const resData = await res.json();
+          if (resData.success) {
+            setMandiriData(resData.data);
+          }
+        } catch (e) {
+          console.warn('Gagal memuat langkah perbaikan:', e);
+        } finally {
+          setLoadingMandiri(false);
+        }
+      };
+
+      if (activeDetail.progressLangkah) {
+        try {
+          setCheckedSteps(JSON.parse(activeDetail.progressLangkah));
+        } catch (e) {
+          setCheckedSteps([]);
+        }
+      } else {
+        setCheckedSteps([]);
+      }
+
+      loadMandiriDetails();
+    } else {
+      setMandiriData(null);
+      setCheckedSteps([]);
+    }
+  }, [activeDetail?.id]);
+
+  const handleToggleStep = async (stepNum) => {
+    if (!activeDetail) return;
+    const isCurrentlyChecked = checkedSteps.includes(stepNum);
+
+    if (!isCurrentlyChecked) {
+      // Men-centang: Hanya bisa jika langkah sebelumnya sudah tercentang
+      if (stepNum > 1 && !checkedSteps.includes(stepNum - 1)) {
+        setShakingStep(stepNum);
+        setTimeout(() => setShakingStep(null), 400);
+        return;
+      }
+    } else {
+      // Melepas centang: Hanya bisa jika langkah setelahnya belum tercentang
+      const hasCheckedAfter = checkedSteps.some(s => s > stepNum);
+      if (hasCheckedAfter) {
+        setShakingStep(stepNum);
+        setTimeout(() => setShakingStep(null), 400);
+        return;
+      }
+    }
+
+    let newChecked;
+    if (isCurrentlyChecked) {
+      newChecked = checkedSteps.filter(s => s !== stepNum);
+    } else {
+      newChecked = [...checkedSteps, stepNum];
+    }
+    setCheckedSteps(newChecked);
+
+    try {
+      await fetch(`/api/riwayat/${activeDetail.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ progressLangkah: JSON.stringify(newChecked) })
+      });
+
+      // Sinkronkan state lokal agar item tetap terupdate
+      setActiveDetail(prev => ({
+        ...prev,
+        progressLangkah: JSON.stringify(newChecked)
+      }));
+
+      setItems(prevItems => prevItems.map(item => {
+        if (item.id === activeDetail.id) {
+          return { ...item, progressLangkah: JSON.stringify(newChecked) };
+        }
+        return item;
+      }));
+    } catch (err) {
+      console.error('Gagal memperbarui progress langkah di DB:', err);
+    }
+  };
 
   useEffect(() => {
     checkSession();
@@ -302,11 +433,22 @@ export default function RiwayatPage() {
           {/* Box Gejala */}
           <div className="border border-neutral-200 bg-white rounded-xl p-6 shadow-sm space-y-3">
             <h3 className="font-bold text-xs text-neutral-950 uppercase tracking-wide">Gejala yang Dilaporkan</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              {symptomList.map((g, idx) => (
-                <li key={idx} className="text-xs text-neutral-700 leading-relaxed">{g}</li>
-              ))}
-            </ul>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              {symptomList.map((g, idx) => {
+                const foundGejala = allGejala.find(x => x.deskripsi === g);
+                const globalNum = foundGejala ? getSymptomGlobalNumber(item.perangkat?.slug, foundGejala.id) : (idx + 1);
+                return (
+                  <div key={idx} className="flex items-start gap-3 p-3.5 rounded-xl border border-neutral-150 bg-neutral-50/50 hover:bg-neutral-50 transition-all duration-200">
+                    <span className="flex items-center justify-center h-6 w-6 rounded-md bg-neutral-950 border border-neutral-950 text-white font-black text-[10px] shrink-0 select-none shadow-sm mt-0.5">
+                      {globalNum}
+                    </span>
+                    <span className="text-xs text-neutral-800 font-semibold leading-relaxed mt-0.5">
+                      {g}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
 
             {/* Keluhan tambahan (jika ada) */}
             {item.hasilAI && item.hasilAI.includes('Keluhan tambahan:') && (
@@ -330,8 +472,124 @@ export default function RiwayatPage() {
             </p>
           </div>
 
-          {/* Box Penjelasan AI / Panduan jika ada */}
-          {item.hasilAI && !item.hasilAI.includes('Keluhan tambahan:') && (
+          {/* Jika Perbaiki Sendiri (Mandiri) - Tampilkan Panduan Interaktif dengan Checkbox */}
+          {item.solusiType === 'mandiri' && (
+            <div className="space-y-6">
+              {loadingMandiri ? (
+                <div className="animate-pulse space-y-4">
+                  <div className="h-4 bg-neutral-200 rounded w-1/4"></div>
+                  <div className="h-32 bg-neutral-100 rounded-xl"></div>
+                </div>
+              ) : mandiriData ? (
+                <>
+                  {/* Peringatan (jika ada) */}
+                  {mandiriData.peringatan && mandiriData.peringatan.length > 0 && (
+                    <div className="border border-red-200 bg-red-50 text-red-950 rounded-xl p-5 shadow-sm space-y-2">
+                      <div className="flex items-center gap-2 text-red-700">
+                        <AlertCircle className="h-5 w-5 shrink-0" />
+                        <h4 className="font-extrabold text-xs uppercase tracking-wide">Peringatan Penting</h4>
+                      </div>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {mandiriData.peringatan.map((warn, idx) => (
+                          <li key={idx} className="text-xs text-red-900 leading-relaxed">{warn}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Grid Kebutuhan */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Alat */}
+                    {mandiriData.alat && mandiriData.alat.length > 0 && (
+                      <div className="border border-neutral-200 bg-white rounded-xl p-6 shadow-sm space-y-3">
+                        <h4 className="font-bold text-xs text-neutral-950 uppercase tracking-wide border-b border-neutral-100 pb-2">Alat yang Dibutuhkan</h4>
+                        <ul className="space-y-2">
+                          {mandiriData.alat.map((a, idx) => (
+                            <li key={idx} className="text-xs text-neutral-700 leading-normal">
+                              <span className="font-bold text-neutral-950">{a.nama}</span> — <span className="text-neutral-500">{a.fungsi}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {/* Bahan */}
+                    {mandiriData.bahan && mandiriData.bahan.length > 0 && (
+                      <div className="border border-neutral-200 bg-white rounded-xl p-6 shadow-sm space-y-3">
+                        <h4 className="font-bold text-xs text-neutral-950 uppercase tracking-wide border-b border-neutral-100 pb-2">Bahan & Estimasi Harga</h4>
+                        <ul className="space-y-2">
+                          {mandiriData.bahan.map((b, idx) => (
+                            <li key={idx} className="text-xs text-neutral-700 flex justify-between gap-2 leading-normal">
+                              <span className="font-bold text-neutral-950">{b.nama}</span>
+                              <span className="text-neutral-500 font-medium shrink-0">{b.estimasiHarga}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Langkah-langkah dengan Checkbox */}
+                  <div className="border border-neutral-200 bg-white rounded-xl p-6 shadow-sm space-y-4">
+                    <h3 className="font-bold text-xs text-neutral-950 uppercase tracking-wide border-b border-neutral-100 pb-2">Progress Langkah Perbaikan</h3>
+                    <div className="relative border-l border-neutral-100 ml-4 pl-6 space-y-6">
+                      {mandiriData.langkah?.map((step, idx) => {
+                        const stepNum = step.nomor || idx + 1;
+                        const isChecked = checkedSteps.includes(stepNum);
+                        return (
+                          <div key={idx} className="relative">
+                            <button
+                              type="button"
+                              onClick={() => handleToggleStep(stepNum)}
+                              className={`absolute -left-10 top-0.5 rounded-lg w-7 h-7 flex items-center justify-center text-xs font-black select-none border transition-all duration-200 cursor-pointer ${
+                                shakingStep === stepNum
+                                  ? 'animate-shake border-red-500 text-red-650 bg-red-50'
+                                  : isChecked
+                                  ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                                  : 'bg-white border-neutral-300 text-neutral-800 hover:border-neutral-950 hover:bg-neutral-50'
+                              }`}
+                            >
+                              {isChecked ? (
+                                <svg className="h-4 w-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                              ) : (
+                                stepNum
+                              )}
+                            </button>
+                            <div className={`space-y-1 transition-all duration-300 ${isChecked ? 'opacity-40 line-through select-none' : ''}`}>
+                              <h4 className="font-extrabold text-neutral-950 text-xs uppercase tracking-wider">{step.judul}</h4>
+                              <p className="text-xs text-neutral-500 leading-relaxed">{step.detail}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Footer Info */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-neutral-50 p-4 rounded-xl border border-neutral-200">
+                    <div className="text-center sm:text-left">
+                      <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Estimasi Biaya</span>
+                      <span className="text-xs font-extrabold text-neutral-950">
+                        Rp {mandiriData.estimasiBiayaTotal?.min?.toLocaleString('id-ID')} - Rp {mandiriData.estimasiBiayaTotal?.max?.toLocaleString('id-ID')}
+                      </span>
+                    </div>
+                    <div className="text-center sm:text-left border-y sm:border-y-0 sm:border-x border-neutral-200 py-2 sm:py-0 sm:px-4">
+                      <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Estimasi Waktu</span>
+                      <span className="text-xs font-extrabold text-neutral-950">{mandiriData.estimasiWaktu || '30 - 60 menit'}</span>
+                    </div>
+                    <div className="text-center sm:text-left sm:pl-4">
+                      <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Tingkat Kesulitan</span>
+                      <span className="text-xs font-extrabold text-neutral-950">{mandiriData.tingkatKesulitan || 'Menengah'}</span>
+                    </div>
+                  </div>
+                </>
+              ) : null}
+            </div>
+          )}
+
+          {/* Box Penjelasan AI / Panduan jika ada (Hanya jika bukan perbaikan mandiri) */}
+          {item.solusiType !== 'mandiri' && item.hasilAI && !item.hasilAI.includes('Keluhan tambahan:') && (
             <div className="border border-neutral-200 bg-white rounded-xl p-6 shadow-sm space-y-3">
               <h3 className="font-bold text-xs text-neutral-950 uppercase tracking-wide">Dokumentasi Panduan AI</h3>
               <DropdownAIExplanation text={item.hasilAI} />
@@ -509,10 +767,10 @@ function RiwayatItemCard({ item, onOpenDetail }) {
         </div>
       </div>
 
-      <div className="flex sm:justify-end">
+      <div className="flex sm:justify-end shrink-0">
         <button
           onClick={() => onOpenDetail(item)}
-          className="px-4 py-2 border border-neutral-200 hover:border-neutral-950 hover:bg-neutral-50 rounded-lg text-neutral-950 font-bold text-xs transition cursor-pointer"
+          className="px-4 py-2 border border-neutral-200 hover:border-neutral-950 hover:bg-neutral-50 rounded-lg text-neutral-950 font-bold text-xs transition cursor-pointer whitespace-nowrap"
         >
           Lihat Detail
         </button>
@@ -523,25 +781,25 @@ function RiwayatItemCard({ item, onOpenDetail }) {
 
 function parseAIExplanation(text) {
   if (!text) return [];
-  
+
   const blocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
   const parsed = [];
   let currentTitle = "";
-  
+
   const defaultTitles = [
     "Analisis Kerusakan",
     "Mekanisme & Dampak Teknis",
     "Rekomendasi Tindakan"
   ];
-  
+
   blocks.forEach((block) => {
-    const headerMatch = block.match(/^(?:###|##|\*\*|#)\s*(.*?)(?:\*\*|:)?\n([\s\S]*)$/m) 
-                     || block.match(/^(?:###|##|\*\*|#)\s*(.*)$/);
-                     
+    const headerMatch = block.match(/^(?:###|##|\*\*|#)\s*(.*?)(?:\*\*|:)?\n([\s\S]*)$/m)
+      || block.match(/^(?:###|##|\*\*|#)\s*(.*)$/);
+
     if (headerMatch) {
       const title = headerMatch[1].replace(/[\*\#\:]/g, '').trim();
       const content = headerMatch[2] ? headerMatch[2].trim() : "";
-      
+
       if (content) {
         parsed.push({ title, content });
       } else {
@@ -553,7 +811,7 @@ function parseAIExplanation(text) {
       currentTitle = "";
     }
   });
-  
+
   return parsed;
 }
 

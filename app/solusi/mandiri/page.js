@@ -31,6 +31,67 @@ export default function SolusiMandiriPage() {
   const [mandiriData, setMandiriData] = useState(null);
   const [loadingAPI, setLoadingAPI] = useState(true);
   const [errorAPI, setErrorAPI] = useState('');
+  const [checkedSteps, setCheckedSteps] = useState([]);
+  const [shakingStep, setShakingStep] = useState(null);
+
+  // Load initial checked steps progress
+  useEffect(() => {
+    if (riwayatId) {
+      const fetchProgress = async () => {
+        try {
+          const res = await fetch(`/api/riwayat/${riwayatId}`);
+          const resData = await res.json();
+          if (resData.success && resData.data && resData.data.progressLangkah) {
+            setCheckedSteps(JSON.parse(resData.data.progressLangkah));
+          }
+        } catch (e) {
+          console.warn('Gagal memuat data progress langkah:', e);
+        }
+      };
+      fetchProgress();
+    }
+  }, [riwayatId]);
+
+  const handleToggleStep = async (stepNum) => {
+    const isCurrentlyChecked = checkedSteps.includes(stepNum);
+
+    if (!isCurrentlyChecked) {
+      // Men-centang: Hanya bisa jika langkah sebelumnya sudah tercentang
+      if (stepNum > 1 && !checkedSteps.includes(stepNum - 1)) {
+        setShakingStep(stepNum);
+        setTimeout(() => setShakingStep(null), 400);
+        return;
+      }
+    } else {
+      // Melepas centang: Hanya bisa jika langkah setelahnya belum tercentang
+      const hasCheckedAfter = checkedSteps.some(s => s > stepNum);
+      if (hasCheckedAfter) {
+        setShakingStep(stepNum);
+        setTimeout(() => setShakingStep(null), 400);
+        return;
+      }
+    }
+
+    let newChecked;
+    if (isCurrentlyChecked) {
+      newChecked = checkedSteps.filter(s => s !== stepNum);
+    } else {
+      newChecked = [...checkedSteps, stepNum];
+    }
+    setCheckedSteps(newChecked);
+
+    if (riwayatId) {
+      try {
+        await fetch(`/api/riwayat/${riwayatId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ progressLangkah: JSON.stringify(newChecked) })
+        });
+      } catch (err) {
+        console.error('Gagal menyimpan progress langkah:', err);
+      }
+    }
+  };
 
   const fetchMandiriInfo = async (slugVal, kerusakanVal, riwayatVal) => {
     setLoadingAPI(true);
@@ -323,17 +384,37 @@ export default function SolusiMandiriPage() {
               <h3 className="font-bold text-xs text-neutral-950 uppercase tracking-wide">Langkah-Langkah Perbaikan</h3>
             </div>
             <div className="relative border-l border-neutral-100 ml-4 pl-6 space-y-6">
-              {mandiriData?.langkah?.map((step, idx) => (
-                <div key={idx} className="relative">
-                  <span className="absolute -left-10 top-0.5 bg-neutral-950 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs font-black select-none">
-                    {step.nomor || idx + 1}
-                  </span>
-                  <div className="space-y-1">
-                    <h4 className="font-extrabold text-neutral-950 text-xs uppercase tracking-wider">{step.judul}</h4>
-                    <p className="text-xs text-neutral-500 leading-relaxed">{step.detail}</p>
+              {mandiriData?.langkah?.map((step, idx) => {
+                const stepNum = step.nomor || idx + 1;
+                const isChecked = checkedSteps.includes(stepNum);
+                return (
+                  <div key={idx} className="relative">
+                    <button
+                      type="button"
+                      onClick={() => handleToggleStep(stepNum)}
+                      className={`absolute -left-10 top-0.5 rounded-lg w-7 h-7 flex items-center justify-center text-xs font-black select-none border transition-all duration-200 cursor-pointer ${
+                        shakingStep === stepNum
+                          ? 'animate-shake border-red-500 text-red-650 bg-red-50'
+                          : isChecked
+                          ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                          : 'bg-white border-neutral-300 text-neutral-800 hover:border-neutral-950 hover:bg-neutral-50'
+                      }`}
+                    >
+                      {isChecked ? (
+                        <svg className="h-4 w-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        stepNum
+                      )}
+                    </button>
+                    <div className={`space-y-1 transition-all duration-300 ${isChecked ? 'opacity-40 line-through select-none' : ''}`}>
+                      <h4 className="font-extrabold text-neutral-950 text-xs uppercase tracking-wider">{step.judul}</h4>
+                      <p className="text-xs text-neutral-500 leading-relaxed">{step.detail}</p>
+                    </div>
                   </div>
-                </div>
-              )) || (
+                );
+              }) || (
                 <p className="text-xs text-neutral-400">Tidak ada data langkah perbaikan.</p>
               )}
             </div>
