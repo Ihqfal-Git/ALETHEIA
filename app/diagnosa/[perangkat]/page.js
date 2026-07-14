@@ -107,7 +107,7 @@ export default function DiagnosaPage() {
       }
     }
     setLoading(false);
-  }, [slug, router]);
+  }, [slug, router, isNew]);
 
   if (loading) {
     return (
@@ -142,6 +142,14 @@ export default function DiagnosaPage() {
   }, {});
 
   const categories = Object.keys(groupedGejala);
+
+  // Hitung start index untuk penomoran berlanjut antar kategori
+  const categoryStartIndices = {};
+  let currentStart = 0;
+  categories.forEach((cat) => {
+    categoryStartIndices[cat] = currentStart;
+    currentStart += groupedGejala[cat].length;
+  });
 
   // Toggle checkbox
   const handleCheckboxChange = (id) => {
@@ -248,24 +256,42 @@ export default function DiagnosaPage() {
                   </h3>
                 </div>
 
-                {/* Daftar Gejala */}
                 <div className="p-4 space-y-3 flex-1">
-                  {gejalaList.map((g) => (
-                    <label
-                      key={g.id}
-                      className="flex items-start gap-3 cursor-pointer text-xs leading-relaxed text-neutral-700 hover:text-neutral-950 select-none group"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={!!selectedGejala[g.id]}
-                        onChange={() => handleCheckboxChange(g.id)}
-                        className="mt-0.5 h-4 w-4 rounded border-neutral-300 text-neutral-950 focus:ring-neutral-950 focus:ring-offset-0 cursor-pointer accent-neutral-950"
-                      />
-                      <span className="group-hover:translate-x-0.5 transition-transform duration-150">
-                        {g.deskripsi}
-                      </span>
-                    </label>
-                  ))}
+                  {gejalaList.map((g, idx) => {
+                    const isChecked = !!selectedGejala[g.id];
+                    const globalIdx = (categoryStartIndices[cat] || 0) + idx;
+                    return (
+                      <label
+                        key={g.id}
+                        className="flex items-start gap-3.5 p-1 rounded-lg cursor-pointer text-xs leading-relaxed text-neutral-700 hover:text-neutral-950 select-none group"
+                      >
+                        <div className="relative shrink-0 mt-0.5 select-none">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handleCheckboxChange(g.id)}
+                            className="sr-only"
+                          />
+                          <div className={`flex items-center justify-center h-6 w-6 rounded-md text-[10px] font-black transition-all duration-150 border ${
+                            isChecked 
+                              ? 'bg-neutral-950 border-neutral-950 text-white shadow-sm scale-105' 
+                              : 'bg-neutral-50 border-neutral-200 text-neutral-400 group-hover:border-neutral-400 group-hover:bg-neutral-100'
+                          }`}>
+                            {isChecked ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                              </svg>
+                            ) : (
+                              globalIdx + 1
+                            )}
+                          </div>
+                        </div>
+                        <span className="group-hover:translate-x-0.5 transition-transform duration-150 mt-1">
+                          {g.deskripsi}
+                        </span>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -294,7 +320,7 @@ export default function DiagnosaPage() {
         </div>
 
         {/* Sticky Summary & Button di Bawah */}
-        <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[240px] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center justify-end">
+        <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[var(--sidebar-width,240px)] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center justify-end transition-[left] duration-300">
           <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
             <div className="text-right">
               <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider hidden sm:block">Hasil Pemilihan</p>

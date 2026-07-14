@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Sidebar from './Sidebar';
-import { Home, Laptop, Smartphone, Monitor, ClipboardList, Info, Zap, User } from 'lucide-react';
+import { Home, Laptop, Smartphone, Monitor, ClipboardList, Info, Zap, User, Settings } from 'lucide-react';
 
 
 export default function SidebarWrapper({ children }) {
@@ -25,6 +25,29 @@ export default function SidebarWrapper({ children }) {
 
       const savedCollapsed = localStorage.getItem('aletheia_sidebar_collapsed') === 'true';
       setIsSidebarCollapsed(savedCollapsed);
+
+      // Override window.fetch to inject dynamic custom API key header
+      const originalFetch = window.fetch;
+      window.fetch = async function (input, init) {
+        let modifiedInit = init;
+        let url = '';
+        if (typeof input === 'string') {
+          url = input;
+        } else if (input && input.url) {
+          url = input.url;
+        }
+        
+        if (url.includes('/api/ai/')) {
+          const customKey = localStorage.getItem('custom_gemini_api_key');
+          if (customKey) {
+            modifiedInit = init ? { ...init } : {};
+            const headers = modifiedInit.headers ? { ...modifiedInit.headers } : {};
+            headers['x-gemini-api-key'] = customKey;
+            modifiedInit.headers = headers;
+          }
+        }
+        return originalFetch(input, modifiedInit);
+      };
     }
   }, []);
 
@@ -34,6 +57,20 @@ export default function SidebarWrapper({ children }) {
       localStorage.setItem('aletheia_sidebar_collapsed', String(next));
       return next;
     });
+  };
+
+  const handleGoHome = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('hasilDiagnosa');
+      sessionStorage.removeItem('pilihanSolusi');
+      sessionStorage.removeItem('aletheia_diagnosa_hasil');
+      sessionStorage.removeItem('aletheia_diagnosa_riwayat_id');
+      sessionStorage.removeItem('aletheia_diagnosa_selected_ids');
+      sessionStorage.removeItem('aletheia_diagnosa_device_name');
+      sessionStorage.removeItem('aletheia_diagnosa_device_slug');
+      sessionStorage.removeItem('aletheia_diagnosa_tambahan');
+      sessionStorage.removeItem('aletheia_diagnosa_solusi');
+    }
   };
 
   const navItems = [
@@ -57,12 +94,22 @@ export default function SidebarWrapper({ children }) {
 
   // Jika bukan halaman beranda, tampilkan layout dengan sidebar (desktop) atau bottom nav (mobile)
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-white overflow-hidden">
+    <div 
+      className="min-h-screen flex flex-col md:flex-row bg-white overflow-hidden w-full"
+      style={{ '--sidebar-width': isSidebarCollapsed ? '72px' : '240px' }}
+    >
       {/* Mobile Top Header (hanya muncul di layar kecil) */}
       <div className="md:hidden flex items-center justify-between bg-white border-b border-neutral-200 px-6 py-4 sticky top-0 z-40">
-        <Link href="/" className="font-black text-base tracking-tight text-neutral-950 flex items-center gap-1.5">
+        <Link href="/" onClick={handleGoHome} className="font-black text-base tracking-tight text-neutral-950 flex items-center gap-1.5">
           <Zap className="h-4.5 w-4.5 text-neutral-950 fill-neutral-950" />
           <span>ALETHEIA</span>
+        </Link>
+        <Link
+          href="/pengaturan"
+          className="p-1.5 hover:bg-neutral-100 rounded-lg text-neutral-600 hover:text-neutral-950 transition-colors"
+          title="Pengaturan API Key"
+        >
+          <Settings className="h-5 w-5" />
         </Link>
       </div>
 
@@ -89,6 +136,7 @@ export default function SidebarWrapper({ children }) {
             <Link
               key={item.href}
               href={item.href}
+              onClick={item.href === '/' ? handleGoHome : undefined}
               className={`flex flex-col items-center justify-center flex-1 py-1 text-center transition-colors ${isActive ? 'text-neutral-950 font-bold' : 'text-neutral-400 hover:text-neutral-600'
                 }`}
             >

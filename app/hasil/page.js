@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Loader2, ArrowLeft, ShieldAlert, BookOpen, AlertCircle, Wrench, ArrowRight, CheckCircle2, XCircle, ChevronDown } from 'lucide-react';
+import { Loader2, ArrowLeft, ShieldAlert, BookOpen, AlertCircle, Wrench, ArrowRight, CheckCircle2, XCircle, ChevronDown, Settings, Search } from 'lucide-react';
 import { gejalaLaptop } from '@/data/gejalaLaptop';
 import { gejalaHP } from '@/data/gejalaHP';
 import { gejalaPC } from '@/data/gejalaPC';
@@ -12,6 +12,33 @@ const deviceMapping = {
   laptop: { nama: 'Laptop', data: gejalaLaptop },
   hp: { nama: 'Handphone', data: gejalaHP },
   pc: { nama: 'PC / Desktop', data: gejalaPC },
+};
+
+const getSymptomGlobalNumber = (perangkatSlug, symptomId) => {
+  const device = deviceMapping[perangkatSlug];
+  if (!device) return 0;
+
+  const grouped = device.data.reduce((acc, item) => {
+    if (!acc[item.kategori]) {
+      acc[item.kategori] = [];
+    }
+    acc[item.kategori].push(item);
+    return acc;
+  }, {});
+
+  const categories = Object.keys(grouped);
+  let globalIndex = 1;
+  
+  for (const cat of categories) {
+    const list = grouped[cat];
+    for (const item of list) {
+      if (item.id === symptomId) {
+        return globalIndex;
+      }
+      globalIndex++;
+    }
+  }
+  return 0;
 };
 
 export default function HasilPage() {
@@ -38,6 +65,20 @@ export default function HasilPage() {
     router.push(`/diagnosa/${deviceSlug || 'hp'}`);
   };
 
+  const handleGoHome = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('hasilDiagnosa');
+      sessionStorage.removeItem('aletheia_diagnosa_hasil');
+      sessionStorage.removeItem('aletheia_diagnosa_riwayat_id');
+      sessionStorage.removeItem('aletheia_diagnosa_selected_ids');
+      sessionStorage.removeItem('aletheia_diagnosa_device_name');
+      sessionStorage.removeItem('aletheia_diagnosa_device_slug');
+      sessionStorage.removeItem('aletheia_diagnosa_tambahan');
+      sessionStorage.removeItem('pilihanSolusi');
+      sessionStorage.removeItem('aletheia_diagnosa_solusi');
+    }
+  };
+
   // States untuk API AI Explain
   const [explainText, setExplainText] = useState('');
   const [loadingExplain, setLoadingExplain] = useState(true);
@@ -61,7 +102,7 @@ export default function HasilPage() {
     }
 
     const savedHasilDiagnosa = sessionStorage.getItem('hasilDiagnosa');
-    
+
     if (savedHasilDiagnosa) {
       try {
         const parsed = JSON.parse(savedHasilDiagnosa);
@@ -171,7 +212,7 @@ export default function HasilPage() {
     if (loadingSession || !hasil || hasil.length === 0) return;
     fetchExplain();
     fetchReferensi();
-    
+
     // Ambil status awal riwayat jika ada
     if (riwayatId) {
       const fetchInitialStatus = async () => {
@@ -297,7 +338,7 @@ export default function HasilPage() {
     <div className="space-y-8 pb-12">
       {/* Navigation header */}
       <div className="flex items-center justify-between pb-2 border-b border-neutral-100">
-        <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-950 transition">
+        <Link href="/" onClick={handleGoHome} className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-950 transition">
           <ArrowLeft className="h-3.5 w-3.5" /> Beranda
         </Link>
         <button
@@ -338,14 +379,19 @@ export default function HasilPage() {
             <CheckCircle2 className="h-4.5 w-4.5 text-neutral-850" />
             <h3 className="font-bold text-xs text-neutral-950 uppercase tracking-wide">Gejala yang Anda Pilih</h3>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             {selectedIds.map((id) => {
               const match = symptomsList.find(g => g.id === id);
+              const globalNum = getSymptomGlobalNumber(deviceSlug, id);
               return (
-                <span key={id} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-750 text-xs font-medium">
-                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
-                  {match ? match.deskripsi : id}
-                </span>
+                <div key={id} className="flex items-start gap-3 p-3.5 rounded-xl border border-neutral-150 bg-neutral-50/50 hover:bg-neutral-50 transition-all duration-200">
+                  <span className="flex items-center justify-center h-6 w-6 rounded-md bg-neutral-950 border border-neutral-950 text-white font-black text-[10px] shrink-0 select-none shadow-sm mt-0.5">
+                    {globalNum || '?'}
+                  </span>
+                  <span className="text-xs text-neutral-800 font-semibold leading-relaxed mt-0.5">
+                    {match ? match.deskripsi : id}
+                  </span>
+                </div>
               );
             })}
           </div>
@@ -369,16 +415,25 @@ export default function HasilPage() {
           ) : errorExplain ? (
             /* Error state with retry */
             <div className="space-y-3 py-2">
-              <div className="flex items-center gap-2 text-red-600 text-xs">
+              <div className="flex items-center gap-2 text-red-650 text-xs">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{errorExplain}</span>
               </div>
-              <button
-                onClick={fetchExplain}
-                className="px-3 py-1.5 bg-white border border-neutral-250 hover:bg-neutral-50 text-neutral-950 font-semibold rounded text-[10px] transition cursor-pointer"
-              >
-                Coba Lagi
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={fetchExplain}
+                  className="px-3 py-1.5 bg-white border border-neutral-250 hover:bg-neutral-50 text-neutral-950 font-semibold rounded text-[10px] transition cursor-pointer"
+                >
+                  Coba Lagi
+                </button>
+                <Link
+                  href="/pengaturan"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-neutral-955 hover:bg-neutral-855 text-white font-semibold rounded text-[10px] transition cursor-pointer"
+                >
+                  <Settings className="h-3 w-3" />
+                  Atur API Key
+                </Link>
+              </div>
             </div>
           ) : (
             <DropdownAIExplanation text={explainText} />
@@ -407,16 +462,25 @@ export default function HasilPage() {
           ) : errorReferensi ? (
             /* Error state with retry */
             <div className="space-y-3 py-2">
-              <div className="flex items-center gap-2 text-red-600 text-xs">
+              <div className="flex items-center gap-2 text-red-655 text-xs">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{errorReferensi}</span>
               </div>
-              <button
-                onClick={fetchReferensi}
-                className="px-3 py-1.5 bg-white border border-neutral-250 hover:bg-neutral-50 text-neutral-950 font-semibold rounded text-[10px] transition cursor-pointer"
-              >
-                Coba Lagi
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={fetchReferensi}
+                  className="px-3 py-1.5 bg-white border border-neutral-250 hover:bg-neutral-50 text-neutral-950 font-semibold rounded text-[10px] transition cursor-pointer"
+                >
+                  Coba Lagi
+                </button>
+                <Link
+                  href="/pengaturan"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-neutral-955 hover:bg-neutral-855 text-white font-semibold rounded text-[10px] transition cursor-pointer"
+                >
+                  <Settings className="h-3 w-3" />
+                  Atur API Key
+                </Link>
+              </div>
             </div>
           ) : referensi.length === 0 ? (
             <p className="text-xs text-neutral-400">Tidak ada referensi tambahan untuk kerusakan ini.</p>
@@ -434,15 +498,30 @@ export default function HasilPage() {
                     {ref.relevansi && (
                       <p className="text-[10px] text-neutral-400 font-medium">Relevansi: {ref.relevansi}</p>
                     )}
-                    {ref.url && (
+                    {ref.url && ref.url.startsWith('http') ? (
                       <a
-                        href={ref.url.startsWith('http') ? ref.url : '#'}
+                        href={ref.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-[10px] text-neutral-600 hover:text-neutral-950 hover:underline block break-all font-mono mt-0.5"
                       >
                         {ref.url}
                       </a>
+                    ) : (
+                      <a
+                        href={`https://www.google.com/search?q=${encodeURIComponent(ref.judul + ' ' + (ref.penulis || ''))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-[9px] text-neutral-500 hover:text-neutral-950 hover:underline mt-1 font-bold bg-neutral-100/60 hover:bg-neutral-100 px-2 py-0.5 rounded transition-all duration-200"
+                      >
+                        <Search className="h-2.5 w-2.5 shrink-0" />
+                        <span>Cari Referensi ini di Google</span>
+                      </a>
+                    )}
+                    {ref.url && !ref.url.startsWith('http') && (
+                      <span className="text-[9px] text-neutral-400 block mt-0.5 font-medium">
+                        Sumber: {ref.url}
+                      </span>
                     )}
                   </div>
                 </li>
@@ -572,25 +651,25 @@ export default function HasilPage() {
 
 function parseAIExplanation(text) {
   if (!text) return [];
-  
+
   const blocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
   const parsed = [];
   let currentTitle = "";
-  
+
   const defaultTitles = [
     "Analisis Kerusakan",
     "Mekanisme & Dampak Teknis",
     "Rekomendasi Tindakan"
   ];
-  
+
   blocks.forEach((block) => {
-    const headerMatch = block.match(/^(?:###|##|\*\*|#)\s*(.*?)(?:\*\*|:)?\n([\s\S]*)$/m) 
-                     || block.match(/^(?:###|##|\*\*|#)\s*(.*)$/);
-                     
+    const headerMatch = block.match(/^(?:###|##|\*\*|#)\s*(.*?)(?:\*\*|:)?\n([\s\S]*)$/m)
+      || block.match(/^(?:###|##|\*\*|#)\s*(.*)$/);
+
     if (headerMatch) {
       const title = headerMatch[1].replace(/[\*\#\:]/g, '').trim();
       const content = headerMatch[2] ? headerMatch[2].trim() : "";
-      
+
       if (content) {
         parsed.push({ title, content });
       } else {
@@ -602,7 +681,7 @@ function parseAIExplanation(text) {
       currentTitle = "";
     }
   });
-  
+
   return parsed;
 }
 

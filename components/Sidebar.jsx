@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Laptop, Smartphone, Monitor, ClipboardList, Info, LogOut, User, Zap, ChevronLeft } from 'lucide-react';
+import { Home, Laptop, Smartphone, Monitor, ClipboardList, Info, LogOut, User, Zap, ChevronLeft, Settings } from 'lucide-react';
 
 export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }) {
   const pathname = usePathname();
@@ -29,6 +29,20 @@ export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }
   const handleLinkClick = () => {
     if (onCloseMobile) {
       onCloseMobile();
+    }
+  };
+
+  const handleGoHome = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('hasilDiagnosa');
+      sessionStorage.removeItem('pilihanSolusi');
+      sessionStorage.removeItem('aletheia_diagnosa_hasil');
+      sessionStorage.removeItem('aletheia_diagnosa_riwayat_id');
+      sessionStorage.removeItem('aletheia_diagnosa_selected_ids');
+      sessionStorage.removeItem('aletheia_diagnosa_device_name');
+      sessionStorage.removeItem('aletheia_diagnosa_device_slug');
+      sessionStorage.removeItem('aletheia_diagnosa_tambahan');
+      sessionStorage.removeItem('aletheia_diagnosa_solusi');
     }
   };
 
@@ -111,7 +125,7 @@ export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }
         <div className={`border-b border-neutral-100 flex items-center transition-all duration-300 ${
           isCollapsed ? 'h-[72px] justify-center px-0' : 'h-[72px] px-6 justify-between'
         }`}>
-          <Link href="/" onClick={handleLinkClick} className={getLogoClass()}>
+          <Link href="/" onClick={() => { handleGoHome(); handleLinkClick(); }} className={getLogoClass()}>
             <Zap className="h-5.5 w-5.5 text-neutral-950 fill-neutral-950 shrink-0" />
             {!isCollapsed && <span>ALETHEIA</span>}
           </Link>
@@ -122,7 +136,7 @@ export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }
           <nav className="space-y-1">
             <Link
               href="/"
-              onClick={handleLinkClick}
+              onClick={() => { handleGoHome(); handleLinkClick(); }}
               className={getLinkClass(pathname === '/')}
               title={isCollapsed ? "Beranda" : undefined}
             >
@@ -203,6 +217,16 @@ export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }
             >
               <Info className="h-4.5 w-4.5 shrink-0" />
               {!isCollapsed && <span>Tentang Sistem</span>}
+            </Link>
+
+            <Link
+              href="/pengaturan"
+              onClick={handleLinkClick}
+              className={getLinkClass(isPageActive('/pengaturan'))}
+              title={isCollapsed ? "Pengaturan API Key" : undefined}
+            >
+              <Settings className="h-4.5 w-4.5 shrink-0" />
+              {!isCollapsed && <span>Pengaturan API Key</span>}
             </Link>
           </nav>
         </div>
