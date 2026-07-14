@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import genAI from '@/lib/gemini';
 import { prisma } from '@/lib/prisma';
+import { generateCacheHash, getCachedAIResponse, setCachedAIResponse } from '@/lib/aiCache';
 
 export async function POST(request) {
   try {
@@ -19,6 +20,62 @@ export async function POST(request) {
       );
     }
 
+    // Resolusi kunci cache yang konsisten
+    let perangkatSlug = perangkat;
+    let kerusakanId = body.kerusakanId || '';
+    let sortedGejalaIds = [];
+
+    if (riwayatId) {
+      try {
+        const riwayat = await prisma.riwayat.findUnique({
+          where: { id: parseInt(riwayatId) },
+          include: { perangkat: true }
+        });
+        if (riwayat) {
+          if (riwayat.perangkat) perangkatSlug = riwayat.perangkat.slug;
+          if (riwayat.kerusakanId) kerusakanId = riwayat.kerusakanId;
+          if (riwayat.gejalaIds) {
+            try {
+              sortedGejalaIds = JSON.parse(riwayat.gejalaIds);
+            } catch (e) {
+              console.warn('Gagal parse gejalaIds dari riwayat:', e.message);
+            }
+          }
+        }
+      } catch (dbError) {
+        console.warn('Gagal mengambil data riwayat untuk cache:', dbError.message);
+      }
+    }
+
+    // Fallback jika tidak ada/gagal dari riwayat
+    if (!perangkatSlug && perangkat) perangkatSlug = perangkat;
+    if (!kerusakanId) kerusakanId = kerusakan;
+
+    // Generate hash cache
+    const cacheHash = generateCacheHash('servis', perangkatSlug, kerusakanId, sortedGejalaIds);
+
+    // Cek cache
+    const cachedResponse = await getCachedAIResponse(cacheHash);
+    if (cachedResponse) {
+      if (riwayatId) {
+        try {
+          await prisma.riwayat.update({
+            where: { id: parseInt(riwayatId) },
+            data: { solusiType: 'servis', hasilAI: cachedResponse.guide }
+          });
+        } catch (dbError) {
+          console.warn('Gagal update riwayat dengan data cache:', dbError.message);
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        data: cachedResponse.data,
+        guide: cachedResponse.guide,
+        cached: true
+      });
+    }
+
     // System + User prompt sesuai spesifikasi Phase 4
     const systemInstruction = `Kamu adalah teknisi elektronik. Berikan informasi servis dalam format JSON valid. Gunakan web search untuk harga terkini di Indonesia tahun 2024-2025. Jawab HANYA dengan JSON.`;
 
@@ -33,6 +90,7 @@ Berikan dalam format JSON:
 
     let servisData = null;
     let guideMarkdown = '';
+    let isFallbackUsed = false;
 
     try {
       if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('xxxx')) {
@@ -63,6 +121,7 @@ Berikan dalam format JSON:
       }
     } catch (aiError) {
       console.warn('AI Servis generation gagal, menggunakan fallback:', aiError.message);
+      isFallbackUsed = true;
     }
 
     // Fallback data jika AI gagal atau belum dikonfigurasi
@@ -135,10 +194,19 @@ ${servisData.tipsCariServis.map(t => `- ${t}`).join('\n')}
       }
     }
 
+    const responseObj = {
+      data: servisData,
+      guide: guideMarkdown
+    };
+
+    // HANYA simpan ke cache jika tidak menggunakan fallback simulasi
+    if (!isFallbackUsed) {
+      await setCachedAIResponse(cacheHash, 'servis', perangkatSlug, responseObj);
+    }
+
     return NextResponse.json({
       success: true,
-      data: servisData,
-      guide: guideMarkdown  // backward compat dengan PanduanServis.jsx
+      ...responseObj
     });
 
   } catch (error) {
@@ -149,3 +217,4 @@ ${servisData.tipsCariServis.map(t => `- ${t}`).join('\n')}
     );
   }
 }
+

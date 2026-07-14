@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import genAI from '@/lib/gemini';
 import { prisma } from '@/lib/prisma';
+import { generateCacheHash, getCachedAIResponse, setCachedAIResponse } from '@/lib/aiCache';
 
 export async function POST(request) {
   try {
@@ -21,6 +22,65 @@ export async function POST(request) {
       );
     }
 
+    // Resolusi kunci cache yang konsisten
+    let perangkatSlug = perangkat;
+    let kerusakanId = body.kerusakanId || '';
+    let sortedGejalaIds = [];
+
+    if (riwayatId) {
+      try {
+        const riwayat = await prisma.riwayat.findUnique({
+          where: { id: parseInt(riwayatId) },
+          include: { perangkat: true }
+        });
+        if (riwayat) {
+          if (riwayat.perangkat) perangkatSlug = riwayat.perangkat.slug;
+          if (riwayat.kerusakanId) kerusakanId = riwayat.kerusakanId;
+          if (riwayat.gejalaIds) {
+            try {
+              sortedGejalaIds = JSON.parse(riwayat.gejalaIds);
+            } catch (e) {
+              console.warn('Gagal parse gejalaIds dari riwayat:', e.message);
+            }
+          }
+        }
+      } catch (dbError) {
+        console.warn('Gagal mengambil data riwayat untuk cache:', dbError.message);
+      }
+    }
+
+    // Fallback jika tidak ada/gagal dari riwayat
+    if (!perangkatSlug && perangkat) perangkatSlug = perangkat;
+    if (!kerusakanId) kerusakanId = kerusakan;
+    if (sortedGejalaIds.length === 0 && gejalaCocok.length > 0) {
+      sortedGejalaIds = gejalaCocok;
+    }
+
+    // Generate hash cache
+    const cacheHash = generateCacheHash('explain', perangkatSlug, kerusakanId, sortedGejalaIds);
+
+    // Cek cache
+    const cachedResponse = await getCachedAIResponse(cacheHash);
+    if (cachedResponse) {
+      if (riwayatId) {
+        try {
+          await prisma.riwayat.update({
+            where: { id: parseInt(riwayatId) },
+            data: { hasilAI: cachedResponse.penjelasan }
+          });
+        } catch (dbError) {
+          console.warn('Gagal update riwayat dengan data cache:', dbError.message);
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        penjelasan: cachedResponse.penjelasan,
+        explanation: cachedResponse.explanation,
+        cached: true
+      });
+    }
+
     const gejalaFormatted = gejalaCocok.length > 0
       ? gejalaCocok.map(g => `- ${g}`).join('\n')
       : 'Gejala tidak disebutkan secara spesifik.';
@@ -37,6 +97,7 @@ ${gejalaFormatted}
 Jelaskan kenapa kerusakan ini bisa terjadi.`;
 
     let penjelasan = '';
+    let isFallbackUsed = false;
 
     try {
       if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('xxxx')) {
@@ -52,6 +113,7 @@ Jelaskan kenapa kerusakan ini bisa terjadi.`;
       penjelasan = result.response.text();
     } catch (aiError) {
       console.warn('AI Explain generation gagal, menggunakan fallback:', aiError.message);
+      isFallbackUsed = true;
 
       // Fallback simulasi jika API key belum dikonfigurasi
       penjelasan = `### Analisis Teknis: ${kerusakan}
@@ -75,10 +137,19 @@ Disarankan untuk segera melakukan pemeriksaan menggunakan multimeter pada jalur 
       }
     }
 
+    const responseObj = {
+      penjelasan: penjelasan,
+      explanation: penjelasan
+    };
+
+    // HANYA simpan ke cache jika tidak menggunakan fallback simulasi
+    if (!isFallbackUsed) {
+      await setCachedAIResponse(cacheHash, 'explain', perangkatSlug, responseObj);
+    }
+
     return NextResponse.json({
       success: true,
-      penjelasan: penjelasan,
-      explanation: penjelasan  // backward compat dengan HasilDiagnosa.jsx
+      ...responseObj
     });
 
   } catch (error) {
@@ -89,3 +160,4 @@ Disarankan untuk segera melakukan pemeriksaan menggunakan multimeter pada jalur 
     );
   }
 }
+

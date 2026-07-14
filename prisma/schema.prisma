@@ -92,3 +92,13 @@ model User {
   password  String   @db.VarChar(255)
   createdAt DateTime @default(now())
 }
+
+model AICache {
+  id        Int      @id @default(autoincrement())
+  hash      String   @unique @db.VarChar(64)
+  type      String   @db.VarChar(20) // 'explain', 'mandiri', 'servis'
+  perangkat String   @db.VarChar(100)
+  response  String   @db.LongText
+  createdAt DateTime @default(now())
+}
+

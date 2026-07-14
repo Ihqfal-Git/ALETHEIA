@@ -54,6 +54,8 @@ Format JSON:
   }
 ]`;
 
+    let isFallbackUsed = false;
+
     try {
       if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('xxxx')) {
         throw new Error('API_KEY_PLACEHOLDER');
@@ -86,6 +88,7 @@ Format JSON:
       }
     } catch (aiError) {
       console.warn('AI Referensi generation gagal, menggunakan fallback:', aiError.message);
+      isFallbackUsed = true;
     }
 
     // Fallback jika AI gagal
@@ -116,21 +119,24 @@ Format JSON:
     }
 
     // ========== STEP 3: Simpan hasil AI ke database ==========
-    try {
-      const dataToInsert = referensiAI.map(ref => ({
-        kerusakanId: kerusakanId,
-        judul: ref.judul || 'Referensi',
-        penulis: ref.penulis || null,
-        tahun: ref.tahun || null,
-        url: ref.url || null,
-        sumber: 'ai'
-      }));
+    if (!isFallbackUsed) {
+      try {
+        const dataToInsert = referensiAI.map(ref => ({
+          kerusakanId: kerusakanId,
+          judul: ref.judul || 'Referensi',
+          penulis: ref.penulis || null,
+          tahun: ref.tahun || null,
+          url: ref.url || null,
+          sumber: 'ai'
+        }));
 
-      await prisma.referensi.createMany({ data: dataToInsert });
-    } catch (dbError) {
-      console.warn('Gagal menyimpan referensi AI ke DB:', dbError.message);
-      // Tetap lanjutkan — user masih mendapat data meski tidak tersimpan
+        await prisma.referensi.createMany({ data: dataToInsert });
+      } catch (dbError) {
+        console.warn('Gagal menyimpan referensi AI ke DB:', dbError.message);
+        // Tetap lanjutkan — user masih mendapat data meski tidak tersimpan
+      }
     }
+
 
     // ========== STEP 4: Return referensi ==========
     // Format output agar konsisten dengan frontend (tambahkan sumber: 'ai')

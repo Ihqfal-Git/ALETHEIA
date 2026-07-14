@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import genAI from '@/lib/gemini';
 import { prisma } from '@/lib/prisma';
+import { generateCacheHash, getCachedAIResponse, setCachedAIResponse } from '@/lib/aiCache';
 
 export async function POST(request) {
   try {
@@ -17,6 +18,62 @@ export async function POST(request) {
         { success: false, error: 'Parameter kerusakan wajib diisi.' },
         { status: 400 }
       );
+    }
+
+    // Resolusi kunci cache yang konsisten
+    let perangkatSlug = perangkat;
+    let kerusakanId = body.kerusakanId || '';
+    let sortedGejalaIds = [];
+
+    if (riwayatId) {
+      try {
+        const riwayat = await prisma.riwayat.findUnique({
+          where: { id: parseInt(riwayatId) },
+          include: { perangkat: true }
+        });
+        if (riwayat) {
+          if (riwayat.perangkat) perangkatSlug = riwayat.perangkat.slug;
+          if (riwayat.kerusakanId) kerusakanId = riwayat.kerusakanId;
+          if (riwayat.gejalaIds) {
+            try {
+              sortedGejalaIds = JSON.parse(riwayat.gejalaIds);
+            } catch (e) {
+              console.warn('Gagal parse gejalaIds dari riwayat:', e.message);
+            }
+          }
+        }
+      } catch (dbError) {
+        console.warn('Gagal mengambil data riwayat untuk cache:', dbError.message);
+      }
+    }
+
+    // Fallback jika tidak ada/gagal dari riwayat
+    if (!perangkatSlug && perangkat) perangkatSlug = perangkat;
+    if (!kerusakanId) kerusakanId = kerusakan;
+
+    // Generate hash cache
+    const cacheHash = generateCacheHash('mandiri', perangkatSlug, kerusakanId, sortedGejalaIds);
+
+    // Cek cache
+    const cachedResponse = await getCachedAIResponse(cacheHash);
+    if (cachedResponse) {
+      if (riwayatId) {
+        try {
+          await prisma.riwayat.update({
+            where: { id: parseInt(riwayatId) },
+            data: { solusiType: 'mandiri', hasilAI: cachedResponse.guide }
+          });
+        } catch (dbError) {
+          console.warn('Gagal update riwayat dengan data cache:', dbError.message);
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        data: cachedResponse.data,
+        guide: cachedResponse.guide,
+        cached: true
+      });
     }
 
     // System + User prompt sesuai spesifikasi Phase 4
@@ -36,6 +93,7 @@ Berikan dalam format JSON:
 
     let mandiriData = null;
     let guideMarkdown = '';
+    let isFallbackUsed = false;
 
     try {
       if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('xxxx')) {
@@ -64,6 +122,7 @@ Berikan dalam format JSON:
       }
     } catch (aiError) {
       console.warn('AI Mandiri generation gagal, menggunakan fallback:', aiError.message);
+      isFallbackUsed = true;
     }
 
     // Fallback data jika AI gagal atau belum dikonfigurasi
@@ -87,7 +146,7 @@ Berikan dalam format JSON:
           { nomor: 2, judul: 'Buka Casing dengan Hati-hati', detail: 'Gunakan obeng presisi untuk melepas sekrup casing. Gunakan spudger plastik untuk mencongkel clip pengunci casing. Jangan gunakan alat logam yang bisa merusak atau menyebabkan short circuit.' },
           { nomor: 3, judul: 'Identifikasi Komponen Bermasalah', detail: 'Periksa visual terlebih dahulu — cari tanda hangus, kapasitor kembung, kabel putus, atau korosi. Gunakan multimeter untuk mengecek tegangan pada titik-titik kritis sesuai skema servis.' },
           { nomor: 4, judul: 'Bersihkan Komponen Kontak', detail: 'Lepas modul RAM, kartu WiFi, atau konektor yang bisa dilepas. Bersihkan pin kontak menggunakan penghapus pensil putih, lalu lap dengan kain microfiber yang diberi sedikit IPA.' },
-          { nomor: 5, judul: 'Rakit Kembali dan Uji Coba', detail: 'Pasang kembali semua komponen dengan posisi yang benar hingga terkunci sempurna. Pasang baterai dan casing. Sambungkan ke power dan nyalakan perangkat untuk menguji hasil perbaikan.' }
+          { nomor: 5, judul: 'Rakit Kembali dan Uji Coba', detail: 'Pasang kembali semua komponen dengan posisi yang benar hingga terkunci sempurna. Pasang baterai dan casing. Sambungkan to power dan nyalakan perangkat untuk menguji hasil perbaikan.' }
         ],
         estimasiBiayaTotal: { min: 20000, max: 150000, satuan: 'Rp' },
         estimasiWaktu: '30 menit - 2 jam',
@@ -157,10 +216,19 @@ ${mandiriData.peringatan.map(p => `- ⚠️ ${p}`).join('\n')}`;
       }
     }
 
+    const responseObj = {
+      data: mandiriData,
+      guide: guideMarkdown
+    };
+
+    // HANYA simpan ke cache jika tidak menggunakan fallback simulasi
+    if (!isFallbackUsed) {
+      await setCachedAIResponse(cacheHash, 'mandiri', perangkatSlug, responseObj);
+    }
+
     return NextResponse.json({
       success: true,
-      data: mandiriData,
-      guide: guideMarkdown  // backward compat dengan PanduanMandiri.jsx
+      ...responseObj
     });
 
   } catch (error) {
@@ -171,3 +239,4 @@ ${mandiriData.peringatan.map(p => `- ⚠️ ${p}`).join('\n')}`;
     );
   }
 }
+
