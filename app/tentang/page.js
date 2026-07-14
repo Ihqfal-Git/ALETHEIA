@@ -104,18 +104,6 @@ export default function TentangPage() {
           ))}
         </div>
       </div>
-
-      {/* Sticky Home Button Footer */}
-      <div className="fixed bottom-16 md:bottom-0 left-0 md:left-[240px] right-0 border-t border-neutral-200 bg-white/95 backdrop-blur py-4 px-4 sm:px-6 md:px-12 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center">
-        <Link 
-          href="/" 
-          className="inline-flex items-center justify-center h-[42px] w-[42px] sm:w-auto sm:px-4 sm:gap-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 hover:text-neutral-950 transition-colors shadow-sm shrink-0"
-          title="Kembali ke Beranda"
-        >
-          <Home className="h-4.5 w-4.5 sm:h-4 sm:w-4" />
-          <span className="hidden sm:block text-xs font-bold">Home</span>
-        </Link>
-      </div>
     </div>
   );
 }
