@@ -41,3 +41,11 @@ next-env.d.ts
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Project Reports and CSV Data Exports
+/Daftar_Gejala*.csv
+/Daftar_Aturan_Pakar*.csv
+/Laporan_Proyek_ALETHEIA.doc
+/Laporan_Proyek_ALETHEIA_files/
+/scratch/
+/~$*.doc

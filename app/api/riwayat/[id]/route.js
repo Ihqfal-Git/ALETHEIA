@@ -38,7 +38,7 @@ export async function PATCH(request, { params }) {
     }
 
     const body = await request.json();
-    const { status, solusiType } = body;
+    const { status, solusiType, progressLangkah } = body;
 
     // Bangun object data dinamis
     const dataToUpdate = {};
@@ -47,6 +47,9 @@ export async function PATCH(request, { params }) {
     }
     if (solusiType !== undefined) {
       dataToUpdate.solusiType = solusiType;
+    }
+    if (progressLangkah !== undefined) {
+      dataToUpdate.progressLangkah = progressLangkah;
     }
 
     const updatedRiwayat = await prisma.riwayat.update({
