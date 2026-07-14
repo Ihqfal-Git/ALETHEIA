@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import genAI from '@/lib/gemini';
+import genAI, { getGenAI } from '@/lib/gemini';
 import { prisma } from '@/lib/prisma';
 import { generateCacheHash, getCachedAIResponse, setCachedAIResponse } from '@/lib/aiCache';
 
@@ -96,12 +96,16 @@ Berikan dalam format JSON:
     let isFallbackUsed = false;
 
     try {
-      if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('xxxx')) {
+      const customKey = request.headers.get('x-gemini-api-key') || null;
+      const activeKey = customKey || process.env.GEMINI_API_KEY || '';
+
+      if (!activeKey || activeKey.includes('xxxx')) {
         throw new Error('API_KEY_PLACEHOLDER');
       }
 
-      const model = genAI.getGenerativeModel({
-        model: 'gemini-2.0-flash',
+      const genAIInstance = getGenAI(customKey);
+      const model = genAIInstance.getGenerativeModel({
+        model: 'gemini-flash-latest',
         systemInstruction: systemInstruction,
         tools: [{ googleSearch: {} }]
       });
@@ -228,7 +232,8 @@ ${mandiriData.peringatan.map(p => `- ⚠️ ${p}`).join('\n')}`;
 
     return NextResponse.json({
       success: true,
-      ...responseObj
+      ...responseObj,
+      fallback: isFallbackUsed
     });
 
   } catch (error) {

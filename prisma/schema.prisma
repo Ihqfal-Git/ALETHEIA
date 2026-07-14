@@ -80,8 +80,9 @@ model Riwayat {
   gejalaIds   String     @db.Text
   solusiType  String?    // 'servis' atau 'mandiri'
   hasilAI     String?    @db.Text
-  status      String     @default("proses") // 'proses', 'berhasil', 'gagal'
-  createdAt   DateTime   @default(now())
+  status          String     @default("proses") // 'proses', 'berhasil', 'gagal'
+  progressLangkah String?    @db.Text           // Simpan langkah yang dicentang (JSON string array)
+  createdAt       DateTime   @default(now())
   perangkat   Perangkat  @relation(fields: [perangkatId], references: [id], onDelete: Cascade)
   kerusakan   Kerusakan? @relation(fields: [kerusakanId], references: [id], onDelete: SetNull)
 }

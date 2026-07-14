@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import genAI from '@/lib/gemini';
+import genAI, { getGenAI } from '@/lib/gemini';
 import { prisma } from '@/lib/prisma';
 import { generateCacheHash, getCachedAIResponse, setCachedAIResponse } from '@/lib/aiCache';
 
@@ -100,19 +100,26 @@ Jelaskan kenapa kerusakan ini bisa terjadi.`;
     let isFallbackUsed = false;
 
     try {
-      if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('xxxx')) {
+      const customKey = request.headers.get('x-gemini-api-key') || null;
+      const activeKey = customKey || process.env.GEMINI_API_KEY || '';
+
+      console.log('[AI Explain] Menggunakan API Key:', activeKey ? `${activeKey.substring(0, 8)}...` : 'KOSONG');
+
+      if (!activeKey || activeKey.includes('xxxx')) {
         throw new Error('API_KEY_PLACEHOLDER');
       }
 
-      const model = genAI.getGenerativeModel({
-        model: 'gemini-2.0-flash',
+      const genAIInstance = getGenAI(customKey);
+      const model = genAIInstance.getGenerativeModel({
+        model: 'gemini-flash-latest',
         systemInstruction: systemInstruction
       });
 
       const result = await model.generateContent(userPrompt);
       penjelasan = result.response.text();
+      console.log('[AI Explain] Sukses mendapatkan respon dari Gemini!');
     } catch (aiError) {
-      console.warn('AI Explain generation gagal, menggunakan fallback:', aiError.message);
+      console.error('[AI Explain] Gagal melakukan generate:', aiError);
       isFallbackUsed = true;
 
       // Fallback simulasi jika API key belum dikonfigurasi
@@ -149,7 +156,8 @@ Disarankan untuk segera melakukan pemeriksaan menggunakan multimeter pada jalur 
 
     return NextResponse.json({
       success: true,
-      ...responseObj
+      ...responseObj,
+      fallback: isFallbackUsed
     });
 
   } catch (error) {

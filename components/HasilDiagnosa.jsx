@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, Cpu, ArrowRight, BookOpen, AlertCircle, Wrench } from 'lucide-react';
+import { ShieldCheck, Cpu, ArrowRight, BookOpen, AlertCircle, Wrench, Settings } from 'lucide-react';
 
 export default function HasilDiagnosa({ hasil, riwayatId, selectedGejalaIds }) {
   const [explanation, setExplanation] = useState('');
@@ -144,10 +144,19 @@ export default function HasilDiagnosa({ hasil, riwayatId, selectedGejalaIds }) {
             )}
 
             {errorAI && (
-              <p className="text-rose-400 text-xs mt-2 flex items-center gap-1.5">
-                <AlertCircle className="h-3.5 w-3.5" />
-                {errorAI}
-              </p>
+              <div className="mt-2.5 space-y-2">
+                <p className="text-rose-400 text-xs flex items-center gap-1.5">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  <span>{errorAI}</span>
+                </p>
+                <Link
+                  href="/pengaturan"
+                  className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-bold transition"
+                >
+                  <Settings className="h-3.5 w-3.5" />
+                  <span>Ganti / Atur API Key Gemini Mandiri</span>
+                </Link>
+              </div>
             )}
           </div>
         </div>
