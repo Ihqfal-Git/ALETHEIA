@@ -197,13 +197,11 @@ export default function HasilPage() {
       if (data.success) {
         let refs = data.referensi || [];
         
-        // Cek apakah ada gejala BIOS (P03 / P04) atau aturan RAM/Motherboard (P002 / P005)
+        // 1. BIOS Beep Code / POST issues (Intel)
         const hasBiosSymptom = selectedIds.includes('P03') || selectedIds.includes('P04');
         const isRamOrMotherboardRule = primaryMatch.ruleId === 'P002' || primaryMatch.ruleId === 'P005';
-        
         if (hasBiosSymptom || isRamOrMotherboardRule) {
-          const alreadyExists = refs.some(r => r.url && r.url.includes('intel.co.id'));
-          if (!alreadyExists) {
+          if (!refs.some(r => r.url && r.url.includes('intel.co.id'))) {
             refs = [
               {
                 judul: 'Mengidentifikasi Kode Beep BIOS Komputer',
@@ -211,6 +209,74 @@ export default function HasilPage() {
                 tahun: 2024,
                 url: 'https://www.intel.co.id/content/www/id/id/search.html#q=Mengidentifikasi%20Kode%20Beep%20BIOS%20Komputer',
                 relevansi: 'Panduan pencarian dan penyelesaian masalah kode bunyi beep motherboard Intel'
+              },
+              ...refs
+            ];
+          }
+        }
+
+        // 2. Windows BSOD / OS Corrupt (Microsoft)
+        const isWindowsCorrupt = primaryMatch.ruleId === 'P007' || selectedIds.includes('P11') || selectedIds.includes('P14');
+        if (isWindowsCorrupt) {
+          if (!refs.some(r => r.url && r.url.includes('support.microsoft.com'))) {
+            refs = [
+              {
+                judul: 'Menyelesaikan Kesalahan Layar Biru (BSOD) di Windows',
+                penulis: 'Microsoft Support',
+                tahun: 2024,
+                url: 'https://support.microsoft.com/id-id/windows/menyelesaikan-kesalahan-layar-biru-di-windows-60b01860-58f2-be66-7516-5c45a66ae3c6',
+                relevansi: 'Panduan resmi penyelesaian masalah layar biru dan kegagalan booting Windows'
+              },
+              ...refs
+            ];
+          }
+        }
+
+        // 3. Laptop Battery / Power issues (HP Support)
+        const isBatteryLaptop = primaryMatch.ruleId === 'L002' || selectedIds.includes('L02') || selectedIds.includes('L03');
+        if (isBatteryLaptop) {
+          if (!refs.some(r => r.url && r.url.includes('support.hp.com'))) {
+            refs = [
+              {
+                judul: 'Pengujian dan Kalibrasi Baterai Laptop HP',
+                penulis: 'HP Customer Support',
+                tahun: 2024,
+                url: 'https://support.hp.com/id-id/document/ish_4465457-4347714-16',
+                relevansi: 'Panduan resmi kalibrasi dan cek kesehatan baterai laptop'
+              },
+              ...refs
+            ];
+          }
+        }
+
+        // 4. Smartphone Battery Swelling / Care (Samsung Support)
+        const isBatteryPhone = primaryMatch.ruleId === 'H001' || selectedIds.includes('H02') || selectedIds.includes('H04');
+        if (isBatteryPhone) {
+          if (!refs.some(r => r.url && r.url.includes('samsung.com/id'))) {
+            refs = [
+              {
+                judul: 'Tips Perawatan dan Pengisian Daya Baterai Handphone',
+                penulis: 'Samsung Indonesia Support',
+                tahun: 2024,
+                url: 'https://www.samsung.com/id/support/mobile-devices/battery-tips/',
+                relevansi: 'Tips resmi menjaga kesehatan baterai lithium ponsel dari degradasi'
+              },
+              ...refs
+            ];
+          }
+        }
+
+        // 5. Storage / HDD / SSD bad blocks (Kingston Support)
+        const isStorageIssue = primaryMatch.ruleId === 'P004' || primaryMatch.ruleId === 'L007' || selectedIds.includes('P12') || selectedIds.includes('L13');
+        if (isStorageIssue) {
+          if (!refs.some(r => r.url && r.url.includes('kingston.com'))) {
+            refs = [
+              {
+                judul: 'Memonitor Kesehatan Solid State Drive (SSD) via SSD Manager',
+                penulis: 'Kingston Technology',
+                tahun: 2024,
+                url: 'https://www.kingston.com/en/support/technical/ssdmanager',
+                relevansi: 'Utilitas resmi diagnosa bad block, update firmware, dan kesehatan media penyimpanan'
               },
               ...refs
             ];
