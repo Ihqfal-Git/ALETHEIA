@@ -378,7 +378,7 @@ export default function RiwayatPage() {
   }
 
 
-  const handleExportToWord = (item) => {
+  const handleExportToPDF = (item) => {
     const device = deviceMapping[item.perangkat?.slug];
     const dateFormatted = new Date(item.createdAt).toLocaleDateString('id-ID', {
       day: 'numeric',
@@ -392,107 +392,172 @@ export default function RiwayatPage() {
     let solusiHTML = '';
     if (item.solusiType === 'mandiri' && mandiriData) {
       solusiHTML = `
-        <h3>Panduan Perbaikan Mandiri (DIY)</h3>
-        <p><strong>Tingkat Kesulitan:</strong> ${mandiriData.tingkatKesulitan || 'Menengah'}</p>
-        <p><strong>Estimasi Waktu:</strong> ${mandiriData.estimasiWaktu || '30 - 60 menit'}</p>
-        <p><strong>Estimasi Biaya Total:</strong> Rp ${mandiriData.estimasiBiayaTotal?.min?.toLocaleString('id-ID')} - Rp ${mandiriData.estimasiBiayaTotal?.max?.toLocaleString('id-ID')}</p>
-        
-        <h4>Alat yang Dibutuhkan:</h4>
-        <ul>
-          ${(mandiriData.alat || []).map(a => `<li><strong>${a.nama}</strong>: ${a.fungsi}</li>`).join('')}
-        </ul>
-        
-        <h4>Bahan yang Dibutuhkan:</h4>
-        <ul>
-          ${(mandiriData.bahan || []).map(b => `<li><strong>${b.nama}</strong> (Estimasi: ${b.estimasiHarga})</li>`).join('')}
-        </ul>
-        
-        <h4>Langkah-Langkah Perbaikan:</h4>
-        <ol>
-          ${(mandiriData.langkah || []).map((step, idx) => {
-            const stepNum = step.nomor || idx + 1;
-            const isChecked = checkedSteps.includes(stepNum);
-            return `<li>[${isChecked ? '✓' : ' '}] <strong>${step.judul}</strong>: ${step.detail}</li>`;
-          }).join('')}
-        </ol>
+        <div class="section">
+          <h3>Panduan Perbaikan Mandiri (DIY)</h3>
+          <table class="info-table">
+            <tr>
+              <td class="label">Tingkat Kesulitan</td>
+              <td>${mandiriData.tingkatKesulitan || 'Menengah'}</td>
+            </tr>
+            <tr>
+              <td class="label">Estimasi Waktu</td>
+              <td>${mandiriData.estimasiWaktu || '30 - 60 menit'}</td>
+            </tr>
+            <tr>
+              <td class="label">Estimasi Biaya Total</td>
+              <td>Rp ${mandiriData.estimasiBiayaTotal?.min?.toLocaleString('id-ID')} - Rp ${mandiriData.estimasiBiayaTotal?.max?.toLocaleString('id-ID')}</td>
+            </tr>
+          </table>
+          
+          <h4>Alat yang Dibutuhkan:</h4>
+          <ul>
+            ${(mandiriData.alat || []).map(a => `<li><strong>${a.nama}</strong>: ${a.fungsi}</li>`).join('')}
+          </ul>
+          
+          <h4>Bahan & Komponen:</h4>
+          <ul>
+            ${(mandiriData.bahan || []).map(b => `<li><strong>${b.nama}</strong> (Estimasi: ${b.estimasiHarga})</li>`).join('')}
+          </ul>
+          
+          <h4>Langkah-Langkah Perbaikan:</h4>
+          <ol>
+            ${(mandiriData.langkah || []).map((step, idx) => {
+              const stepNum = step.nomor || idx + 1;
+              const isChecked = checkedSteps.includes(stepNum);
+              return `<li>[${isChecked ? '✓' : ' '}] <strong>${step.judul}</strong> — <span style="color:#64748b;">${step.detail}</span></li>`;
+            }).join('')}
+          </ol>
+        </div>
       `;
     } else if (item.hasilAI) {
       solusiHTML = `
-        <h3>Panduan & Penjelasan AI</h3>
-        <div style="font-size: 11pt; line-height: 1.5; text-align: justify; white-space: pre-wrap;">
-          ${item.hasilAI.replace(/###/g, '<h4>').replace(/##/g, '<h3>').replace(/\n/g, '<br/>')}
+        <div class="section">
+          <h3>Panduan & Penjelasan AI</h3>
+          <div style="font-size: 10pt; line-height: 1.6; text-align: justify; white-space: pre-wrap; color:#334155;">
+            ${item.hasilAI.replace(/###/g, '<h4>').replace(/##/g, '<h3>').replace(/\n/g, '<br/>')}
+          </div>
         </div>
       `;
     }
 
-    const htmlContent = `
-<html xmlns:o="urn:schemas-microsoft-com:office:office" 
-      xmlns:w="urn:schemas-microsoft-com:office:word" 
-      xmlns="http://www.w3.org/TR/REC-html40">
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Mohon izinkan pop-up untuk mencetak laporan.');
+      return;
+    }
+
+    printWindow.document.write(`
+<html>
 <head>
   <meta charset="utf-8">
-  <title>Laporan Diagnosa ALETHEIA</title>
+  <title>Laporan_Diagnosa_${item.perangkat?.nama.replace(/\s+/g, '_')}_${item.id}</title>
   <style>
+    @media print {
+      body {
+        margin: 1.6cm;
+        -webkit-print-color-adjust: exact;
+      }
+      .no-print {
+        display: none;
+      }
+    }
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Segoe UI', system-ui, sans-serif;
       font-size: 11pt;
-      line-height: 1.5;
-      color: #111111;
+      line-height: 1.6;
+      color: #1e293b;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
     }
-    h1 {
-      font-size: 18pt;
+    .header-block {
+      border-bottom: 3px solid #0f172a;
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .brand {
+      font-size: 20pt;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: #0f172a;
+    }
+    .title-doc {
+      font-size: 10pt;
       font-weight: bold;
-      color: #0b0f19;
-      border-bottom: 2px solid #e5e7eb;
-      padding-bottom: 5px;
-      margin-bottom: 15px;
-    }
-    h3 {
-      font-size: 13pt;
-      font-weight: bold;
-      color: #1f2937;
-      margin-top: 20px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid #f3f4f6;
-      padding-bottom: 3px;
-    }
-    h4 {
-      font-size: 11pt;
-      font-weight: bold;
-      color: #374151;
-      margin-top: 15px;
-      margin-bottom: 5px;
-    }
-    p {
-      margin-bottom: 8px;
-      text-align: justify;
-    }
-    ul, ol {
-      margin-bottom: 8px;
-      padding-left: 20px;
-    }
-    li {
-      margin-bottom: 3px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .info-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
     .info-table td {
-      padding: 8px 12px;
-      border: 1px solid #e5e7eb;
+      padding: 10px 14px;
+      border: 1px solid #e2e8f0;
       font-size: 10pt;
     }
     .info-table td.label {
       font-weight: bold;
-      background-color: #f9fafb;
+      background-color: #f8fafc;
+      color: #475569;
       width: 30%;
+    }
+    .section {
+      margin-bottom: 24px;
+    }
+    h3 {
+      font-size: 12pt;
+      font-weight: bold;
+      color: #0f172a;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+    h4 {
+      font-size: 10pt;
+      font-weight: bold;
+      color: #334155;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 10px;
+      text-align: justify;
+      font-size: 10pt;
+    }
+    ul, ol {
+      margin-top: 0;
+      margin-bottom: 10px;
+      padding-left: 20px;
+      font-size: 10pt;
+    }
+    li {
+      margin-bottom: 5px;
+    }
+    .footer {
+      border-top: 1px solid #e2e8f0;
+      margin-top: 40px;
+      padding-top: 15px;
+      font-size: 8.5pt;
+      color: #94a3b8;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <h1>LAPORAN DIAGNOSA PERANGKAT ELEKTRONIK</h1>
+  <div class="header-block">
+    <span class="brand">ALETHEIA</span>
+    <span class="title-doc">Laporan Diagnosa Perangkat</span>
+  </div>
   
   <table class="info-table">
     <tr>
@@ -521,33 +586,34 @@ export default function RiwayatPage() {
     </tr>
   </table>
 
-  <h3>Gejala yang Dilaporkan</h3>
-  <ul>
-    ${symptomList.map(s => `<li>${s}</li>`).join('')}
-  </ul>
+  <div class="section">
+    <h3>Gejala yang Dilaporkan</h3>
+    <ul>
+      ${symptomList.map(s => `<li>${s}</li>`).join('')}
+    </ul>
+  </div>
 
-  <h3>Deskripsi Kerusakan</h3>
-  <p>${item.kerusakan?.deskripsi || 'Pattern tidak mencocokkan aturan pakar statis.'}</p>
+  <div class="section">
+    <h3>Deskripsi Kerusakan</h3>
+    <p>${item.kerusakan?.deskripsi || 'Pattern tidak mencocokkan aturan pakar statis.'}</p>
+  </div>
 
   ${solusiHTML}
 
-  <hr style="border:none; border-top:1px solid #e5e7eb; margin-top:40px;" />
-  <p style="font-size:9pt; color:#9ca3af; text-align:center;">Laporan ini dibuat otomatis oleh ALETHEIA (Sistem Pakar Diagnosa Perangkat Elektronik)</p>
+  <div class="footer">
+    Laporan ini dibuat otomatis oleh ALETHEIA (Sistem Pakar Diagnosa Perangkat Elektronik)
+  </div>
+
+  <script>
+    window.onload = function() {
+      window.print();
+      setTimeout(function() { window.close(); }, 500);
+    };
+  </script>
 </body>
 </html>
-    `;
-
-    const blob = new Blob(['\ufeff' + htmlContent], {
-      type: 'application/msword;charset=utf-8'
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Laporan_Diagnosa_${item.perangkat?.nama.replace(/\s+/g, '_')}_${item.id}.doc`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    `);
+    printWindow.document.close();
   };
 
   // JIKA TAMPILAN DETAIL AKTIF (REPLACE VIEW)
@@ -588,11 +654,11 @@ export default function RiwayatPage() {
             </p>
           </div>
           <button
-            onClick={() => handleExportToWord(item)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white font-bold rounded-xl text-xs tracking-wide shadow transition cursor-pointer shrink-0 self-start sm:self-center"
+            onClick={() => handleExportToPDF(item)}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white font-bold rounded-lg text-xs tracking-wide shadow transition cursor-pointer shrink-0 self-start sm:self-center"
           >
             <Download className="h-4 w-4" />
-            Unduh Laporan (.doc)
+            Cetak Laporan (PDF)
           </button>
         </div>
 
