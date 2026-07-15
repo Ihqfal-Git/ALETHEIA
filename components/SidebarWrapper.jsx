@@ -114,7 +114,7 @@ export default function SidebarWrapper({ children }) {
       </div>
 
       {/* Sidebar untuk Desktop */}
-      <div className={`hidden md:block sticky top-0 left-0 transition-all duration-300 shrink-0 border-r border-neutral-200 bg-white h-screen ${
+      <div className={`hidden md:block sticky top-0 left-0 transition-all duration-300 shrink-0 border-r border-neutral-200 bg-white h-screen z-40 ${
         isSidebarCollapsed ? 'w-[72px]' : 'w-[240px]'
       }`}>
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
