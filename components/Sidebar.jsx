@@ -177,12 +177,12 @@ export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }
               <>
                 {/* Backdrop to close popover when clicking outside */}
                 <div 
-                  className="fixed inset-0 z-[9998] cursor-default" 
+                  className="fixed inset-0 z-[9998] cursor-default bg-neutral-950/5 animate-fade-in" 
                   onClick={() => setIsModalOpen(false)}
                 />
 
                 {/* Popover Card */}
-                <div className={`absolute z-[9999] bg-white rounded-2xl border border-neutral-200 shadow-xl w-64 p-4 animate-in fade-in slide-in-from-left-2 duration-200 ${
+                <div className={`absolute z-[9999] bg-white rounded-2xl border border-neutral-200 shadow-xl w-64 p-4 animate-balloon-pop ${
                   isCollapsed ? 'left-14 -top-2' : 'left-full -top-2 ml-3.5'
                 }`}>
                   {/* Arrow/Tail pointing left */}
