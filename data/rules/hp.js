@@ -1,272 +1,325 @@
 export const hpRules = [
   {
-    "id": "H001",
-    "perangkat": "hp",
-    "kerusakan": "Baterai Rusak / Kembung",
-    "deskripsi": "Baterai HP sudah usang, mengalami penurunan cycle secara drastis, atau kembung. Persentase baterai sangat tidak stabil (sering loncat).",
-    "gejalaIds": [
-      "H02",
-      "H04"
-    ],
-    "certaintyFactor": 0.98,
-    "referensiStatis": [
+    id: 'H001',
+    perangkat: 'hp',
+    kerusakan: 'IC WIFI',
+    deskripsi: 'Kerusakan pada IC pengontrol WiFi pada mainboard smartphone, menyebabkan fitur WiFi dan Bluetooth tidak dapat aktif atau terdeteksi.',
+    gejalaIds: ['H01', 'H02'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Kecerdasan Buatan",
-        "penulis": "Sutojo, T. et al.",
-        "tahun": 2011,
-        "penerbit": "Andi Offset",
-        "relevansi": "Analisis baterai ponsel"
-      },
-      {
-        "judul": "iFixit Repair Guides",
-        "penulis": "iFixit",
-        "tahun": 2023,
-        "penerbit": "iFixit",
-        "relevansi": "Tanda-tanda baterai lithium kembung"
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis kerusakan chip IC Wifi dan Bluetooth',
+        url: 'https://jurnal-itsi.org'
       }
     ]
   },
   {
-    "id": "H002",
-    "perangkat": "hp",
-    "kerusakan": "LCD Rusak",
-    "deskripsi": "Panel penampil gambar pada layar mengalami kerusakan karena benturan atau tekanan, menimbulkan blank hitam, dead pixel, atau garis.",
-    "gejalaIds": [
-      "H06",
-      "H09"
-    ],
-    "certaintyFactor": 0.98,
-    "referensiStatis": [
+    id: 'H002',
+    perangkat: 'hp',
+    kerusakan: 'IC WTR',
+    deskripsi: 'Kerusakan pada IC transceiver WTR yang mengatur penerimaan dan pengiriman sinyal frekuensi radio seluler.',
+    gejalaIds: ['H10', 'H12'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Expert Systems: Principles and Programming",
-        "penulis": "Giarratano, J. & Riley, G.",
-        "tahun": 2005,
-        "penerbit": "Thomson",
-        "relevansi": "Visual check display"
-      },
-      {
-        "judul": "iFixit Repair Guides",
-        "penulis": "iFixit",
-        "tahun": 2023,
-        "penerbit": "iFixit",
-        "relevansi": "Pemecahan masalah LCD HP"
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis kegagalan tangkapan sinyal manual dan indikator silang pada IC WTR',
+        url: 'https://jurnal-itsi.org'
       }
     ]
   },
   {
-    "id": "H003",
-    "perangkat": "hp",
-    "kerusakan": "IC Power Rusak",
-    "deskripsi": "Sirkuit pembagi daya (IC Power) konslet atau terbakar. Mengakibatkan HP mati total dan terasa panas karena arus pendek di mainboard.",
-    "gejalaIds": [
-      "H01",
-      "H05"
-    ],
-    "certaintyFactor": 0.98,
-    "referensiStatis": [
+    id: 'H003',
+    perangkat: 'hp',
+    kerusakan: 'IC CHARGING',
+    deskripsi: 'Kerusakan sirkuit daya pengisian baterai (IC Charger), membuat sasis tidak mendeteksi tegangan masuk atau terjadi fake charging.',
+    gejalaIds: ['H04', 'H05', 'H06'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Decision Support Systems",
-        "penulis": "Turban, E.",
-        "tahun": 2005,
-        "penerbit": "Prentice Hall",
-        "relevansi": "Diagnosa tingkat lanjut mesin HP"
-      },
-      {
-        "judul": "Tom's Hardware Troubleshooting Guide",
-        "penulis": "Tom's Hardware",
-        "tahun": 2022,
-        "penerbit": "Purch",
-        "relevansi": "Penanganan short circuit IC"
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis kegagalan pengisian daya baterai dan overheat IC Charger',
+        url: 'https://jurnal-itsi.org'
       }
     ]
   },
   {
-    "id": "H004",
-    "perangkat": "hp",
-    "kerusakan": "Touchscreen Rusak",
-    "deskripsi": "Digitizer kaca sentuh tidak membaca tekanan/gestur jari pengguna, atau terjadi short sehingga merespon sendiri (ghost touch).",
-    "gejalaIds": [
-      "H07",
-      "H08"
-    ],
-    "certaintyFactor": 0.98,
-    "referensiStatis": [
+    id: 'H004',
+    perangkat: 'hp',
+    kerusakan: 'IC FAST CHARGING',
+    deskripsi: 'Kerusakan pada sirkuit sekunder pengatur tegangan tinggi fast charging, sehingga smartphone hanya mengisi daya dalam mode lambat standar.',
+    gejalaIds: ['H07'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Artificial Intelligence",
-        "penulis": "Kusumadewi, S.",
-        "tahun": 2003,
-        "penerbit": "Graha Ilmu",
-        "relevansi": "Diagnosa sistem interaktif"
-      },
-      {
-        "judul": "iFixit Repair Guides",
-        "penulis": "iFixit",
-        "tahun": 2023,
-        "penerbit": "iFixit",
-        "relevansi": "Deteksi masalah digitizer touchscreen"
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan pengujian fungsionalitas fitur pengisian daya cepat',
+        url: 'https://jurnal-itsi.org'
       }
     ]
   },
   {
-    "id": "H005",
-    "perangkat": "hp",
-    "kerusakan": "Modul Kamera Rusak",
-    "deskripsi": "Lensa retak, konektor kamera terlepas, atau sensor CMOS rusak. Aplikasi kamera tidak bisa menangkap gambar dengan baik atau error.",
-    "gejalaIds": [
-      "H16"
-    ],
-    "certaintyFactor": 0.98,
-    "referensiStatis": [
+    id: 'H005',
+    perangkat: 'hp',
+    kerusakan: 'IC CPU',
+    deskripsi: 'Kerusakan pada chip prosesor utama (CPU) akibat overheat parah atau retaknya kaki solder BGA chip. Mengakibatkan perangkat mati total.',
+    gejalaIds: ['H03'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Kecerdasan Buatan",
-        "penulis": "Sutojo, T. et al.",
-        "tahun": 2011,
-        "penerbit": "Andi Offset",
-        "relevansi": "Analisis kegagalan hardware sekunder"
-      },
-      {
-        "judul": "iFixit Repair Guides",
-        "penulis": "iFixit",
-        "tahun": 2023,
-        "penerbit": "iFixit",
-        "relevansi": "Panduan perbaikan modul kamera HP"
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis mati total akibat kerusakan unit pemroses utama CPU',
+        url: 'https://jurnal-itsi.org'
       }
     ]
   },
   {
-    "id": "H006",
-    "perangkat": "hp",
-    "kerusakan": "Speaker / Loudspeaker Rusak",
-    "deskripsi": "Membran speaker sobek atau kemasukan air/debu, sehingga suara yang keluar sember, pecah, sangat kecil atau mati total.",
-    "gejalaIds": [
-      "H17",
-      "H21"
-    ],
-    "certaintyFactor": 0.98,
-    "referensiStatis": [
+    id: 'H006',
+    perangkat: 'hp',
+    kerusakan: 'IC EMMC',
+    deskripsi: 'Kerusakan chip flash storage (eMMC/UFS), mengakibatkan firmware sistem operasi gagal booting dan performa melambat parah.',
+    gejalaIds: ['H08', 'H09'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Expert Systems: Principles and Programming",
-        "penulis": "Giarratano, J. & Riley, G.",
-        "tahun": 2005,
-        "penerbit": "Thomson",
-        "relevansi": "Audio troubleshooting"
-      },
-      {
-        "judul": "iFixit Repair Guides",
-        "penulis": "iFixit",
-        "tahun": 2023,
-        "penerbit": "iFixit",
-        "relevansi": "Cara memeriksa earpiece dan speaker"
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis bootloop dan penurunan performa memori eMMC',
+        url: 'https://jurnal-itsi.org'
       }
     ]
   },
   {
-    "id": "H007",
-    "perangkat": "hp",
-    "kerusakan": "IC Sinyal / Antena Lemah",
-    "deskripsi": "Kabel antena putus atau IC WTR/Sinyal pada motherboard bermasalah, sehingga tidak bisa menangkap sinyal dari BTS atau koneksi terputus.",
-    "gejalaIds": [
-      "H18",
-      "H19"
-    ],
-    "certaintyFactor": 0.98,
-    "referensiStatis": [
+    id: 'H007',
+    perangkat: 'hp',
+    kerusakan: 'IC PA',
+    deskripsi: 'Kerusakan chip Power Amplifier penguat sinyal pemancar, menyebabkan kartu SIM terdeteksi namun tidak mendapat pancaran sinyal seluler.',
+    gejalaIds: ['H10', 'H11'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Decision Support Systems",
-        "penulis": "Turban, E.",
-        "tahun": 2005,
-        "penerbit": "Prentice Hall",
-        "relevansi": "Pemecahan masalah konektivitas"
-      },
-      {
-        "judul": "Tom's Hardware Troubleshooting Guide",
-        "penulis": "Tom's Hardware",
-        "tahun": 2022,
-        "penerbit": "Purch",
-        "relevansi": "Pemeriksaan receiver dan antena"
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis kegagalan pancaran sinyal seluler pada IC PA',
+        url: 'https://jurnal-itsi.org'
       }
     ]
   },
   {
-    "id": "H008",
-    "perangkat": "hp",
-    "kerusakan": "Port Charger (Konektor) Rusak",
-    "deskripsi": "Pin pada port Type-C atau Micro USB patah, bengkok, atau berkarat. Harus ditekuk agar bisa mengecas, atau tidak mengecas sama sekali.",
-    "gejalaIds": [
-      "H03",
-      "H20"
-    ],
-    "certaintyFactor": 0.98,
-    "referensiStatis": [
+    id: 'H008',
+    perangkat: 'hp',
+    kerusakan: 'IC POWER',
+    deskripsi: 'Kerusakan pada chip Power Management (PMIC) utama yang membagi tegangan ke sirkuit sistem, menyebabkan kegagalan daya total pada WiFi/Bluetooth.',
+    gejalaIds: ['H01', 'H02'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Artificial Intelligence",
-        "penulis": "Kusumadewi, S.",
-        "tahun": 2003,
-        "penerbit": "Graha Ilmu",
-        "relevansi": "Analisis input daya"
-      },
-      {
-        "judul": "iFixit Repair Guides",
-        "penulis": "iFixit",
-        "tahun": 2023,
-        "penerbit": "iFixit",
-        "relevansi": "Pemeriksaan pin charging board"
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan penelusuran kegagalan modul pendukung akibat fluktuasi PMIC',
+        url: 'https://jurnal-itsi.org'
       }
     ]
   },
   {
-    "id": "H009",
-    "perangkat": "hp",
-    "kerusakan": "Sensor Proximity / Ambient Light Rusak",
-    "deskripsi": "Sensor proximity atau ambient light pada bagian atas layar HP mengalami kerusakan fisik atau tertutup debu/kotoran, menyebabkan brightness tidak bisa diatur otomatis dan sensor cahaya tidak merespon.",
-    "gejalaIds": [
-      "H10"
-    ],
-    "certaintyFactor": 0.98,
-    "referensiStatis": [
+    id: 'H009',
+    perangkat: 'hp',
+    kerusakan: 'IC RAM',
+    deskripsi: 'Modul Dynamic RAM mengalami kegagalan akses memori sementara, memicu HP mati mendadak saat ditekan power atau restart berulang.',
+    gejalaIds: ['H03', 'H13'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Kecerdasan Buatan",
-        "penulis": "Sutojo, T. et al.",
-        "tahun": 2011,
-        "penerbit": "Andi Offset",
-        "relevansi": "Analisis sensor perangkat mobile"
-      },
-      {
-        "judul": "iFixit Repair Guides",
-        "penulis": "iFixit",
-        "tahun": 2023,
-        "penerbit": "iFixit",
-        "relevansi": "Diagnosa sensor proximity dan ambient light HP"
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis memori sementara RAM bermasalah',
+        url: 'https://jurnal-itsi.org'
       }
     ]
   },
   {
-    "id": "H010",
-    "perangkat": "hp",
-    "kerusakan": "eMMC Rusak / Software Corrupt",
-    "deskripsi": "Chip penyimpanan internal (eMMC) mengalami bad block atau sistem operasi Android/iOS mengalami kerusakan data. Menyebabkan bootloop, lag parah, aplikasi force close, penyimpanan terdeteksi penuh, dan hang total.",
-    "gejalaIds": [
-      "H11",
-      "H12",
-      "H13",
-      "H14",
-      "H15"
-    ],
-    "certaintyFactor": 0.98,
-    "referensiStatis": [
+    id: 'H010',
+    perangkat: 'hp',
+    kerusakan: 'IC AUDIO',
+    deskripsi: 'Kerusakan pada chip audio controller/decoder, mematikan seluruh alur input dan output audio (speaker dan mic mati sekaligus).',
+    gejalaIds: ['H20'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Expert Systems: Principles and Programming",
-        "penulis": "Giarratano, J. & Riley, G.",
-        "tahun": 2005,
-        "penerbit": "Thomson",
-        "relevansi": "Diagnosa kegagalan storage mobile"
-      },
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosa kegagalan terpusat codec suara IC Audio',
+        url: 'https://jurnal-itsi.org'
+      }
+    ]
+  },
+  {
+    id: 'H011',
+    perangkat: 'hp',
+    kerusakan: 'TOUCHSCREEN',
+    deskripsi: 'Kerusakan digitizer kaca sentuh eksternal atau konektor kabel fleksibel sentuh yang sobek/longgar.',
+    gejalaIds: ['H15'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
       {
-        "judul": "Tom's Hardware Troubleshooting Guide",
-        "penulis": "Tom's Hardware",
-        "tahun": 2022,
-        "penerbit": "Purch",
-        "relevansi": "Identifikasi kerusakan eMMC dan software corruption pada smartphone"
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis kegagalan sensitivitas panel sentuh',
+        url: 'https://jurnal-itsi.org'
+      }
+    ]
+  },
+  {
+    id: 'H012',
+    perangkat: 'hp',
+    kerusakan: 'KAMERA',
+    deskripsi: 'Kerusakan pada modul kamera utama/depan, sirkuit autofocus goyang, atau sensor lensa retak sehingga blank/blur.',
+    gejalaIds: ['H16', 'H17', 'H18', 'H19'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
+      {
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan komprehensif diagnosis modul lensa dan sensor kamera',
+        url: 'https://jurnal-itsi.org'
+      }
+    ]
+  },
+  {
+    id: 'H013',
+    perangkat: 'hp',
+    kerusakan: 'BATERAI',
+    deskripsi: 'Penurunan kualitas sel baterai litium secara kimiawi, menyebabkan sel menggelembung dan tidak stabil menahan daya.',
+    gejalaIds: ['H13', 'H14'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
+      {
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan identifikasi baterai menggembung dan penurunan voltase',
+        url: 'https://jurnal-itsi.org'
+      }
+    ]
+  },
+  {
+    id: 'H014',
+    perangkat: 'hp',
+    kerusakan: 'SPEAKER',
+    deskripsi: 'Kerusakan fisik modul speaker utama (buzzer/loudspeaker), membran sobek atau kemasukan air/kotoran.',
+    gejalaIds: ['H21', 'H22'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
+      {
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan pengujian kualitas output suara speaker utama',
+        url: 'https://jurnal-itsi.org'
+      }
+    ]
+  },
+  {
+    id: 'H015',
+    perangkat: 'hp',
+    kerusakan: 'MICROPHONE',
+    deskripsi: 'Kerusakan pada mikrofon internal bawah, menyebabkan sirkuit tidak merekam input getaran suara pengguna.',
+    gejalaIds: ['H23'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
+      {
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan pengujian fungsionalitas perekaman suara mic telepon',
+        url: 'https://jurnal-itsi.org'
+      }
+    ]
+  },
+  {
+    id: 'H016',
+    perangkat: 'hp',
+    kerusakan: 'LCD',
+    deskripsi: 'Kerusakan pada panel display LCD/OLED internal, mengakibatkan ketiadaan output visual gambar ke layar.',
+    gejalaIds: ['H24'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
+      {
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis blank screen pada panel display LCD',
+        url: 'https://jurnal-itsi.org'
+      }
+    ]
+  },
+  {
+    id: 'H017',
+    perangkat: 'hp',
+    kerusakan: 'SYSTEM OPERASI',
+    deskripsi: 'Kerusakan pada file partisi system OS Android/iOS (bootloop), akibat gagal update atau data korup.',
+    gejalaIds: ['H08', 'H13'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
+      {
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis kegagalan sistem operasi memuat berkas booting',
+        url: 'https://jurnal-itsi.org'
+      }
+    ]
+  },
+  {
+    id: 'H018',
+    perangkat: 'hp',
+    kerusakan: 'IMEI',
+    deskripsi: 'Kerusakan partisi EFS/NVRAM yang menampung nomor IMEI atau pemblokiran IMEI secara nasional di server database.',
+    gejalaIds: ['H11'],
+    certaintyFactor: 0.98,
+    referensiStatis: [
+      {
+        judul: 'Sistem Pakar Diagnosa Kerusakan Smartphone Menggunakan Metode Certainty Factor',
+        penulis: 'Ilham Agus Pratama, Aldo Erianda, Ardi Syawaldipa',
+        tahun: 2026,
+        penerbit: 'JITSI: Jurnal Ilmiah Teknologi Sistem Informasi',
+        relevansi: 'Aturan diagnosis nomor identifikasi modem IMEI tidak terdaftar',
+        url: 'https://jurnal-itsi.org'
       }
     ]
   }

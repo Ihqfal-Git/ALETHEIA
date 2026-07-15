@@ -306,7 +306,7 @@ export default function PengaturanPage() {
           <li>API Key kustom disimpan secara lokal di browser Anda menggunakan **LocalStorage**.</li>
           <li>Kunci ini **tidak akan disimpan di database server** proyek ALETHEIA.</li>
           <li>Setiap panggilan diagnosa ke backend akan langsung menyertakan kunci kustom Anda di header permintaan untuk digunakan secara *real-time*.</li>
-          <li>Kapan saja Anda ingin berhenti menggunakannya, cukup klik tombol **"Hapus Kunci Kustom"** di atas.</li>
+          <li>Kapan saja Anda ingin berhenti menggunakannya, cukup klik tombol **&quot;Hapus Kunci Kustom&quot;** di atas.</li>
         </ul>
       </div>
     </div>

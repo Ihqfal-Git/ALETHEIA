@@ -1,112 +1,112 @@
 export const gejalaLaptop = [
   {
     "id": "L01",
-    "deskripsi": "Laptop tidak mau menyala sama sekali (mati total)",
+    "deskripsi": "Tercium Bau Hangus",
     "kategori": "Daya & Baterai"
   },
   {
     "id": "L02",
-    "deskripsi": "Laptop mati saat charger dicabut (baterai tidak menahan daya)",
+    "deskripsi": "Sistem Laptop Mati Total, Tombol Power tidak berfungsi",
     "kategori": "Daya & Baterai"
   },
   {
     "id": "L03",
-    "deskripsi": "Baterai tidak terisi saat dicas (plugged in, not charging)",
+    "deskripsi": "Shutdown Lama Disertai Nada Beep",
     "kategori": "Daya & Baterai"
   },
   {
     "id": "L04",
-    "deskripsi": "Indikator baterai menyala merah atau berkedip-kedip tidak normal",
-    "kategori": "Daya & Baterai"
-  },
-  {
-    "id": "L05",
-    "deskripsi": "Laptop sering mati sendiri secara tiba-tiba tanpa peringatan",
-    "kategori": "Daya & Baterai"
-  },
-  {
-    "id": "L06",
-    "deskripsi": "Adaptor / charger terasa sangat panas saat digunakan atau mengeluarkan bau",
-    "kategori": "Daya & Baterai"
-  },
-  {
-    "id": "L07",
-    "deskripsi": "Layar tidak menampilkan apa-apa (blank black) tapi mesin dan lampu indikator hidup",
+    "deskripsi": "Saat Dinyalakan Tidak Ada Tampilan",
     "kategori": "Layar & Tampilan"
   },
   {
+    "id": "L05",
+    "deskripsi": "Blue Screen Pada Saat Loading",
+    "kategori": "Performa & Sistem"
+  },
+  {
+    "id": "L06",
+    "deskripsi": "Operator Sistem Tidak Berfungsi",
+    "kategori": "Performa & Sistem"
+  },
+  {
+    "id": "L07",
+    "deskripsi": "Keluar Nada Beep Berulang-ulang",
+    "kategori": "Hardware & Fisik"
+  },
+  {
     "id": "L08",
-    "deskripsi": "Layar bergaris horizontal atau vertikal berwarna",
+    "deskripsi": "Monitor Mati, Blank dan Tidak Ada Gambar",
     "kategori": "Layar & Tampilan"
   },
   {
     "id": "L09",
-    "deskripsi": "Layar berkedip atau flicker saat digunakan",
+    "deskripsi": "Monitor Berkedip-kedip",
     "kategori": "Layar & Tampilan"
   },
   {
     "id": "L10",
-    "deskripsi": "Warna pada layar terlihat memudar, buram, atau seperti klise (distorsi warna)",
+    "deskripsi": "Tampilan Tidak Sesuai Aslinya",
     "kategori": "Layar & Tampilan"
   },
   {
     "id": "L11",
-    "deskripsi": "Layar sangat gelap atau redup meskipun brightness sudah diatur maksimal",
-    "kategori": "Layar & Tampilan"
+    "deskripsi": "Loading Lama dan Sering Hank",
+    "kategori": "Performa & Sistem"
   },
   {
     "id": "L12",
-    "deskripsi": "Laptop terasa sangat lambat (lemot) saat membuka aplikasi ringan atau file",
+    "deskripsi": "Program Tidak Support dan Sering Restart",
     "kategori": "Performa & Sistem"
   },
   {
     "id": "L13",
-    "deskripsi": "Sering muncul layar biru dengan pesan error (Blue Screen of Death / BSOD)",
-    "kategori": "Performa & Sistem"
+    "deskripsi": "Layar Tidak Tampil Walau Sudah Dihidupkan, dan Tidak Mau Akses BIOS",
+    "kategori": "Layar & Tampilan"
   },
   {
     "id": "L14",
-    "deskripsi": "Sistem operasi sering freeze atau hang, kursor tidak bisa digerakkan",
+    "deskripsi": "Tidak Deteksi Sistem",
     "kategori": "Performa & Sistem"
   },
   {
     "id": "L15",
-    "deskripsi": "Suara kipas pendingin (fan) terdengar sangat bising, berderit, atau sekadar berputar kencang",
+    "deskripsi": "Tidak Dapat Booting Cepat",
     "kategori": "Performa & Sistem"
   },
   {
     "id": "L16",
-    "deskripsi": "Bagian bawah bodi laptop terasa sangat panas (overheating) bahkan saat idle",
+    "deskripsi": "Akses Program Lambat",
     "kategori": "Performa & Sistem"
   },
   {
     "id": "L17",
-    "deskripsi": "Proses booting masuk ke Windows memakan waktu yang sangat lama",
+    "deskripsi": "Laptop Lemot",
     "kategori": "Performa & Sistem"
   },
   {
     "id": "L18",
-    "deskripsi": "Beberapa atau seluruh tombol keyboard tidak berfungsi saat ditekan, atau mengetik sendiri",
+    "deskripsi": "Tidak Dapat membaca, menulis, menghapus dan mengedit",
     "kategori": "Hardware & Fisik"
   },
   {
     "id": "L19",
-    "deskripsi": "Touchpad tidak merespon sentuhan, klik kiri/kanan tidak berfungsi",
-    "kategori": "Hardware & Fisik"
+    "deskripsi": "Laptop Cepat Panas",
+    "kategori": "Performa & Sistem"
   },
   {
     "id": "L20",
-    "deskripsi": "Suara dari speaker pecah, kresek-kresek, atau tidak keluar suara sama sekali",
-    "kategori": "Hardware & Fisik"
+    "deskripsi": "Kerja Laptop Lambat",
+    "kategori": "Performa & Sistem"
   },
   {
     "id": "L21",
-    "deskripsi": "Koneksi WiFi sering putus-nyambung atau tidak bisa mendeteksi jaringan sama sekali",
-    "kategori": "Hardware & Fisik"
+    "deskripsi": "Tidak Dapat Shutdown",
+    "kategori": "Performa & Sistem"
   },
   {
     "id": "L22",
-    "deskripsi": "Terdengar bunyi klik-klik, scratching, atau suara aneh dari bagian hard disk",
+    "deskripsi": "Selalu Minta Setup CMOS",
     "kategori": "Hardware & Fisik"
   }
 ];

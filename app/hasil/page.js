@@ -4,9 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2, ArrowLeft, ShieldAlert, BookOpen, AlertCircle, Wrench, ArrowRight, CheckCircle2, XCircle, ChevronDown, Settings, Search } from 'lucide-react';
-import { gejalaLaptop } from '@/data/gejalaLaptop';
-import { gejalaHP } from '@/data/gejalaHP';
-import { gejalaPC } from '@/data/gejalaPC';
+import { gejalaLaptop, gejalaHP, gejalaPC } from '@/data/gejala';
 
 const deviceMapping = {
   laptop: { nama: 'Laptop', data: gejalaLaptop },

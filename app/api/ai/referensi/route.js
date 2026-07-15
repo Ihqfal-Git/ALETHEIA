@@ -30,9 +30,30 @@ export async function POST(request) {
 
     // Jika sudah ada di database → langsung return tanpa panggil AI
     if (existingRefs.length > 0) {
+      const formattedRefs = existingRefs.map(ref => {
+        let realUrl = ref.url || '';
+        let relevance = '';
+        if (realUrl.includes('|||')) {
+          const parts = realUrl.split('|||');
+          realUrl = parts[0];
+          relevance = parts[1];
+        }
+        return {
+          id: ref.id,
+          kerusakanId: ref.kerusakanId,
+          judul: ref.judul,
+          penulis: ref.penulis,
+          tahun: ref.tahun,
+          url: realUrl,
+          relevansi: relevance,
+          sumber: ref.sumber,
+          createdAt: ref.createdAt
+        };
+      });
+
       return NextResponse.json({
         success: true,
-        referensi: existingRefs,
+        referensi: formattedRefs,
         sumber: 'database'
       });
     }

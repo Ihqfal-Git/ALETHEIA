@@ -18,7 +18,7 @@ function loadData(filename, varName) {
 const specificData = {
   // ================= LAPTOP =================
   'L001': {
-    explain: "### Analisis Kerusakan\nKerusakan adapter disebabkan oleh kegagalan sirkuit Switching Mode Power Supply (SMPS) atau kerusakan fisik pada kabel DC. Kapasitor filter pada sirkuit sekunder sering mengalami kebocoran (leakage), menyebabkan output tegangan menjadi tidak stabil atau drop ketika laptop meminta beban daya tinggi.\n\n### Mekanisme & Dampak Teknis\nKegagalan ini biasanya diawali oleh kebocoran kapasitor filter sekunder yang membuat regulasi tegangan DC output berfluktuasi atau drop saat dibebani arus tinggi.\n\n### Rekomendasi Tindakan\nDisarankan untuk segera mengganti adaptor dengan spesifikasi voltase (V) dan ampere (A) yang identik untuk mencegah kerusakan sirkuit charging motherboard.",
+    explain: "### Analisis Kerusakan\nKerusakan power supply/charger disebabkan oleh kegagalan sirkuit Switching Mode Power Supply (SMPS) atau kerusakan fisik pada kabel DC. Kapasitor filter pada sirkuit sekunder sering mengalami kebocoran (leakage), menyebabkan output tegangan menjadi tidak stabil atau drop ketika laptop meminta beban daya tinggi.\n\n### Mekanisme & Dampak Teknis\nKegagalan ini biasanya diawali oleh kebocoran kapasitor filter sekunder yang membuat regulasi tegangan DC output berfluktuasi atau drop saat dibebani arus tinggi.\n\n### Rekomendasi Tindakan\nDisarankan untuk segera mengganti adaptor dengan spesifikasi voltase (V) dan ampere (A) yang identik untuk mencegah kerusakan sirkuit charging motherboard.",
     biaya: { min: 150000, max: 350000 },
     komponen: ["Kabel Jack DC Adapter", "Kapasitor Elektrolit Utama", "Transistor MOSFET Power", "Sekring (Fuse Input)"],
     tips: ["Bandingkan spesifikasi voltase (V) dan ampere (A) adaptor pengganti dengan yang lama.", "Hindari menggunakan adaptor universal tanpa sertifikasi keamanan."],
@@ -36,24 +36,6 @@ const specificData = {
     peringatan: ["Jangan menyentuh kapasitor tegangan tinggi (400V) sebelum dayanya dikosongkan.", "Pastikan polaritas kapasitor polar tidak terbalik."]
   },
   'L002': {
-    explain: "### Analisis Kerusakan\nBaterai laptop kehilangan kapasitas karena degradasi kimia sel Lithium-Ion akibat siklus pengisian (charge cycles) yang tinggi atau panas berlebih.\n\n### Mekanisme & Dampak Teknis\nPenurunan kesehatan baterai membuat Battery Management System (BMS) mengunci sirkuit pengisian untuk keamanan jika mendeteksi adanya sel baterai yang tidak seimbang (imbalance).\n\n### Rekomendasi Tindakan\nPenggantian sel baterai utuh direkomendasikan. Hindari menggunakan laptop tanpa baterai langsung ke charger karena rawan mati mendadak saat listrik padam.",
-    biaya: { min: 350000, max: 950000 },
-    komponen: ["Sel Baterai Li-Ion", "BMS Chip Controller", "Konektor Baterai Motherboard", "Thermal Sensor Baterai"],
-    tips: ["Belilah baterai original atau OEM berkualitas tinggi bergaransi resmi.", "Gunakan aplikasi BatteryInfoView untuk memeriksa Battery Health sebelum membeli."],
-    waktu: "1 hari",
-    kesulitan: "Sedang",
-    waktuMandiri: "30 menit",
-    biayaMandiri: { min: 300000, max: 750000 },
-    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka baut casing bawah laptop" }, { nama: "Spudger Plastik", fungsi: "Melepas konektor baterai dari motherboard" }],
-    bahan: [{ nama: "Baterai Laptop Pengganti", estimasiHarga: "Rp 450.000" }],
-    langkah: [
-      { nomor: 1, judul: "Buka Casing", detail: "Matikan laptop, buka seluruh baut casing bawah, dan lepaskan casing bawah menggunakan spudger." },
-      { nomor: 2, judul: "Putus Daya", detail: "Lepaskan konektor kabel baterai dari motherboard sebelum menyentuh komponen lain." },
-      { nomor: 3, judul: "Ganti Baterai", detail: "Buka baut pengunci baterai lama, angkat baterai, lalu pasang baterai baru dan pasang kembali bautnya." }
-    ],
-    peringatan: ["Jangan menusuk atau membengkokkan baterai karena dapat memicu hubungan singkat dan kebakaran.", "Gunakan alat berbahan plastik (bukan logam) saat melepas konektor baterai."]
-  },
-  'L003': {
     explain: "### Analisis Kerusakan\nKegagalan RAM umumnya disebabkan oleh oksidasi pada pin kuningan konektor akibat kelembapan, atau kerusakan fisik pada IC DRAM (bad block).\n\n### Mekanisme & Dampak Teknis\nOksidasi ini menghambat aliran data biner dinamis, memicu kegagalan pembacaan data memori (parity error) saat sistem operasi melakukan POST atau mengalokasikan ruang memori dinamis.\n\n### Rekomendasi Tindakan\nBersihkan pin RAM menggunakan penghapus pensil terlebih dahulu. Jika tetap error saat diuji MemTest86, gantilah dengan modul memori baru.",
     biaya: { min: 250000, max: 700000 },
     komponen: ["Keping Memori RAM", "Slot RAM Motherboard", "Jalur Bus Memori", "IC Kontroler Memori"],
@@ -71,25 +53,7 @@ const specificData = {
     ],
     peringatan: ["Sentuh benda logam besar terlebih dahulu untuk membuang listrik statis tubuh sebelum memegang RAM.", "Jangan memasang RAM dengan posisi terbalik, perhatikan lekukan pada RAM dan slot."]
   },
-  'L004': {
-    explain: "### Analisis Kerusakan\nOverheating terjadi karena thermal paste (media penghantar panas antara CPU/GPU ke heatsink) telah mengering sehingga transfer panas terhambat.\n\n### Mekanisme & Dampak Teknis\nAkumulasi kotoran debu yang menyumbat sirip heatsink tembaga dan kipas yang macet membuat sirkulasi udara dingin dari luar terhenti.\n\n### Rekomendasi Tindakan\nLakukan pembersihan debu secara rutin dan ganti thermal paste dengan kualitas premium (seperti Arctic MX-4) minimal setahun sekali.",
-    biaya: { min: 100000, max: 250000 },
-    komponen: ["Kipas Pendingin (Fan)", "Sirip Heatsink Tembaga", "Thermal Paste", "Sensor Termal CPU/GPU"],
-    tips: ["Mintalah penggantian thermal paste berkualitas tinggi seperti Arctic MX-4 atau Noctua NT-H1.", "Pastikan kipas dibersihkan secara menyeluruh, bukan hanya disemprot angin."],
-    waktu: "1-2 jam",
-    kesulitan: "Sedang",
-    waktuMandiri: "45-60 menit",
-    biayaMandiri: { min: 45000, max: 120000 },
-    alat: [{ nama: "Obeng Set & Spudger", fungsi: "Membuka casing dan melepas heatsink" }, { nama: "Kuas Kecil & Blower", fungsi: "Membersihkan debu tebal pada kipas" }],
-    bahan: [{ nama: "Thermal Paste Berkualitas", estimasiHarga: "Rp 65.000" }, { nama: "Alkohol Isopropil 99%", estimasiHarga: "Rp 15.000" }],
-    langkah: [
-      { nomor: 1, judul: "Pelepasan Heatsink", detail: "Buka baut heatsink sesuai nomor urut yang tertera pada logam pelat pendingin CPU." },
-      { nomor: 2, judul: "Pembersihan Sisa Paste", detail: "Bersihkan sisa thermal paste kering di atas CPU dan heatsink menggunakan alkohol dan cotton bud." },
-      { nomor: 3, judul: "Pengaplikasian Baru", detail: "Oleskan thermal paste baru seukuran biji kacang di tengah CPU, lalu pasang kembali heatsink secara merata." }
-    ],
-    peringatan: ["Jangan mengoleskan thermal paste terlalu tebal karena justru akan menghambat pelepasan panas.", "Hati-hati saat melepas konektor kabel kipas agar jalurnya tidak putus."]
-  },
-  'L005': {
+  'L003': {
     explain: "### Analisis Kerusakan\nKerusakan LCD diakibatkan oleh keretakan panel matriks kaca cair (liquid crystal), putusnya jalur sirkuit COF (Chip on Film), atau kerusakan kabel eDP (embedded DisplayPort).\n\n### Mekanisme & Dampak Teknis\nKabel fleksibel eDP sering mengalami keausan/gesekan di area engsel karena aktivitas membuka-tutup layar laptop yang konstan.\n\n### Rekomendasi Tindakan\nGanti panel LCD secara utuh. Hindari menutup layar laptop dengan hanya menekan satu sisi bezel saja untuk mencegah tekanan asimetris.",
     biaya: { min: 800000, max: 1800000 },
     komponen: ["Panel Layar LCD/LED", "Kabel Fleksibel eDP", "Sirkuit T-Con Board", "Backlight Inverter"],
@@ -107,25 +71,21 @@ const specificData = {
     ],
     peringatan: ["Selalu lepaskan baterai laptop sebelum mengganti LCD untuk mencegah korsleting pada jalur backlight tegangan tinggi.", "Jangan menekan permukaan panel LCD baru terlalu keras."]
   },
-  'L006': {
-    explain: "### Analisis Kerusakan\nKeyboard laptop rusak biasanya terjadi karena cairan yang tumpah korosif terhadap jalur sirkuit matriks karbon fleksibel.\n\n### Mekanisme & Dampak Teknis\nHal ini menyebabkan sirkuit tombol terputus atau terjadi hubungan singkat (short circuit) yang membuat tombol mengetik sendiri secara acak.\n\n### Rekomendasi Tindakan\nGanti modul keyboard baru. Jika terkena tumpahan air, segera matikan laptop, balikkan posisinya, dan lepaskan baterai.",
-    biaya: { min: 200000, max: 550000 },
-    komponen: ["Matriks Sirkuit Keyboard", "Kubah Karet (Rubber Dome)", "Kabel Fleksibel Ribbon", "Konektor ZIF Keyboard"],
-    tips: ["Untuk laptop modern yang keyboard-nya menyatu dengan palmrest, penggantian membutuhkan waktu lebih lama.", "Pastikan layout tombol (US/UK) sesuai dengan kenyamanan mengetik Anda."],
-    waktu: "1-3 jam",
-    kesulitan: "Tinggi",
-    waktuMandiri: "60-90 menit",
-    biayaMandiri: { min: 120000, max: 300000 },
-    alat: [{ nama: "Obeng Set Lengkap", fungsi: "Membuka seluruh komponen laptop" }, { nama: "Prying Tool & Solder Plastik", fungsi: "Melepas rivet plastik penahan keyboard" }],
-    bahan: [{ nama: "Keyboard Laptop Baru", estimasiHarga: "Rp 150.000" }],
-    langkah: [
-      { nomor: 1, judul: "Bongkar Total", detail: "Karena keyboard seringkali dipasang dari dalam, Anda perlu melepas motherboard dan baterai terlebih dahulu." },
-      { nomor: 2, judul: "Lepas Keyboard Lama", detail: "Patahkan rivet plastik penahan keyboard secara hati-hati atau lepas baut penahan pelat seng keyboard." },
-      { nomor: 3, judul: "Pasang Baru", detail: "Tempatkan keyboard baru, kencangkan menggunakan baut/solder rivet plastik, lalu pasang kembali motherboard." }
-    ],
-    peringatan: ["Kabel fleksibel keyboard sangat tipis dan mudah sobek, pasang konektor dengan sangat hati-hati.", "Gunakan isolator pelindung bawaan agar sirkuit keyboard tidak menyentuh motherboard."]
+  'L004': {
+    explain: "### Analisis Kerusakan\nKerusakan chip grafis VGA (GPU) di laptop biasanya diakibatkan oleh pecahnya bola solder BGA (lead-free solder fatigue) di bawah chip GPU akibat pemuaian thermal stress karena panas tinggi.\n\n### Mekanisme & Dampak Teknis\nRetakan solder bola BGA ini mengganggu interkoneksi data PCIe grafis ke motherboard, membuat laptop no display, freeze secara acak, atau gagal memproses bootloader BIOS.\n\n### Rekomendasi Tindakan\nLakukan pembersihan sistem pendingin secara berkala. Jika kartu grafis rusak parah, perbaikan reflow/reball atau penggantian motherboard diperlukan.",
+    biaya: { min: 500000, max: 1500000 },
+    komponen: ["Chip GPU BGA", "VRAM Video Memory", "Thermal System & Heatsink", "Motherboard BGA Tracks"],
+    tips: ["Pekerjaan perbaikan reballing chip VGA membutuhkan mesin inframerah BGA rework station khusus. Cari teknisi spesialis mesin.", "Pastikan sirkulasi udara laptop tidak terhambat debu."],
+    waktu: "1-3 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Perbaikan mandiri untuk kerusakan VGA laptop sangat tidak disarankan karena membutuhkan keahlian solder BGA tingkat tinggi dan peralatan rework station khusus."]
   },
-  'L007': {
+  'L005': {
     explain: "### Analisis Kerusakan\nKerusakan Hard Disk disebabkan oleh ausnya komponen mekanis (platter magnetik dan actuator arm) atau terjadinya bad sector fisik akibat guncangan saat piringan berputar kencang.\n\n### Mekanisme & Dampak Teknis\nGoncangan fisik saat piringan berputar kencang memicu head pembaca membentur platter, merusak sektor penyimpanan berkas sistem operasi sehingga boot fail.\n\n### Rekomendasi Tindakan\nSangat disarankan mengganti penyimpanan lama dengan SSD (Solid State Drive) untuk ketahanan guncangan dan kecepatan baca-tulis yang jauh lebih tinggi.",
     biaya: { min: 300000, max: 900000 },
     komponen: ["Platter Magnetik", "Head Actuator Arm", "Motor Spindle", "SATA/NVMe Interface Controller"],
@@ -143,448 +103,636 @@ const specificData = {
     ],
     peringatan: ["Jangan menggoyang atau memindahkan laptop saat hardisk mekanis lama sedang melakukan proses pemindahan/salin data.", "Gunakan sekrup bawaan yang pas agar tidak menusuk sel baterai."]
   },
-  'L008': {
-    explain: "### Analisis Kerusakan\nModul WiFi (WLAN Card) rusak akibat lonjakan arus mikro atau korosi pada kontak pin PCIe akibat paparan kelembapan.\n\n### Mekanisme & Dampak Teknis\nHal ini memutus jalur komunikasi frekuensi radio nirkabel antara antena internal laptop dan adapter jaringan motherboard.\n\n### Rekomendasi Tindakan\nGantilah modul WiFi PCIe card. Sebagai alternatif cepat, Anda dapat menggunakan USB WiFi adapter eksternal yang murah dan praktis.",
+  'L006': {
+    explain: "### Analisis Kerusakan\nOptical Drive (DVD-RW) mengalami kerusakan akibat lemahnya dioda laser pembaca piringan kaset atau keausan pada dinamo/motor mekanis pemutar disk.\n\n### Mekanisme & Dampak Teknis\nDioda laser yang melemah kehilangan intensitas cahaya untuk membaca track mikroskopis kaset, menyebabkan disk tidak terbaca (disk error) atau proses burn gagal.\n\n### Rekomendasi Tindakan\nGanti optical drive internal yang baru atau beralih menggunakan DVD-RW eksternal berbasis USB yang lebih praktis dan kompatibel dengan banyak perangkat.",
     biaya: { min: 150000, max: 350000 },
-    komponen: ["WiFi/Bluetooth Combo Card", "Kabel Antena Koaksial", "Slot M.2/PCIe Mini Motherboard"],
-    tips: ["Pertimbangkan membeli modul yang mendukung standar WiFi 6 (Intel AX200) untuk konektivitas modern.", "Pastikan kedua kabel antena koaksial terpasang dengan kuat pada terminalnya."],
+    komponen: ["Laser Diode Reader", "Spindle Motor", "Mekanik Tray Gear", "Kabel Fleksibel SATA OD"],
+    tips: ["Lebih disarankan menggunakan DVD-RW USB Eksternal karena tidak memakan ruang internal laptop dan mudah dipindahkan.", "Sebagai opsi lain, slot DVD internal kosong dapat diubah menjadi slot penyimpanan tambahan menggunakan HDD Caddy."],
     waktu: "1 jam",
-    kesulitan: "Sedang",
-    waktuMandiri: "20 menit",
-    biayaMandiri: { min: 80000, max: 180000 },
-    alat: [{ nama: "Obeng Presisi & Pinset", fungsi: "Membuka baut pengunci WiFi card dan menjepit konektor antena" }],
-    bahan: [{ nama: "Card WiFi Intel / Realtek Baru", estimasiHarga: "Rp 120.000" }],
+    kesulitan: "Sangat Mudah",
+    waktuMandiri: "15 menit",
+    biayaMandiri: { min: 100000, max: 200000 },
+    alat: [{ nama: "Obeng Phillips Presisi", fungsi: "Membuka baut pengunci optical drive di bagian bawah laptop" }],
+    bahan: [{ nama: "Optical Drive Baru / DVD-RW Eksternal USB", estimasiHarga: "Rp 150.000" }],
     langkah: [
-      { nomor: 1, judul: "Lokalisasi Modul", detail: "Buka casing bawah laptop dan temukan modul WiFi kecil dengan dua kabel koaksial tipis terhubung." },
-      { nomor: 2, judul: "Lepas Antena", detail: "Gunakan pinset untuk mencungkil konektor logam bulat emas antena koaksial secara tegak lurus ke atas." },
-      { nomor: 3, judul: "Ganti Modul", detail: "Buka baut pengunci modul WiFi, tarik modul keluar dari slot M.2, masukkan modul baru, pasang baut, dan pasang kembali kabel antena." }
+      { nomor: 1, judul: "Pelepasan Baut", detail: "Matikan laptop, temukan satu baut berlabel khusus optical drive di bagian bawah casing laptop, lalu buka baut tersebut." },
+      { nomor: 2, judul: "Tarik Drive", detail: "Gunakan pinset atau kuku untuk menarik bezel laci optical drive secara perlahan lurus keluar dari slot laptop." },
+      { nomor: 3, judul: "Pasang Baru / Eksternal", detail: "Masukkan optical drive pengganti yang baru ke dalam slot hingga konektor SATA terhubung pas, lalu pasang kembali baut penguncinya." }
     ],
-    peringatan: ["Konektor kabel antena koaksial sangat rapuh, jangan dipaksa ditekan jika posisinya belum lurus dengan pin terminal.", "Pastikan nomor kabel antena terpasang ke terminal yang benar (Main / Aux)."]
+    peringatan: ["Jangan menyentuh lensa optik pembaca laser dengan tangan karena kotoran lemak jari dapat merusak daya baca laser.", "Jangan menarik tray optical drive terlalu keras saat laci sedang macet."]
   },
-  'L009': {
-    explain: "### Analisis Kerusakan\nTouchpad tidak merespon karena ausnya sensor kapasitif pada pelat touchpad, korosi pada jalur kabel fleksibel, atau tekanan dari baterai laptop yang kembung di bawah touchpad.\n\n### Mekanisme & Dampak Teknis\nBaterai yang kembung tepat di bawah touchpad akan mendesak pelat sentuh ke atas, mengunci microswitch klik fisik sehingga tidak bisa ditekan.\n\n### Rekomendasi Tindakan\nBuka casing bawah untuk memeriksa apakah baterai kembung. Jika baterai aman, lakukan pembersihan konektor kabel FFC atau ganti pelat touchpad.",
-    biaya: { min: 150000, max: 400000 },
-    komponen: ["Pelat Touchpad Kapasitif", "Kabel Fleksibel Ribbon FFC", "Tombol Klik Fisik (Microswitch)"],
-    tips: ["Pastikan kerusakan bukan karena touchpad dinonaktifkan melalui tombol shortcut keyboard (Fn).", "Periksa apakah ada baterai kembung di bawah touchpad sebelum membeli suku cadang pengganti."],
-    waktu: "1-2 jam",
-    kesulitan: "Sedang",
-    waktuMandiri: "45 menit",
-    biayaMandiri: { min: 80000, max: 200000 },
-    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka casing bawah dan sekrup pengunci touchpad" }, { nama: "Spudger Plastik", fungsi: "Membuka klip kabel fleksibel" }],
-    bahan: [{ nama: "Touchpad Laptop Pengganti", estimasiHarga: "Rp 110.000" }],
-    langkah: [
-      { nomor: 1, judul: "Akses Area", detail: "Buka casing bawah, lepaskan baterai utama terlebih dahulu karena touchpad berada langsung di bawah baterai." },
-      { nomor: 2, judul: "Buka Pengunci", detail: "Lepaskan kabel fleksibel touchpad dari konektor ZIF motherboard, lalu buka baut penyangga pelat touchpad." },
-      { nomor: 3, judul: "Penggantian", detail: "Angkat touchpad lama, tempatkan touchpad baru, kencangkan baut pengunci dengan tingkat kerapatan yang pas, lalu pasang kembali baterai." }
-    ],
-    peringatan: ["Jangan menyekrup touchpad terlalu kencang karena dapat membuat tombol klik fisik tertekan terus-menerus.", "Gunakan spudger plastik saat mencungkil kabel fleksibel."]
-  },
-  'L010': {
-    explain: "### Analisis Kerusakan\nKerusakan speaker disebabkan oleh robeknya membran kerucut speaker akibat volume tinggi terus-menerus, masuknya kotoran besi magnetik, atau putusnya kumparan suara (voice coil).\n\n### Mekanisme & Dampak Teknis\nRobeknya membran atau putusnya kumparan suara (voice coil) memicu timbulnya suara pecah, bergetar kencang, atau mati total.\n\n### Rekomendasi Tindakan\nGanti speaker sebagai satu set (kiri dan kanan) agar output suara seimbang kembali. Hindari mengatur volume maksimal dalam jangka panjang.",
-    biaya: { min: 100000, max: 300000 },
-    komponen: ["Membran Speaker", "Kumparan Suara (Voice Coil)", "Magnet Neodymium", "Kabel Konektor Audio"],
-    tips: ["Ganti speaker sebagai satu set (kiri dan kanan) agar output suara seimbang.", "Uji speaker baru dengan memutar audio berfrekuensi rendah (bass) untuk memastikan suara tidak pecah."],
-    waktu: "1 jam",
-    kesulitan: "Sedang",
-    waktuMandiri: "30 menit",
-    biayaMandiri: { min: 50000, max: 150000 },
-    alat: [{ nama: "Obeng Presisi Set", fungsi: "Membuka casing laptop and sekrup speaker" }, { nama: "Spudger Plastik", fungsi: "Melepas jalur kabel speaker dari pemandu casing" }],
-    bahan: [{ nama: "Set Speaker Laptop Baru", estimasiHarga: "Rp 75.000" }],
-    langkah: [
-      { nomor: 1, judul: "Lokalisasi", detail: "Buka casing bawah laptop dan temukan modul speaker di sisi kiri dan kanan bawah." },
-      { nomor: 2, judul: "Lepas Jalur", detail: "Lepaskan konektor kabel speaker dari motherboard, lalu keluarkan kabel dari jalur rute casing secara perlahan." },
-      { nomor: 3, judul: "Pemasangan", detail: "Lepaskan speaker lama, pasang set speaker baru pada posisinya, rute kabel sesuai jalur bawaan, pasang konektor motherboard." }
-    ],
-    peringatan: ["Rute kabel speaker harus rapi dan masuk ke jalurnya agar kabel tidak terjepit atau tertekan saat casing bawah ditutup.", "Jangan menekan membran speaker yang rapuh."]
+  'L007': {
+    explain: "### Analisis Kerusakan\nMotherboard bermasalah akibat sirkuit pintas (short) pada jalur kelistrikan, kegagalan IC regulator tegangan, penumpukan panas berlebih pada chipset, atau baterai CMOS yang habis dayanya.\n\n### Mekanisme & Dampak Teknis\nKorsleting pada kapasitor filter SMD atau rusaknya IC power management memicu sirkuit proteksi daya mematikan sistem secara otomatis atau membatasi kinerja laptop secara ekstrem.\n\n### Rekomendasi Tindakan\nLakukan pemeliharaan thermal paste chipset dan pembersihan debu. Jika terjadi korsleting mesin, bawa ke spesialis reparasi motherboard laptop untuk pengerjaan micro-soldering.",
+    biaya: { min: 600000, max: 2500000 },
+    komponen: ["Chipset Motherboard (PCH)", "Kapasitor SMD & Resistor", "IC Power Management (PWM)", "Soket Baterai CMOS"],
+    tips: ["Mintalah garansi servis minimal 1 bulan jika melakukan reparasi sirkuit motherboard.", "Gunakan stabilizer listrik saat mengisi daya laptop di rumah untuk menghindari korsleting akibat tegangan tidak stabil."],
+    waktu: "2-4 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Perbaikan sirkuit motherboard laptop membutuhkan keahlian skematik sirkuit dan alat micro-soldering/rework station. Sangat tidak disarankan memperbaikinya sendiri."]
   },
 
   // ================= HP =================
   'H001': {
-    explain: "### Analisis Kerusakan\nBaterai handphone kembung akibat penumpukan gas sisa reaksi kimia elektrolit lithium-ion yang terdegradasi.\n\n### Mekanisme & Dampak Teknis\nSecara teknis, penumpukan gas ini terjadi karena sirkuit pembatas pengisian daya di dalam baterai (PCM) gagal mendeteksi batas tegangan atas (overvoltage), memicu pemanasan berlebih pada sel baterai dan dekomposisi cairan elektrolit menjadi gas hidrogen/karbon dioksida.\n\n### Rekomendasi Tindakan\nSegera ganti baterai untuk menghindari risiko meledak atau merusak panel LCD dari dalam akibat tekanan fisik baterai kembung.",
-    biaya: { min: 150000, max: 450000 },
-    komponen: ["Sel Baterai Li-Po", "Sirkuit PCM Baterai", "Konektor Flex Baterai", "Double Tape Perekat Baterai"],
-    tips: ["Gunakan baterai bersertifikasi resmi dan hindari bermain HP saat sedang dicharge.", "Mintalah perekat baterai khusus saat penggantian agar baterai tidak bergeser di dalam casing."],
-    waktu: "1 jam",
-    kesulitan: "Sedang",
-    waktuMandiri: "30-45 menit",
-    biayaMandiri: { min: 100000, max: 300000 },
-    alat: [{ nama: "Obeng Pentalobe/Phillips & Spudger", fungsi: "Membuka casing HP" }, { nama: "Suction Cup & Hairdryer", fungsi: "Melunakkan lem perekat casing belakang" }],
-    bahan: [{ nama: "Baterai HP Baru", estimasiHarga: "Rp 150.000" }, { nama: "Perekat Baterai (Adhesive)", estimasiHarga: "Rp 10.000" }],
-    langkah: [
-      { nomor: 1, judul: "Panaskan Casing", detail: "Panaskan casing belakang menggunakan hairdryer selama 3 menit untuk melunakkan lem." },
-      { nomor: 2, judul: "Buka Casing", detail: "Tempelkan suction cup, tarik perlahan, masukkan prying pick plastik ke sela casing, dan geser memutar." },
-      { nomor: 3, judul: "Ganti Baterai", detail: "Lepaskan pelindung konektor baterai, cabut konektor, tarik pita perekat baterai (pull tabs), angkat baterai lama, dan pasang yang baru." }
-    ],
-    peringatan: ["Jangan mencungkil baterai menggunakan alat logam tajam karena dapat memicu ledakan kimia jika bocor.", "Gunakan alkohol isopropil untuk membantu melunakkan perekat baterai."]
+    explain: "### Analisis Kerusakan\nKerusakan pada IC WIFI disebabkan oleh kegagalan daya tegangan input ke chip sirkuit transceiver WiFi, atau retaknya solder bola BGA di bawah IC akibat getaran/benturan.\n\n### Mekanisme & Dampak Teknis\nTidak adanya tegangan penyuplai daya ke IC WIFI menghentikan operasi transceiver nirkabel, sehingga tombol switch WiFi dan Bluetooth di pengaturan HP berwarna abu-abu (greyed out) dan tidak bisa diaktifkan.\n\n### Rekomendasi Tindakan\nBawa HP ke teknisi spesialis mesin untuk melakukan proses reballing (solder ulang kaki-kaki IC) atau penggantian chip IC WIFI yang baru.",
+    biaya: { min: 250000, max: 600000 },
+    komponen: ["Chip IC WIFI/Bluetooth Transceiver", "Kapasitor Filter Input Tegangan", "Motherboard HP"],
+    tips: ["Hindari menggunakan HP di tempat yang sangat lembab untuk mencegah korosi sirkuit mainboard.", "Pastikan garansi servis mesin minimal 1 bulan setelah penggantian chip."],
+    waktu: "1-2 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Perbaikan IC WIFI membutuhkan keahlian solder mikro BGA tingkat lanjut dan alat solder uap panas (blower), tidak disarankan dikerjakan mandiri."]
   },
   'H002': {
-    explain: "### Analisis Kerusakan\nKerusakan LCD HP umumnya disebabkan oleh keretakan fisik pada lapisan kaca panel AMOLED/IPS akibat benturan, atau putusnya jalur kabel fleksibel layar.\n\n### Mekanisme & Dampak Teknis\nKeretakan jalur sirkuit eDP mikro di dalam panel menghentikan distribusi sinyal gambar, menyebabkan layar blank hitam atau muncul garis warna.\n\n### Rekomendasi Tindakan\nGanti modul LCD assembly secara utuh. Pasang pelindung layar tempered glass untuk perlindungan benturan di masa mendatang.",
-    biaya: { min: 350000, max: 2500000 },
-    komponen: ["LCD/AMOLED Assembly", "IC Display Controller", "Kabel Fleksibel Konektor Layar", "Double Tape Frame"],
-    tips: ["Untuk layar AMOLED, harga komponen jauh lebih mahal dibanding IPS. Pastikan garansi pengetesan sebelum layar dilem.", "Gunakan pelindung layar tempered glass berkualitas setelah perbaikan selesai."],
+    explain: "### Analisis Kerusakan\nIC Transceiver WTR mengalami kerusakan akibat korosi cairan atau kejutan tegangan yang merusak sirkuit pemrosesan frekuensi radio (RF).\n\n### Mekanisme & Dampak Teknis\nKerusakan chip transceiver WTR menghentikan pemrosesan modulasi sinyal seluler. Akibatnya, HP tidak bisa menangkap sinyal seluler sama sekali, memunculkan tanda sinyal silang, dan tidak bisa mencari jaringan secara manual.\n\n### Rekomendasi Tindakan\nBawa HP ke pusat reparasi hardware profesional untuk mengganti chip IC WTR yang rusak dengan chip yang baru dan kompatibel.",
+    biaya: { min: 300000, max: 700000 },
+    komponen: ["Chip IC WTR (Transceiver)", "Kondensator Filter RF", "Konektor Kabel Antena"],
+    tips: ["Gunakan casing pelindung tebal untuk meredam getaran benturan langsung ke area mainboard.", "Periksa nomor IMEI Anda terlebih dahulu, pastikan tidak terblokir sebelum mengganti IC WTR."],
+    waktu: "1-2 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Penggantian chip IC WTR membutuhkan blower udara panas dengan suhu terkontrol tinggi agar tidak merusak sirkuit tetangganya."]
+  },
+  'H003': {
+    explain: "### Analisis Kerusakan\nKerusakan pada sirkuit IC Charging disebabkan oleh penggunaan adaptor charger non-original berkualitas rendah yang menyuplai tegangan berfluktuasi tidak stabil ke HP.\n\n### Mekanisme & Dampak Teknis\nLonjakan tegangan merusak sirkuit regulator daya internal chip pengisian, memicu gejala baterai tidak bertambah meski logo petir menyala (fake charging) dan area IC terasa sangat panas.\n\n### Rekomendasi Tindakan\nGanti chip IC Charging pada motherboard. Selalu gunakan charger dan kabel data original berkualitas tinggi yang mendukung regulasi tegangan aman.",
+    biaya: { min: 250000, max: 550000 },
+    komponen: ["Chip IC Charging (PMIC Charger)", "Dioda Proteksi Tegangan (OVP)", "Port USB Connector"],
+    tips: ["Gunakan kabel charger berkualitas yang sudah bersertifikat standar (misal MFi untuk Apple).", "Jangan biarkan HP dicharge semalaman (overnight charging) jika sirkuit OVP Anda bermasalah."],
+    waktu: "1-2 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Kerusakan IC Charger dapat menyebar ke chip daya utama (PMIC) jika dibiarkan korsleting terus-menerus tanpa perbaikan."]
+  },
+  'H004': {
+    explain: "### Analisis Kerusakan\nSirkuit IC Fast Charging mengalami kerusakan akibat panas berlebih (overheating) saat pengisian daya tinggi konstan, atau sirkuit protokol negosiasi daya rusak.\n\n### Mekanisme & Dampak Teknis\nKerusakan pada sirkuit negosiasi daya menggagalkan deteksi protokol pengisian daya cepat (seperti VOOC/QC/PD), membatasi arus masuk ke mode pengisian lambat standar.\n\n### Rekomendasi Tindakan\nGanti chip IC Fast Charging yang rusak. Bersihkan debu pada port Type-C yang dapat menghambat koneksi pin data fast charging.",
+    biaya: { min: 200000, max: 500000 },
+    komponen: ["Chip Protokol Fast Charging", "Kabel Fleksibel Sub-Board ke Mainboard"],
+    tips: ["Selalu bersihkan lubang port charger secara berkala dari serat benang pakaian menggunakan jarum tipis.", "Gunakan charger bawaan HP untuk kestabilan negosiasi daya."],
     waktu: "2-3 jam",
+    kesulitan: "Tinggi",
+    waktuMandiri: "30 menit",
+    biayaMandiri: { min: 50000, max: 150000 },
+    alat: [{ nama: "Obeng Set HP", fungsi: "Membuka baut casing belakang" }, { nama: "Pinset Presisi", fungsi: "Mencabut konektor kabel fleksibel daya" }],
+    bahan: [{ nama: "Modul Papan Charger Bawah Baru", estimasiHarga: "Rp 70.000" }],
+    langkah: [
+      { nomor: 1, judul: "Buka Sub-board", detail: "Buka casing belakang, lepaskan sekrup penutup plastik mesin bawah." },
+      { nomor: 2, judul: "Ganti Papan Charger", detail: "Cabut kabel fleksibel utama dan kabel antena koaksial dari sub-board, angkat papan lama, lalu pasang papan charger baru." },
+      { nomor: 3, judul: "Pasang Kembali", detail: "Hubungkan kembali kabel fleksibel dan antena, pasang sekrup penutup, lalu uji pengisian daya cepat." }
+    ],
+    peringatan: ["Pastikan kabel antena koaksial terpasang rapat hingga klik agar sinyal HP tidak drop setelah pembongkaran."]
+  },
+  'H005': {
+    explain: "### Analisis Kerusakan\nKerusakan pada Central Processing Unit (CPU) HP disebabkan oleh panas berlebih ekstrem (thermal throttling konstan) akibat penggunaan game berat sambil dicharge, atau korsleting internal.\n\n### Mekanisme & Dampak Teknis\nKorsleting pada sirkuit silikon CPU atau retaknya solder bola BGA di bawah chip memutus seluruh jalur distribusi instruksi sistem, menyebabkan HP mati total dan tidak merespon tombol power.\n\n### Rekomendasi Tindakan\nBawa HP ke teknisi spesialis mesin tingkat lanjut untuk melakukan proses reballing CPU (angkat, cetak ulang kaki solder, pasang kembali) atau ganti motherboard baru.",
+    biaya: { min: 500000, max: 1500000 },
+    komponen: ["Chip CPU (Central Processing Unit)", "Solder Ball BGA CPU", "Motherboard Utama"],
+    tips: ["Jangan memaksakan bermain game berat pada kondisi suhu HP sangat panas atau saat sedang dicharge.", "Gunakan phone cooler eksternal untuk membantu membuang panas berlebih saat beban kerja tinggi."],
+    waktu: "2-4 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Proses reballing CPU memiliki tingkat risiko kegagalan permanen yang tinggi, pastikan dikerjakan oleh teknisi spesialis berpengalaman."]
+  },
+  'H006': {
+    explain: "### Analisis Kerusakan\nChip penyimpanan eMMC/UFS mengalami bad sector fisik akibat usia pakai siklus tulis-baca memori flash yang habis, atau korupsi partisi GPT internal.\n\n### Mekanisme & Dampak Teknis\nKerusakan sel memori flash pada sektor partisi bootloader mencegah sistem memuat kernel OS Android/iOS, mengakibatkan HP stuck di logo (bootloop) dan kinerja melambat parah.\n\n### Rekomendasi Tindakan\nLakukan flashing firmware resmi menggunakan komputer. Jika chip eMMC terdeteksi 'read-only' atau mati total, diperlukan penggantian chip eMMC baru.",
+    biaya: { min: 350000, max: 850000 },
+    komponen: ["Chip IC eMMC / UFS Storage", "Motherboard Utama"],
+    tips: ["Selalu lakukan backup data foto dan kontak penting ke akun Google Drive/iCloud Anda secara berkala.", "Jangan mematikan HP secara paksa saat proses update sistem sedang berlangsung."],
+    waktu: "1-2 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Penggantian IC eMMC memerlukan pemrograman ulang partisi IMEI dan enkripsi keamanan agar HP tidak terkunci (brick)."]
+  },
+  'H007': {
+    explain: "### Analisis Kerusakan\nIC Power Amplifier (PA) rusak akibat fluktuasi daya atau beban transmisi sinyal maksimum yang konstan saat berada di area minim sinyal.\n\n### Mekanisme & Dampak Teknis\nKerusakan IC PA menghentikan proses penguatan daya transmisi sinyal radio seluler. Akibatnya, kartu SIM terdeteksi namun sinyal seluler bertanda silang (no service).\n\n### Rekomendasi Tindakan\nBawa HP ke teknisi spesialis mesin untuk penggantian chip IC PA yang sesuai dengan skema tipe mesin HP Anda.",
+    biaya: { min: 250000, max: 600000 },
+    komponen: ["Chip IC PA (Power Amplifier)", "Kondensator Filter Sinyal"],
+    tips: ["Hindari memaksakan menggunakan koneksi data internet seluler saat berada di daerah yang sangat minim jangkauan sinyal.", "Gunakan koneksi WiFi jika sinyal seluler di rumah Anda tidak stabil."],
+    waktu: "1-2 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Perbaikan IC PA membutuhkan penggantian chip dengan nomor seri komponen yang identik agar frekuensi sinyal kembali normal."]
+  },
+  'H008': {
+    explain: "### Analisis Kerusakan\nKerusakan pada chip Power Management utama (PMIC) yang membagi tegangan daya rendah ke komponen periferal seperti modul WiFi dan Bluetooth.\n\n### Mekanisme & Dampak Teknis\nTerputusnya salah satu jalur output daya LDO (Low Dropout Regulator) pada PMIC menghentikan suplai daya ke sirkuit WiFi, menyebabkan modul WiFi mati meski chip WiFi normal.\n\n### Rekomendasi Tindakan\nGanti chip PMIC utama yang rusak pada motherboard. Pastikan kelistrikan HP diuji menggunakan power supply DC bench sebelum perakitan.",
+    biaya: { min: 300000, max: 800000 },
+    komponen: ["Chip PMIC (Power Management IC)", "Kapasitor Jalur Output LDO"],
+    tips: ["Selalu gunakan adaptor charger original bawaan pabrik untuk menghindari fluktuasi arus PMIC.", "Jangan menggunakan powerbank abal-abal yang tidak memiliki fitur pengaman arus voltase."],
+    waktu: "1-2 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Mengganti chip PMIC membutuhkan ketelitian tinggi karena posisinya sangat dekat dengan chip RAM/CPU yang rentan mati jika kepanasan."]
+  },
+  'H009': {
+    explain: "### Analisis Kerusakan\nModul memori RAM mengalami kegagalan fungsi internal atau retak kaki solder timbal akibat panas berlebih (thermal stress) yang konstan.\n\n### Mekanisme & Dampak Teknis\nKegagalan akses data sementara pada memori RAM mengganggu proses eksekusi kernel, menyebabkan HP tiba-tiba mati total saat dinyalakan atau restart berulang.\n\n### Rekomendasi Tindakan\nBawa HP ke teknisi spesialis untuk melakukan teknik reballing/reflow RAM, atau ganti motherboard baru.",
+    biaya: { min: 400000, max: 1000000 },
+    komponen: ["Chip RAM LPDDR", "Motherboard Utama"],
+    tips: ["Jangan menumpuk terlalu banyak aplikasi aktif di latar belakang (background apps) untuk meringankan kinerja RAM.", "Bersihkan file cache sistem secara rutin melalui menu pemeliharaan perangkat."],
+    waktu: "2-3 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Banyak HP modern menumpuk chip RAM di atas chip CPU (double-decker). Pembongkaran RAM membutuhkan blower presisi tinggi agar chip CPU di bawahnya tidak rusak."]
+  },
+  'H010': {
+    explain: "### Analisis Kerusakan\nKerusakan pada IC Audio decoder/codec akibat short sirkuit atau terkena rembesan air di dekat jalur jack audio atau speaker.\n\n### Mekanisme & Dampak Teknis\nKorsleting pada sirkuit codec audio mengunci kontrol audio sistem, sehingga semua fungsi suara (baik suara telepon, musik, mic panggilan) mati total secara terpusat.\n\n### Rekomendasi Tindakan\nGanti chip IC Audio pada motherboard. Pastikan area jalur sirkuit audio dibersihkan dari korosi sisa air.",
+    biaya: { min: 250000, max: 600000 },
+    komponen: ["Chip IC Audio Codec", "Filter Kapasitor Audio", "Jalur Kelistrikan Audio"],
+    tips: ["Jika HP terkena air, segera matikan perangkat dan jangan mencoba menyalakannya sebelum dikeringkan total.", "Gunakan earphone bluetooth sebagai solusi sementara untuk panggilan."],
+    waktu: "1-2 hari",
+    kesulitan: "Sangat Tinggi",
+    waktuMandiri: "Tidak Disarankan",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [],
+    peringatan: ["Jangan menyemprotkan cairan pembersih langsung ke lubang speaker atau microphone HP Anda."]
+  },
+  'H011': {
+    explain: "### Analisis Kerusakan\nKerusakan pada panel kaca sentuh (Touchscreen digitizer) akibat tekanan keras, benturan, atau kabel fleksibel sentuh yang robek/retak sirkuitnya.\n\n### Mekanisme & Dampak Teknis\nPutusnya sirkuit matriks tembaga pada digitizer menghentikan pengiriman koordinat sentuhan jari ke pengontrol layar, menyebabkan layar tidak merespon sama sekali.\n\n### Rekomendasi Tindakan\nGanti modul kaca sentuh (Touchscreen) atau satu set LCD assembly jika panel layar sentuh menyatu secara permanen (laminated display).",
+    biaya: { min: 250000, max: 800000 },
+    komponen: ["Digitizer Touchscreen", "Kabel Fleksibel Touchscreen", "IC Touch Controller"],
+    tips: ["Gunakan tempered glass berkualitas dengan ketebalan minimal 0.3mm untuk meredam benturan layar.", "Gunakan mouse USB dengan adaptor OTG sebagai solusi darurat mengontrol HP yang layarnya tidak bisa disentuh."],
+    waktu: "2 jam",
+    kesulitan: "Tinggi",
+    waktuMandiri: "45 menit",
+    biayaMandiri: { min: 150000, max: 500000 },
+    alat: [{ nama: "Prying Tool & Suction Cup", fungsi: "Melepas layar dari frame" }, { nama: "Obeng Phillips Set", fungsi: "Membuka baut penutup mesin dalam" }],
+    bahan: [{ nama: "Modul Touchscreen Baru", estimasiHarga: "Rp 150.000" }, { nama: "Lem LCD B7000 / T7000", estimasiHarga: "Rp 25.000" }],
+    langkah: [
+      { nomor: 1, judul: "Bongkar HP", detail: "Buka casing belakang, lepaskan konektor baterai, cabut konektor fleksibel touchscreen dari motherboard." },
+      { nomor: 2, judul: "Lepas Layar", detail: "Panaskan sekeliling pinggiran layar dengan hairdryer, gunakan suction cup dan prying pick untuk memisahkan layar dari frame." },
+      { nomor: 3, judul: "Pasang Baru", detail: "Bersihkan sisa lem di frame, oleskan lem baru, pasang touchscreen baru, sambungkan konektor, lalu jepit hingga lem kering." }
+    ],
+    peringatan: ["Jangan menekan layar LCD terlalu keras saat membersihkan sisa lem lama agar tidak memicu noda LCD bocor (dead pixel)."]
+  },
+  'H012': {
+    explain: "### Analisis Kerusakan\nModul kamera HP rusak akibat retaknya elemen optik lensa, putusnya kumparan penstabil gambar (OIS/VCM), atau kerusakan sensor gambar CMOS.\n\n### Mekanisme & Dampak Teknis\nKerusakan kumparan OIS/VCM memicu lensa bergetar tanpa kendala (goyang), sedangkan kegagalan sensor CMOS menyebabkan layar kamera blank hitam atau gambar memblur.\n\n### Rekomendasi Tindakan\nGanti modul kamera internal HP yang rusak. Selalu gunakan penutup pelindung lensa luar agar kaca kamera tidak tergores.",
+    biaya: { min: 200000, max: 900000 },
+    komponen: ["Modul Kamera Utama / Depan", "Voice Coil Motor (VCM/OIS)", "Konektor Fleksibel Kamera"],
+    tips: ["Hindari memasang HP di stang sepeda motor yang memiliki getaran tinggi karena dapat merusak stabilizer OIS kamera.", "Bersihkan kaca luar pelindung kamera menggunakan kain mikrofiber halus secara rutin."],
+    waktu: "1 jam",
+    kesulitan: "Sedang",
+    waktuMandiri: "30 menit",
+    biayaMandiri: { min: 120000, max: 500000 },
+    alat: [{ nama: "Obeng Phillips HP", fungsi: "Membuka baut pelindung modul motherboard" }, { nama: "Pinset Presisi", fungsi: "Melepas modul kamera dari soket motherboard" }],
+    bahan: [{ nama: "Modul Kamera Baru", estimasiHarga: "Rp 200.000" }],
+    langkah: [
+      { nomor: 1, judul: "Bongkar Mesin Atas", detail: "Buka casing belakang, cabut konektor baterai, lalu buka sekrup penutup motherboard atas." },
+      { nomor: 2, judul: "Lepas Kamera Lama", detail: "Gunakan spudger plastik untuk mencungkil konektor fleksibel kamera lama ke atas, lalu angkat modul kamera." },
+      { nomor: 3, judul: "Pasang Modul Baru", detail: "Tempatkan modul kamera baru ke dalam dudukannya, tekan konektor fleksibelnya ke soket motherboard hingga klik." }
+    ],
+    peringatan: ["Jangan menyentuh kaca sensor kamera baru dengan jari telanjang agar tidak meninggalkan noda minyak sidik jari permanen."]
+  },
+  'H013': {
+    explain: "### Analisis Kerusakan\nBaterai lithium mengalami penurunan kapasitas sel (degradasi sel kimia) akibat usia pakai atau panas berlebih saat pengisian daya, memicu gas kimia keluar dan membuat fisik menggembung.\n\n### Mekanisme & Dampak Teknis\nSel baterai yang rusak kehilangan kestabilan tegangan output. Hal ini memicu HP mati secara tiba-tiba saat sasis membutuhkan arus tinggi atau melakukan restart otomatis.\n\n### Rekomendasi Tindakan\nSegera lakukan penggantian baterai HP yang baru. Jangan menusuk baterai kembung karena dapat memicu percikan api ledakan kimia.",
+    biaya: { min: 150000, max: 450000 },
+    komponen: ["Sel Baterai Lithium Polymer", "Sirkuit Pengaman PCM Baterai", "Double Tape Baterai"],
+    tips: ["Jangan membiasakan menggunakan HP hingga persentase baterai 0% karena mempercepat degradasi sel baterai.", "Gunakan pengisi daya resmi dengan output Watt yang sesuai rekomendasi pabrikan."],
+    waktu: "1 jam",
+    kesulitan: "Sedang",
+    waktuMandiri: "30 menit",
+    biayaMandiri: { min: 100000, max: 300000 },
+    alat: [{ nama: "Obeng Phillips & Spudger", fungsi: "Buka casing belakang dan penutup sasis baterai" }, { nama: "Hairdryer", fungsi: "Melunakkan lem perekat di bawah baterai" }],
+    bahan: [{ nama: "Baterai HP Baru", estimasiHarga: "Rp 150.000" }, { nama: "Double Tape Perekat", estimasiHarga: "Rp 10.000" }],
+    langkah: [
+      { nomor: 1, judul: "Lepas Perekat", detail: "Buka casing belakang, cabut konektor baterai, tarik pita perekat baterai (pull tabs) di bawah baterai secara horizontal." },
+      { nomor: 2, judul: "Angkat Baterai", detail: "Gunakan spudger plastik layar lebar untuk mengangkat baterai lama secara perlahan dari sasis HP." },
+      { nomor: 3, judul: "Pasang Baru", detail: "Tempelkan perekat baru di sasis, posisikan baterai baru, tekan perlahan, sambungkan konektor baterai, lalu rakit kembali." }
+    ],
+    peringatan: ["Jangan mencungkil baterai menggunakan obeng logam tajam karena resiko menusuk sel baterai dan memicu kebakaran kimia."]
+  },
+  'H014': {
+    explain: "### Analisis Kerusakan\nSpeaker utama (buzzer/loudspeaker) mengalami kerusakan akibat masuknya partikel debu besi magnetik ke dalam rongga membran, atau sobeknya membran speaker akibat volume suara terlalu keras.\n\n### Mekanisme & Dampak Teknis\nPenumpukan kotoran menyumbat getaran membran speaker, menyebabkan suara terdengar pecah (sember) atau mati total karena sirkuit kumparan voice coil terputus.\n\n### Rekomendasi Tindakan\nBersihkan saringan lubang speaker menggunakan sikat berbulu halus. Jika suara tetap sember/mati, lakukan penggantian modul loudspeaker baru.",
+    biaya: { min: 100000, max: 250000 },
+    komponen: ["Modul Loudspeaker (Buzzer)", "Saringan Debu Casing"],
+    tips: ["Gunakan sikat gigi bekas yang kering untuk menyikat debu halus di lubang speaker luar HP Anda.", "Hindari memutar musik dengan volume maksimal 100% secara terus-menerus."],
+    waktu: "1 jam",
+    kesulitan: "Sedang",
+    waktuMandiri: "20 menit",
+    biayaMandiri: { min: 40000, max: 100000 },
+    alat: [{ nama: "Obeng Phillips HP", fungsi: "Buka sekrup penutup modul speaker bawah" }, { nama: "Spudger Plastik", fungsi: "Mencungkil modul speaker dari frame" }],
+    bahan: [{ nama: "Modul Speaker Baru", estimasiHarga: "Rp 50.000" }],
+    langkah: [
+      { nomor: 1, judul: "Akses Speaker", detail: "Buka casing belakang, lepaskan sekrup penutup plastik mesin bagian bawah tempat speaker berada." },
+      { nomor: 2, judul: "Ganti Modul", detail: "Angkat modul speaker lama yang biasanya menyatu dengan sasis penutup bawah, letakkan modul baru pada posisinya." },
+      { nomor: 3, judul: "Tutup & Sekrup", detail: "Kencangkan sekrup kembali, rakit casing belakang, lalu tes suara nada dering." }
+    ],
+    peringatan: ["Pastikan pin kontak logam kuningan speaker sejajar dengan pin kontak pada papan sirkuit sebelum menyekrupnya."]
+  },
+  'H015': {
+    explain: "### Analisis Kerusakan\nMicrophone internal HP mengalami kerusakan akibat tersumbat kotoran lilin saku celana, terkena cairan korosif, atau putusnya sirkuit mic pada papan charger sub-board.\n\n### Mekanisme & Dampak Teknis\nTersumbatnya lubang mic menghalangi getaran suara masuk ke membran mic, menyebabkan lawan bicara tidak bisa mendengar suara kita saat melakukan panggilan.\n\n### Rekomendasi Tindakan\nBersihkan lubang mic menggunakan jarum tipis secara hati-hati. Jika sirkuit mic mati, ganti papan sasis sub-board charger bawah yang memuat mic internal.",
+    biaya: { min: 100000, max: 300000 },
+    komponen: ["Microphone Sensor (MEMS)", "Papan Charger Bawah (Sub-board)", "Karet Pelindung Mic"],
+    tips: ["Gunakan headset berkabel atau bluetooth sebagai solusi darurat jika mic telepon Anda mati total.", "Jangan menusuk lubang mic terlalu dalam menggunakan jarum karena dapat merusak membran sensor."],
+    waktu: "1 jam",
+    kesulitan: "Sedang",
+    waktuMandiri: "30 menit",
+    biayaMandiri: { min: 50000, max: 150000 },
+    alat: [{ nama: "Obeng Phillips HP", fungsi: "Membuka baut pelindung sub-board bawah" }, { nama: "Pinset Presisi", fungsi: "Melepas konektor fleksibel utama dan antena" }],
+    bahan: [{ nama: "Papan Charger Sub-board Baru (dengan Mic)", estimasiHarga: "Rp 70.000" }],
+    langkah: [
+      { nomor: 1, judul: "Buka Sub-board", detail: "Buka casing belakang, lepaskan sekrup penutup bawah, cabut kabel fleksibel utama dan antena koaksial." },
+      { nomor: 2, judul: "Ganti Sub-board", detail: "Angkat papan charger lama, pastikan karet pelindung mic bawaan dipindahkan ke papan baru, lalu pasang papan baru." },
+      { nomor: 3, judul: "Rakit Kembali", detail: "Pasang kembali kabel fleksibel dan antena, sekrup penutup bawah, lalu uji microphone dengan aplikasi perekam suara." }
+    ],
+    peringatan: ["Karet pelindung mic (gasket) harus dipasang kembali agar suara rekaman tidak mendengung atau gema."]
+  },
+  'H016': {
+    explain: "### Analisis Kerusakan\nLayar LCD/OLED rusak akibat benturan fisik keras yang memecahkan lapisan kaca panel liquid crystal internal, atau putusnya jalur sirkuit fleksibel display.\n\n### Mekanisme & Dampak Teknis\nKeretakan sirkuit display internal menghentikan transfer visual dari GPU ke matriks piksel LCD, menyebabkan layar blank hitam total meskipun mesin HP menyala (ada getar/suara).\n\n### Rekomendasi Tindakan\nGanti modul LCD assembly secara utuh. Pasangkan pelindung tempered glass setelah penggantian layar selesai.",
+    biaya: { min: 350000, max: 2500000 },
+    komponen: ["Layar LCD / OLED Panel", "Kabel Fleksibel Konektor Layar", "IC Display Driver"],
+    tips: ["Untuk layar tipe OLED/AMOLED, harga komponen jauh lebih mahal dibanding layar IPS biasa. Pastikan menguji fungsi layar sebelum direkatkan.", "Gunakan pelindung casing flip cover jika HP sering terjatuh."],
+    waktu: "2 jam",
     kesulitan: "Tinggi",
     waktuMandiri: "60 menit",
     biayaMandiri: { min: 250000, max: 1500000 },
-    alat: [{ nama: "Prying Tool & Suction Cup", fungsi: "Melepas layar lama dari frame" }, { nama: "Klem Penjepit LCD", fungsi: "Menekan layar saat proses pengeleman" }],
+    alat: [{ nama: "Prying Tool & Suction Cup", fungsi: "Melepas modul layar lama dari frame" }, { nama: "Klem Penjepit LCD", fungsi: "Menekan LCD ke frame saat pengeleman" }],
     bahan: [{ nama: "LCD Assembly Baru", estimasiHarga: "Rp 350.000" }, { nama: "Lem LCD T7000 / B7000", estimasiHarga: "Rp 25.000" }],
     langkah: [
-      { nomor: 1, judul: "Bongkar Casing", detail: "Bongkar casing HP dan lepaskan konektor baterai serta konektor fleksibel LCD lama." },
-      { nomor: 2, judul: "Lepas LCD Lama", detail: "Panaskan pinggiran layar LCD, congkil menggunakan prying pick, bersihkan sisa lem lama pada frame logam." },
-      { nomor: 3, judul: "Pengeleman Baru", detail: "Oleskan lem LCD secara merata pada frame, pasang konektor LCD baru, rekatkan LCD ke frame, lalu jepit menggunakan klem selama 1 jam." }
+      { nomor: 1, judul: "Bongkar HP", detail: "Buka casing belakang, cabut konektor baterai dan konektor fleksibel LCD lama." },
+      { nomor: 2, judul: "Lepas LCD Lama", detail: "Panaskan keliling pinggiran layar LCD dengan hairdryer, congkil perlahan menggunakan prying pick, bersihkan frame dari lem lama." },
+      { nomor: 3, judul: "Pasang LCD Baru", detail: "Uji coba layar baru tanpa lem terlebih dahulu. Jika normal, oleskan lem LCD pada frame, pasang LCD baru, lalu jepit dengan klem selama 1 jam." }
     ],
-    peringatan: ["Selalu tes fungsi layar (sentuh dan kecerahan) secara menyeluruh sebelum mengaplikasikan lem permanen.", "Jangan menekan bagian tengah layar LCD dengan keras."]
+    peringatan: ["Selalu uji fungsi sentuh dan kecerahan LCD baru sebelum memasang lem permanen, karena garansi komponen biasanya hangus jika sudah dilem."]
   },
-  'H003': {
-    explain: "### Analisis Kerusakan\nIC Power (PMIC) mengalami kerusakan akibat arus pendek karena tegangan charger yang melonjak tidak stabil, atau panas berlebih pada sirkuit internal IC.\n\n### Mekanisme & Dampak Teknis\nKerusakan pada sirkuit internal PMIC memutus suplai tegangan utama (seperti VPH_PWR) ke prosesor dan memori sehingga HP mati total.\n\n### Rekomendasi Tindakan\nBawa ke teknisi ahli micro-soldering untuk penggantian chip IC Power. Selalu gunakan kepala charger original berkualitas tinggi.",
-    biaya: { min: 300000, max: 800000 },
-    komponen: ["Chip PMIC (IC Power)", "Kapasitor VPH_PWR Rail", "Induktor Power", "Motherboard"],
-    tips: ["Kerusakan IC Power membutuhkan keahlian micro-soldering BGA. Mintalah teknisi yang berpengalaman di bidang mesin.", "Selalu gunakan charger original untuk melindungi chip daya handphone."],
-    waktu: "1-2 hari",
-    kesulitan: "Sangat Tinggi (Hanya untuk profesional)",
-    waktuMandiri: "Tidak Disarankan",
-    biayaMandiri: { min: 0, max: 0 },
-    alat: [],
-    bahan: [],
-    langkah: [],
-    peringatan: ["Perbaikan mandiri untuk kerusakan IC Power sangat tidak disarankan karena membutuhkan mesin blower udara panas khusus dan mikroskop servis."]
-  },
-  'H004': {
-    explain: "### Analisis Kerusakan\nTouchscreen rusak akibat retaknya jalur konduktor transparan indium tin oxide (ITO) pada lapisan digitizer kaca depan.\n\n### Mekanisme & Dampak Teknis\nGangguan pada sirkuit digitizer ini memutus deteksi muatan statis jari tangan, memicu ghost touch atau mati total di sebagian area layar.\n\n### Rekomendasi Tindakan\nJika kaca depan terpisah, Anda bisa mengganti glass digitizer-nya saja. Namun, ganti satu set LCD lebih disarankan demi kerapian.",
-    biaya: { min: 250000, max: 700000 },
-    komponen: ["Digitizer Kaca Sentuh", "IC Touchscreen Controller", "Kabel Fleksibel Touchscreen"],
-    tips: ["Bandingkan biaya penggantian touchscreen saja dengan penggantian satu set LCD utuh. Seringkali satu set LCD lebih direkomendasikan.", "Mintalah pengujian ghost touch sebelum menandatangani bukti penyerahan barang."],
-    waktu: "2-3 jam",
-    kesulitan: "Tinggi",
-    waktuMandiri: "60 menit",
-    biayaMandiri: { min: 100000, max: 400000 },
-    alat: [{ nama: "Prying Tool & Suction Cup", fungsi: "Melepas layar lama dari frame" }, { nama: "Klem Penjepit LCD", fungsi: "Menekan layar saat proses pengeleman" }],
-    bahan: [{ nama: "Touchscreen / LCD Baru", estimasiHarga: "Rp 180.000" }, { nama: "Lem LCD T7000 / B7000", estimasiHarga: "Rp 25.000" }],
-    langkah: [
-      { nomor: 1, judul: "Bongkar HP", detail: "Buka casing belakang, lepaskan konektor baterai, dan lepaskan modul layar dari frame logam." },
-      { nomor: 2, judul: "Uji Layar Baru", detail: "Hubungkan kabel fleksibel layar baru ke motherboard tanpa mengelemnya terlebih dahulu, lalu hidupkan HP dan tes ketikan layar." },
-      { nomor: 3, judul: "Pemasangan", detail: "Oleskan lem LCD di sekeliling bezel frame, tempelkan layar baru dengan presisi, jepit dengan klem hingga kering." }
-    ],
-    peringatan: ["Gunakan lem secukupnya agar tidak meluber ke dalam backlight LCD yang dapat menyebabkan bercak putih.", "Matikan HP sebelum memasang konektor."]
-  },
-  'H005': {
-    explain: "### Analisis Kerusakan\nModul kamera rusak akibat putusnya kumparan voice coil motor (VCM) autofocus karena guncangan keras, atau lensa luar yang retak.\n\n### Mekanisme & Dampak Teknis\nKerusakan pada VCM membuat lensa kamera tidak bisa bergeser fokus, menyebabkan hasil foto buram, tidak fokus, atau kamera blank hitam.\n\n### Rekomendasi Tindakan\nGanti modul kamera internal yang sesuai dengan tipe HP Anda. Jaga lensa luar agar tetap bersih.",
-    biaya: { min: 200000, max: 750000 },
-    komponen: ["Modul Kamera Belakang/Depan", "Konektor Flex Kamera", "Kaca Pelindung Lensa Belakang"],
-    tips: ["Pastikan lensa pelindung luar dibersihkan secara menyeluruh sebelum memasang modul kamera baru.", "Minta teknisi menunjukkan hasil jepretan kamera baru pada kondisi minim cahaya."],
-    waktu: "1 jam",
-    kesulitan: "Sedang",
-    waktuMandiri: "30 menit",
-    biayaMandiri: { min: 100000, max: 400000 },
-    alat: [{ nama: "Obeng Phillips HP", fungsi: "Membuka baut penutup motherboard" }, { nama: "Pinset Presisi", fungsi: "Melepas modul kamera dari soketnya" }],
-    bahan: [{ nama: "Modul Kamera Pengganti", estimasiHarga: "Rp 220.000" }],
-    langkah: [
-      { nomor: 1, judul: "Akses Mesin", detail: "Buka casing belakang dan lepaskan penutup plastik mesin utama yang menutupi soket kamera." },
-      { nomor: 2, judul: "Lepas Kamera", detail: "Gunakan spudger plastik untuk mencungkil konektor fleksibel kamera lama ke atas, lalu angkat kamera." },
-      { nomor: 3, judul: "Pasang Baru", detail: "Tempatkan modul kamera baru ke dalam dudukannya, tekan konektor koaksialnya ke soket motherboard hingga berbunyi klik." }
-    ],
-    peringatan: ["Jangan pernah menyentuh lensa kaca kamera baru dengan jari telanjang karena sidik jari akan meninggalkan noda permanen.", "Gunakan pinset dengan sangat hati-hati agar tidak merusak komponen kecil di sekitar soket."]
-  },
-  'H006': {
-    explain: "### Analisis Kerusakan\nSpeaker HP rusak umumnya disebabkan oleh membran sobek akibat volume suara terlalu kencang, atau kotoran besi magnetik yang mengunci getaran membran.\n\n### Mekanisme & Dampak Teknis\nSerpihan logam magnetik mengunci getaran membran speaker, menyebabkan suara terdengar pecah, sangat pelan, atau mati total.\n\n### Rekomendasi Tindakan\nBersihkan lubang speaker menggunakan kuas halus terlebih dahulu. Jika membran terbukti sobek, lakukan penggantian modul speaker.",
+  'H017': {
+    explain: "### Analisis Kerusakan\nKerusakan sirkuit perangkat lunak (System Operasi) disebabkan oleh kegagalan sistem saat melakukan proses pembaruan firmware (OTA update), infeksi malware, atau data sistem korup.\n\n### Mekanisme & Dampak Teknis\nKorupsi pada file partisi system/boot mencegah kernel OS dimuat oleh bootloader, menyebabkan sistem mengalami bootloop (stuck di logo) atau restart berulang saat dinyalakan.\n\n### Rekomendasi Tindakan\nLakukan flashing ulang firmware resmi (Stock ROM) menggunakan komputer dan software flash tool resmi (seperti Odin, Mi Flash, atau iTunes).",
     biaya: { min: 100000, max: 250000 },
-    komponen: ["Modul Loudspeaker", "Kabel Konektor Audio", "Pin Kontak Motherboard"],
-    tips: ["Pastikan kerusakan bukan karena lubang speaker tersumbat oleh debu tebal. Kadang pembersihan dengan sikat gigi kering sudah cukup.", "Ganti modul speaker original agar kualitas audio kembali jernih."],
-    waktu: "1 jam",
+    komponen: ["Firmware System Operasi", "Partisi Recovery / Bootloader"],
+    tips: ["Pastikan daya baterai minimal 50% sebelum memulai proses flashing firmware menggunakan komputer.", "Gunakan kabel data berkualitas baik saat menghubungkan HP ke komputer agar transfer firmware tidak terputus."],
+    waktu: "1-2 jam",
     kesulitan: "Sedang",
-    waktuMandiri: "25 menit",
-    biayaMandiri: { min: 40000, max: 120000 },
-    alat: [{ nama: "Obeng Phillips HP", fungsi: "Membuka sekrup modul speaker di bagian bawah HP" }, { nama: "Spudger Plastik", fungsi: "Mencungkil modul speaker dari casing" }],
-    bahan: [{ nama: "Modul Speaker HP Baru", estimasiHarga: "Rp 60.000" }],
-    langkah: [
-      { nomor: 1, judul: "Bongkar Bawah", detail: "Buka casing belakang, lalu buka baut penutup papan charger (sub-board) di bagian bawah HP tempat speaker berada." },
-      { nomor: 2, judul: "Ganti Speaker", detail: "Angkat modul speaker lama yang biasanya menyatu dengan plastik penutup bawah, lalu pasang modul speaker baru." },
-      { nomor: 3, judul: "Tutup Kembali", detail: "Kencangkan sekrup penutup bawah, pasang casing belakang, dan tes suara menggunakan nada dering." }
-    ],
-    peringatan: ["Pastikan pin kontak logam pada speaker sejajar dengan pin kontak pada papan sirkuit sebelum sekrup dikencangkan.", "Jangan menggunakan cairan pembersih berlebihan di dekat jalur sirkuit."]
-  },
-  'H007': {
-    explain: "### Analisis Kerusakan\nKelemahan penangkapan sinyal disebabkan oleh terputusnya kabel antena koaksial internal HP atau kerusakan sirkuit IC RF Transceiver.\n\n### Mekanisme & Dampak Teknis\nKerusakan pada IC RF mengganggu modulasi dan amplifikasi frekuensi radio seluler, memicu status sinyal 'No Service' atau 'Panggilan Darurat'.\n\n### Rekomendasi Tindakan\nMintalah teknisi memeriksa sambungan kabel antena koaksial internal terlebih dahulu sebelum memutuskan mengganti IC RF utama.",
-    biaya: { min: 250000, max: 650000 },
-    komponen: ["IC RF Transceiver", "Kabel Antena Koaksial", "Lempengan Kontak Antena Casing"],
-    tips: ["Mintalah teknisi memeriksa kabel antena koaksial internal terlebih dahulu sebelum memutuskan mengganti IC RF.", "Pastikan IMEI HP terdaftar di Kemenperin jika sinyal tiba-tiba hilang total setelah update software."],
-    waktu: "1-2 hari",
-    kesulitan: "Sangat Tinggi (Hanya untuk profesional)",
-    waktuMandiri: "Tidak Disarankan",
+    waktuMandiri: "45 menit",
     biayaMandiri: { min: 0, max: 0 },
-    alat: [],
-    bahan: [],
-    langkah: [],
-    peringatan: ["Kerusakan IC RF membutuhkan keahlian solder BGA tingkat lanjut dan alat hot air station presisi, tidak disarankan untuk perbaikan mandiri."]
-  },
-  'H008': {
-    explain: "### Analisis Kerusakan\nPort Charger rusak akibat patahnya lidah pin kuningan di dalam port Type-C/Micro USB karena colokan charger yang dipaksa masuk terbalik.\n\n### Mekanisme & Dampak Teknis\nKorosi akibat cairan di saku celana juga dapat menghambat aliran arus pengisian daya dan memutuskan jalur transfer data ke PC.\n\n### Rekomendasi Tindakan\nGantilah satu set papan sasis sub-board charger bawah. Pengeleman casing belakang harus rapat setelah proses perbaikan selesai.",
-    biaya: { min: 150000, max: 350000 },
-    komponen: ["Port USB Type-C / Micro USB", "Papan Charger (Sub-board)", "Konektor Flex Utama", "Microphone Internal Sub-board"],
-    tips: ["Lebih baik mengganti satu set papan charger (sub-board) daripada hanya menyolder ulang port USB-nya saja, karena pengerjaan jauh lebih cepat dan minim resiko.", "Gunakan kabel charger yang masih presisi setelah perbaikan agar port baru awet."],
-    waktu: "1 jam",
-    kesulitan: "Sedang",
-    waktuMandiri: "30 menit",
-    biayaMandiri: { min: 50000, max: 150000 },
-    alat: [{ nama: "Obeng Phillips HP", fungsi: "Membuka penutup bawah casing" }, { nama: "Pinset & Spudger", fungsi: "Melepas kabel fleksibel utama dan antena dari sub-board" }],
-    bahan: [{ nama: "Papan Charger Baru (Sub-board)", estimasiHarga: "Rp 70.000" }],
+    alat: [{ nama: "Kabel Data USB Original", fungsi: "Menghubungkan HP ke komputer/laptop" }, { nama: "Komputer / Laptop", fungsi: "Menjalankan aplikasi flashing firmware" }],
+    bahan: [{ nama: "Stock ROM Resmi Firmware", estimasiHarga: "Gratis (Unduh dari situs resmi)" }],
     langkah: [
-      { nomor: 1, judul: "Buka Sub-board", detail: "Buka sekrup penutup bawah HP, cabut kabel fleksibel utama dan kabel antena koaksial dari sub-board." },
-      { nomor: 2, judul: "Ganti Board", detail: "Angkat sub-board lama secara perlahan, pasang sub-board baru pada posisi yang pas di dalam sasis." },
-      { nomor: 3, judul: "Hubungkan Kembali", detail: "Pasang kembali kabel fleksibel utama dan tekan kabel antena ke soketnya hingga mengunci, lalu rakit kembali casing." }
+      { nomor: 1, judul: "Unduh Firmware", detail: "Unduh file firmware stock ROM yang sesuai persis dengan model tipe HP Anda di komputer." },
+      { nomor: 2, judul: "Masuk Download Mode", detail: "Matikan HP, tekan tombol kombinasi (misal Power + Volume Bawah) untuk masuk ke Recovery/Download/Fastboot mode, lalu hubungkan ke PC." },
+      { nomor: 3, judul: "Jalankan Flash", detail: "Buka aplikasi flash tool di PC, pilih file firmware yang diunduh, lalu klik tombol Flash/Restore dan tunggu hingga selesai." }
     ],
-    peringatan: ["Sub-board biasanya juga berisi microphone utama. Pastikan karet pelindung mic bawaan dipindahkan ke sub-board baru agar suara telpon tidak mendengung.", "Jangan menarik kabel antena secara paksa."]
+    peringatan: ["Proses flashing ulang firmware akan menghapus seluruh data internal HP. Pastikan Anda menyetujui konsekuensi hilangnya data."]
   },
-  'H009': {
-    explain: "### Analisis Kerusakan\nSensor proximity rusak akibat tertutupnya kaca sensor oleh debu halus di dalam sasis, pergeseran karet sil, atau kerusakan sirkuit inframerah.\n\n### Mekanisme & Dampak Teknis\nHal ini membuat sensor inframerah tidak bisa membedakan jarak objek dengan akurat, sehingga layar tidak mati saat HP ditempelkan ke telinga.\n\n### Rekomendasi Tindakan\nBersihkan area sensor dari kotoran atau ganti kabel fleksibel sensor atas yang baru bila chip pemancar inframerahnya rusak.",
-    biaya: { min: 150000, max: 300000 },
-    komponen: ["Sensor Proximity / Ambient Light Module", "Karet Sil Sensor (Gasket)", "Kabel Fleksibel Sensor Atas"],
-    tips: ["Seringkali masalah terjadi hanya karena tempered glass yang menutupi sensor di atas layar. Coba lepas tempered glass terlebih dahulu.", "Pastikan karet sil sensor terpasang dengan pas untuk mencegah kebocoran cahaya latar."],
+  'H018': {
+    explain: "### Analisis Kerusakan\nNomor identitas modem (IMEI) terhapus/korup di partisi EFS/NVRAM akibat kegagalan flash firmware, atau nomor IMEI diblokir secara nasional karena perangkat tidak terdaftar resmi.\n\n### Mekanisme & Dampak Teknis\nHilangnya data nomor IMEI mencegah modem mendaftarkan jaringan ke operator seluler nasional, memicu status kartu SIM terdeteksi namun tidak ada jaringan.\n\n### Rekomendasi Tindakan\nLakukan registrasi IMEI resmi Bea Cukai jika HP dibeli dari luar negeri. Jika karena kerusakan data EFS, lakukan restore data partisi EFS/NVRAM menggunakan box flasher.",
+    biaya: { min: 150000, max: 500000 },
+    komponen: ["Partisi NVRAM / EFS IMEI", "Modem Baseband Firmware"],
+    tips: ["Periksa status IMEI Anda terlebih dahulu di situs resmi Bea Cukai atau Kemenperin untuk memastikan status blokir.", "Selalu backup partisi EFS menggunakan TWRP sebelum melakukan modifikasi sistem operasi (Custom ROM)."],
     waktu: "1-2 jam",
     kesulitan: "Tinggi",
-    waktuMandiri: "45 menit",
-    biayaMandiri: { min: 50000, max: 150000 },
-    alat: [{ nama: "Obeng Phillips HP", fungsi: "Membuka penutup mesin atas" }, { nama: "Pinset & Prying Pick", fungsi: "Membuka casing belakang dan melepas baterai" }],
-    bahan: [{ nama: "Kabel Fleksibel Sensor Baru", estimasiHarga: "Rp 65.000" }],
-    langkah: [
-      { nomor: 1, judul: "Bongkar Mesin Atas", detail: "Buka casing belakang, lepaskan konektor baterai, buka penutup atas motherboard untuk mengakses area earpiece." },
-      { nomor: 2, judul: "Ganti Sensor", detail: "Cari kabel fleksibel sensor dekat earpiece, gunakan pinset untuk mencungkilnya secara perlahan dari perekat layar." },
-      { nomor: 3, judul: "Pasang Baru", detail: "Rekatkan sensor baru, pastikan karet sil terpasang melingkari mata sensor inframerah dengan presisi, lalu pasang konektor." }
-    ],
-    peringatan: ["Jika karet sil sensor tidak dipasang kembali, sensor proximity tidak akan bekerja (layar tetap mati saat menelepon).", "Jangan membersihkan sensor inframerah menggunakan alkohol berlebihan."]
-  },
-  'H010': {
-    explain: "### Analisis Kerusakan\nChip memori eMMC/UFS mengalami bad sector parah akibat panas berlebih (thermal stress) atau umur pakai siklus tulis-baca sel memori yang habis (worn out).\n\n### Mekanisme & Dampak Teknis\nBerkas sistem operasi Android yang korup di dalam partisi memori menyebabkan prosesor gagal memuat kernel, memicu bootloop parah.\n\n### Rekomendasi Tindakan\nLakukan penulisan ulang firmware menggunakan box pemrogram (flashing). Jika chip mati total, diperlukan penggantian chip eMMC baru.",
-    biaya: { min: 400000, max: 950000 },
-    komponen: ["Chip IC eMMC / UFS Memory", "IC CPU / Processor (Reballing)", "Motherboard Mainboard"],
-    tips: ["Penggantian eMMC/UFS membutuhkan penulisan ulang firmware (flashing partitions) menggunakan box sifter UFI. Cari spesialis software HP.", "Selalu lakukan backup data secara berkala ke cloud sebelum chip memori terkunci total (brick)."],
-    waktu: "2-3 hari",
-    kesulitan: "Sangat Tinggi (Hanya untuk profesional)",
-    waktuMandiri: "Tidak Disarankan",
+    waktuMandiri: "30 menit",
     biayaMandiri: { min: 0, max: 0 },
-    alat: [],
+    alat: [{ nama: "Komputer / Laptop", fungsi: "Menjalankan tool bypass/repair IMEI" }],
     bahan: [],
-    langkah: [],
-    peringatan: ["Perbaikan mandiri untuk kerusakan eMMC tidak disarankan karena membutuhkan alat pemrogram partisi chip (UFI Box) dan keahlian soldering BGA."]
+    langkah: [
+      { nomor: 1, judul: "Cek IMEI", detail: "Tekan *#06# pada dialer HP. Jika IMEI null atau 0, berarti partisi NVRAM/EFS rusak secara software." },
+      { nomor: 2, judul: "Write EFS", detail: "Hubungkan HP ke PC dalam mode diag port, gunakan aplikasi flasher (seperti QPST/QFIL) untuk menulis ulang berkas NVRAM/EFS bawaan." },
+      { nomor: 3, judul: "Uji Jaringan", detail: "Nyalakan HP, masukkan kartu SIM, pastikan nomor IMEI kembali muncul dan sinyal terdeteksi." }
+    ],
+    peringatan: ["Melakukan pengubahan nomor IMEI selain nomor bawaan perangkat adalah tindakan melanggar hukum di beberapa negara."]
   },
 
   // ================= PC =================
   'P001': {
-    explain: "### Analisis Kerusakan\nPower Supply Unit (PSU) rusak disebabkan oleh jebolnya kapasitor primer besar (leaking capacitor) akibat lonjakan tegangan listrik PLN, atau matinya sirkuit pengatur tegangan PWM.\n\n### Mekanisme & Dampak Teknis\nKerusakan ini memutus jalur distribusi daya utama 12V, 5V, dan 3.3V ke motherboard, membuat PC tidak mau menyala sama sekali.\n\n### Rekomendasi Tindakan\nGantilah PSU dengan unit baru bersertifikasi minimal 80 Plus. Jangan mencoba memperbaiki PSU secara mandiri karena berisiko sengatan listrik tinggi.",
-    biaya: { min: 250000, max: 1200000 },
-    komponen: ["Power Supply Unit (PSU)", "Kabel Daya Utama 24-Pin", "Kapasitor Elektrolit Utama PSU", "Kipas Pendingin PSU"],
-    tips: ["Hindari membeli PSU murah tanpa sertifikasi efisiensi 80 Plus. PSU buruk dapat merusak motherboard dan kartu grafis Anda.", "Gunakan UPS (Uninterruptible Power Supply) untuk mencegah kerusakan akibat mati lampu mendadak."],
-    waktu: "1 jam",
-    kesulitan: "Mudah",
+    explain: "### Analisis Kerusakan\nKerusakan pada unit monitor disebabkan oleh kerusakan panel LCD backlight, modul inverter tegangan tinggi, atau kerusakan sirkuit T-Con board. Hal ini menghalangi transmisi visual dari kartu grafis PC ke panel layar.\n\n### Mekanisme & Dampak Teknis\nKerusakan panel LCD backlight menghentikan pencahayaan layar, sedangkan kerusakan T-Con board mengacaukan pemrosesan piksel grafis, menyebabkan tampilan blank hitam atau bergaris.\n\n### Rekomendasi Tindakan\nPastikan koneksi kabel data (HDMI/VGA) terhubung dengan kencang di kedua sisi. Jika panel LCD pecah atau bergaris permanen, disarankan untuk mengganti panel layar monitor yang baru.",
+    biaya: { min: 400000, max: 1500000 },
+    komponen: ["Panel LCD Monitor", "T-Con Board", "Backlight LED/CCFL", "Kabel Konektor LVDS"],
+    tips: ["Gunakan kabel display berkualitas tinggi (seperti DisplayPort atau HDMI) dengan pelindung nilon.", "Selalu matikan monitor sebelum melepas/memasang kabel data."],
+    waktu: "2-4 jam",
+    kesulitan: "Sedang",
     waktuMandiri: "30 menit",
-    biayaMandiri: { min: 200000, max: 900000 },
-    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka baut pengunci PSU ke sasis casing PC" }, { nama: "Pengikat Kabel (Cable Ties)", fungsi: "Merapikan kabel PSU baru di dalam casing" }],
-    bahan: [{ nama: "PSU Baru (e.g. 500W 80 Plus)", estimasiHarga: "Rp 550.000" }],
+    biayaMandiri: { min: 350000, max: 1200000 },
+    alat: [{ nama: "Obeng Set Presisi", fungsi: "Membuka casing luar monitor" }, { nama: "Prying Tool Plastik", fungsi: "Mencongkil bezel monitor tanpa merusak plastik" }],
+    bahan: [{ nama: "Panel LCD Pengganti", estimasiHarga: "Rp 500.000" }],
     langkah: [
-      { nomor: 1, judul: "Lepas Kabel", detail: "Matikan PC, cabut kabel daya stopkontak, buka penutup casing samping PC, lalu lepaskan semua konektor kabel PSU dari motherboard, GPU, dan storage." },
-      { nomor: 2, judul: "Lepas PSU", detail: "Buka 4 sekrup pengunci PSU di bagian belakang casing PC, lalu tarik PSU keluar secara perlahan." },
-      { nomor: 3, judul: "Pasang Baru", detail: "Masukkan PSU baru, kencangkan 4 sekrup belakang, hubungkan konektor 24-pin ke motherboard, konektor 8-pin ke CPU, dan konektor daya GPU/SATA." }
+      { nomor: 1, judul: "Buka Bezel", detail: "Gunakan prying tool plastik untuk mencungkil bezel plastik monitor di sekeliling layar secara perlahan." },
+      { nomor: 2, judul: "Lepas Panel", detail: "Buka baut penyangga bracket layar, rebahkan panel, lalu cabut kabel LVDS/eDP dari belakang panel." },
+      { nomor: 3, judul: "Pasang Baru", detail: "Hubungkan kabel data to panel baru, posisikan panel pada bracket casing, kencangkan baut, lalu pasang kembali bezel." }
     ],
-    peringatan: ["Jangan pernah membuka casing PSU internal karena di dalamnya tersimpan muatan listrik tegangan tinggi berbahaya meskipun kabel sudah dicabut.", "Pastikan semua konektor kabel terpasang dengan erat dan klik."]
+    peringatan: ["Jangan menyentuh papan sirkuit power supply internal monitor karena terdapat kapasitor bertegangan tinggi (400V) yang berbahaya.", "Jangan menekan bagian tengah panel LCD baru."]
   },
   'P002': {
-    explain: "### Analisis Kerusakan\nRAM kotor disebabkan oleh penumpukan debu halus yang menghambat pin konduktor memori, atau sirkuit logika modul memori mati akibat lonjakan listrik dinamis.\n\n### Mekanisme & Dampak Teknis\nPenumpukan debu memutus kontak jalur bus data memori dengan slot DIMM motherboard, menggagalkan proses POST sistem (PC berbunyi bip).\n\n### Rekomendasi Tindakan\nBersihkan pin kuningan RAM menggunakan penghapus pensil hingga mengkilap, lalu bersihkan slot DIMM di motherboard dengan semprotan contact cleaner.",
-    biaya: { min: 200000, max: 800000 },
-    komponen: ["Modul Memori RAM (DDR4/DDR5)", "Slot DIMM Motherboard"],
-    tips: ["Bersihkan pin kuningan RAM menggunakan penghapus pensil secara searah hingga mengkilap sebelum memutuskan membelinya.", "Gunakan slot memori nomor 2 dan 4 (dual channel) untuk performa optimal pada motherboard dual slot."],
+    explain: "### Analisis Kerusakan\nKegagalan memori RAM umumnya disebabkan oleh tumpukan debu konduktif atau oksidasi pada kaki pin emas RAM akibat kelembapan tinggi, yang mengganggu kontak slot DIMM.\n\n### Mekanisme & Dampak Teknis\nTerputusnya kontak jalur bus memori menggagalkan proses Power-On Self-Test (POST) BIOS saat komputer dinyalakan, memicu bunyi beep berulang dan layar blank (no display).\n\n### Rekomendasi Tindakan\nCabut modul RAM dan gosok pin kuningan emas menggunakan penghapus karet pensil hingga bersih mengkilap, lalu bersihkan slot RAM dengan contact cleaner.",
+    biaya: { min: 150000, max: 800000 },
+    komponen: ["Modul RAM DDR3/DDR4/DDR5", "Slot Memori DIMM Motherboard"],
+    tips: ["Bersihkan pin RAM secara searah secara lembut dengan penghapus karet.", "Gunakan slot memori dual channel (biasanya slot 2 dan 4) untuk memaksimalkan performa transfer data."],
     waktu: "1 jam",
     kesulitan: "Sangat Mudah",
     waktuMandiri: "15 menit",
-    biayaMandiri: { min: 5000, max: 15005 },
-    alat: [{ nama: "Penghapus Karet Pensil", fungsi: "Mengikis oksidasi pada kaki pin RAM" }, { nama: "Cairan Pembersih Kontak (Contact Cleaner)", fungsi: "Membersihkan debu di dalam slot DIMM motherboard" }],
-    bahan: [{ nama: "Kuas Halus", estimasiHarga: "Rp 5.000" }],
+    biayaMandiri: { min: 5000, max: 15000 },
+    alat: [{ nama: "Penghapus Karet Pensil", fungsi: "Mengikis kotoran oksidasi pada pin RAM" }, { nama: "Semprotan Contact Cleaner", fungsi: "Membersihkan debu di dalam celah slot memori" }],
+    bahan: [{ nama: "Kuas Kecil / Cotton Bud", estimasiHarga: "Rp 5.000" }],
     langkah: [
-      { nomor: 1, judul: "Lepas RAM", detail: "Matikan PC, buka penutup samping casing, tekan klip pengunci slot RAM di motherboard ke bawah, lalu tarik RAM ke atas." },
-      { nomor: 2, judul: "Pembersihan", detail: "Gosok pin kuningan RAM menggunakan penghapus karet secara perlahan di kedua sisi. Semprot slot RAM dengan contact cleaner." },
-      { nomor: 3, judul: "Pemasangan", detail: "Masukkan RAM kembali ke slotnya secara merata, lalu tekan ke bawah hingga klip pengunci berbunyi klik dan mengunci otomatis." }
+      { nomor: 1, judul: "Lepas RAM", detail: "Matikan PC, buka penutup casing samping, tekan tuas pengunci slot RAM di motherboard, lalu tarik modul RAM lurus ke atas." },
+      { nomor: 2, judul: "Pembersihan", detail: "Gosok kaki pin kuningan RAM secara lembut dengan penghapus karet di kedua sisi hingga mengkilap. Kuas debu di slot RAM." },
+      { nomor: 3, judul: "Pasang Kembali", detail: "Masukkan RAM ke slotnya secara merata lurus ke bawah hingga kedua klip pengunci berbunyi klik dan mengunci otomatis." }
     ],
-    peringatan: ["Sentuh bagian luar casing PC logam sebelum memegang RAM untuk menetralisir listrik statis tubuh Anda.", "Pastikan tonjolan slot sejajar dengan lekukan pada pin RAM."]
+    peringatan: ["Sentuh bagian luar casing PC berbahan logam untuk membuang listrik statis tubuh sebelum menyentuh komponen RAM.", "Jangan memasang RAM terbalik, perhatikan lekukan pembatas slot."]
   },
   'P003': {
-    explain: "### Analisis Kerusakan\nKerusakan VGA (GPU) umumnya diakibatkan oleh pecahnya solder ball (retak solder mikro) di bawah chip GPU akibat panas berlebih yang konstan.\n\n### Mekanisme & Dampak Teknis\nHal ini menyebabkan output gambar ke monitor terganggu (muncul artefak garis) atau PC crash saat menjalankan game berat.\n\n### Rekomendasi Tindakan\nLakukan penggantian thermal paste VGA secara berkala. Jika kartu grafis rusak parah, lakukan penggantian kartu grafis baru.",
+    explain: "### Analisis Kerusakan\nKerusakan mekanis Hard Disk disebabkan oleh ausnya dinamo pemutar (spindle motor), kemacetan jarum pembaca (head crash), atau kerusakan bad sector fisik pada piringan magnetik.\n\n### Mekanisme & Dampak Teknis\nKemacetan head pembaca (clicking noise) atau rusaknya sektor sektor partisi MBR mencegah sistem operasi memproses sistem booting, sehingga PC stuck di BIOS atau bootloop.\n\n### Rekomendasi Tindakan\nSegera backup data penting jika hard disk masih terdeteksi. Sangat disarankan mengganti hard disk dengan SSD SATA atau M.2 NVMe untuk kecepatan dan ketahanan guncangan yang jauh lebih tinggi.",
+    biaya: { min: 300000, max: 900000 },
+    komponen: ["Platter Magnetik HDD", "Head Actuator Arm", "Motor Spindle", "Sektor Partisi MBR/GPT"],
+    tips: ["Gantilah hard disk mekanik Anda dengan Solid State Drive (SSD) karena tidak memiliki komponen bergerak dan 10x lipat lebih cepat.", "Gunakan software CrystalDiskInfo untuk memantau kesehatan sektor hard disk."],
+    waktu: "1-2 jam",
+    kesulitan: "Mudah",
+    waktuMandiri: "30 menit",
+    biayaMandiri: { min: 250000, max: 600000 },
+    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka sasis casing samping PC dan sekrup hardisk" }],
+    bahan: [{ nama: "SSD SATA / M.2 NVMe Baru", estimasiHarga: "Rp 350.000" }],
+    langkah: [
+      { nomor: 1, judul: "Lepas HDD Lama", detail: "Buka bracket hard disk di dalam casing PC, lepaskan kabel data SATA dan kabel power SATA dari belakang hard disk." },
+      { nomor: 2, judul: "Pasang Baru", detail: "Pasang SSD baru ke bracket, sambungkan kabel data SATA ke motherboard dan kabel power SATA dari PSU." },
+      { nomor: 3, judul: "Instal Sistem", detail: "Nyalakan komputer, masuk to media installer OS Windows (flashdisk) untuk melakukan instalasi sistem operasi baru pada SSD." }
+    ],
+    peringatan: ["Jangan memindahkan, menggoyang, atau membenturkan PC saat hard disk mekanis sedang beroperasi (menyala) karena rawan merusak piringan.", "Pastikan sekrup pengunci storage terpasang kokoh."]
+  },
+  'P004': {
+    explain: "### Analisis Kerusakan\nKerusakan kartu grafis VGA umumnya disebabkan oleh retaknya bola-bola solder BGA (lead-free solder joints) di bawah chip GPU akibat panas berlebih (overheat) berulang.\n\n### Mekanisme & Dampak Teknis\nRetaknya interkoneksi solder mikro ini memutus jalur transmisi sinyal data piksel gambar dari GPU ke motherboard, memicu gejala layar blank hitam, artefak garis berwarna, atau no signal ke monitor.\n\n### Rekomendasi Tindakan\nLakukan pemeliharaan kipas pendingin VGA dan bersihkan sisa thermal paste kering. Jika chip GPU rusak permanen, diperlukan penggantian unit VGA Card baru.",
     biaya: { min: 400000, max: 3000000 },
-    komponen: ["Chip GPU Core (BGA)", "Chip VRAM Memori", "Sirkuit VRM GPU", "Kipas Pendingin GPU (Cooling Fan)"],
-    tips: ["Hindari membeli VGA bekas pertambangan kripto (crypto mining) tanpa garansi yang jelas.", "Pastikan driver kartu grafis selalu diperbarui untuk mencegah crash software."],
+    komponen: ["Chip GPU Core", "VRAM Video Memory", "Sirkuit VRM GPU", "Cooling Fan VGA"],
+    tips: ["Jangan membeli VGA bekas mining (tambang kripto) tanpa jaminan garansi fisik yang jelas.", "Selalu perbarui driver kartu grafis ke versi terbaru dari website resmi NVIDIA / AMD."],
     waktu: "1-2 hari",
     kesulitan: "Tinggi",
     waktuMandiri: "30 menit",
-    biayaMandiri: { min: 350000, max: 2000000 },
-    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka sekrup bracket VGA di casing" }],
-    bahan: [{ nama: "VGA Card Pengganti Baru", estimasiHarga: "Rp 1.500.000" }],
+    biayaMandiri: { min: 300000, max: 2000000 },
+    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka sekrup bracket VGA di casing belakang" }],
+    bahan: [{ nama: "VGA Card Pengganti Baru", estimasiHarga: "Rp 1.200.000" }],
     langkah: [
-      { nomor: 1, judul: "Pelepasan Kabel GPU", detail: "Buka baut pengunci VGA di bracket belakang casing, tekan tuas pengunci PCIe slot ke bawah, lepaskan kabel power PCIe 6/8-pin." },
-      { nomor: 2, judul: "Lepas VGA", detail: "Tarik kartu grafis secara perlahan lurus ke atas keluar dari motherboard." },
-      { nomor: 3, judul: "Pasang Baru", detail: "Tancapkan kartu grafis baru ke slot PCIe utama, dorong hingga tuas mengunci, pasang sekrup bracket, lalu colok kabel power PCIe." }
+      { nomor: 1, judul: "Pelepasan Kabel", detail: "Buka sekrup bracket VGA di belakang casing, tekan tuas pengunci slot PCIe ke bawah, lalu lepaskan kabel daya tambahan PCIe 6/8-pin." },
+      { nomor: 2, judul: "Tarik VGA", detail: "Tarik VGA card lurus secara vertikal ke atas dari slot PCIe motherboard secara perlahan." },
+      { nomor: 3, judul: "Pasang Baru", detail: "Tancapkan VGA baru ke slot PCIe utama, tekan hingga tuas berbunyi klik, pasang sekrup bracket, lalu colokkan kabel daya PCIe." }
     ],
-    peringatan: ["Jangan mencabut kartu grafis saat PC sedang menyala.", "Pastikan power supply PC memiliki daya yang cukup untuk menyuplai kartu grafis baru."]
-  },
-  'P004': {
-    explain: "### Analisis Kerusakan\nHDD/SSD mengalami kegagalan fungsi akibat habisnya batas siklus penulisan data (TBW) pada chip memori Flash NAND SSD, atau ausnya head pembaca piringan mekanik HDD.\n\n### Mekanisme & Dampak Teknis\nHal ini mengacaukan pembacaan tabel partisi master boot record (MBR) sistem operasi Windows, menyebabkan sistem booting sangat lambat atau error.\n\n### Rekomendasi Tindakan\nPindahkan file sistem operasi Anda ke SSD M.2 NVMe baru untuk mempercepat booting dan transfer data secara signifikan.",
-    biaya: { min: 250000, max: 900000 },
-    komponen: ["Flash NAND Controller SSD", "Platter Mekanik HDD", "Kabel Data SATA", "Kabel Daya SATA PSU"],
-    tips: ["Pindahkan file sistem operasi Windows ke SSD M.2 NVMe untuk mempercepat waktu booting hingga 10 kali lipat.", "Selalu periksa kesehatan penyimpanan berkala menggunakan software Hard Disk Sentinel."],
-    waktu: "2 jam",
-    kesulitan: "Sangat Mudah",
-    waktuMandiri: "25 menit",
-    biayaMandiri: { min: 200000, max: 700000 },
-    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka sasis casing samping dan melepas sekrup storage" }],
-    bahan: [{ nama: "SSD M.2 NVMe Baru", estimasiHarga: "Rp 380.000" }],
-    langkah: [
-      { nomor: 1, judul: "Lepas Storage Lama", detail: "Buka sekrup bracket penyimpanan pada casing, lepaskan kabel data dan kabel power SATA dari hardisk lama." },
-      { nomor: 2, judul: "Pasang Baru", detail: "Pasang SSD/Hardisk baru pada bracket sasis, hubungkan kabel data SATA ke motherboard dan kabel power SATA dari PSU." },
-      { nomor: 3, judul: "Jika M.2 NVMe", detail: "Jika menggunakan slot NVMe, masukkan chip SSD M.2 langsung ke slot motherboard dengan kemiringan 30 derajat, tekan ke bawah, lalu kencangkan sekrup pengunci kecilnya." }
-    ],
-    peringatan: ["Jangan menyentuh bagian pin konektor emas SSD M.2 dengan jari kotor.", "Kencangkan sekrup M.2 secukupnya agar papan sirkuit SSD tidak melengkung."]
+    peringatan: ["Selalu matikan PC dan cabut kabel power PSU dari stopkontak sebelum melepas atau memasang kartu grafis VGA.", "Jangan menyentuh pin emas PCIe dengan tangan berminyak."]
   },
   'P005': {
-    explain: "### Analisis Kerusakan\nMotherboard bermasalah akibat sirkuit pintas pada jalur tembaga PCB karena debu konduktif lembab, meledaknya kapasitor VRM, atau korosi pada socket pin processor.\n\n### Mekanisme & Dampak Teknis\nKerusakan VRM mengganggu regulasi suplai tegangan ke prosesor (VCORE), mengakibatkan PC tiba-tiba mati atau hang konstan.\n\n### Rekomendasi Tindakan\nGantilah motherboard dengan socket prosesor dan tipe memori (DDR4/DDR5) yang sesuai dengan komponen lama Anda.",
-    biaya: { min: 500000, max: 2000000 },
-    komponen: ["Papan Motherboard Utama (PCB)", "Socket CPU LGA / AM4", "Chipset Utama", "VRM Circuit & Capacitor"],
-    tips: ["Pastikan chipset dan tipe socket CPU didukung penuh oleh processor lama Anda agar tidak perlu membeli processor baru.", "Gunakan pasta pendingin processor baru saat memindahkan CPU ke motherboard baru."],
-    waktu: "1-2 hari",
-    kesulitan: "Tinggi",
-    waktuMandiri: "90-120 menit",
-    biayaMandiri: { min: 500000, max: 1500000 },
-    alat: [{ nama: "Obeng Phillips Magnetik", fungsi: "Membuka baut motherboard di dalam casing" }, { nama: "Pinset & Spudger", fungsi: "Mengatur kabel header casing depan" }],
-    bahan: [{ nama: "Motherboard Baru", estimasiHarga: "Rp 850.000" }, { nama: "Thermal Paste CPU", estimasiHarga: "Rp 50.000" }],
+    explain: "### Analisis Kerusakan\nKerusakan chip audio controller onboard atau kerusakan fisik port jack audio 3.5mm di motherboard. Sering dipicu oleh korosi atau lonjakan tegangan statis pada headphone.\n\n### Mekanisme & Dampak Teknis\nKorsleting pada sirkuit output audio onboard mengganggu regulasi daya audio sehingga sistem operasi mendeteksi driver audio silang merah dan audio mati total.\n\n### Rekomendasi Tindakan\nPerbarui driver audio Realtek terlebih dahulu. Jika kerusakan sirkuit terbukti secara fisik, gunakan USB Sound Card eksternal yang murah dan praktis.",
+    biaya: { min: 100000, max: 350000 },
+    komponen: ["Chip Audio Realtek Onboard", "Port Jack Audio 3.5mm", "Kondensator Filter Audio"],
+    tips: ["Membeli sound card USB eksternal jauh lebih praktis dan murah daripada melakukan reparasi sirkuit onboard motherboard.", "Pastikan pengaturan output audio default di Windows sudah diarahkan ke port yang benar."],
+    waktu: "1 jam",
+    kesulitan: "Sangat Mudah",
+    waktuMandiri: "10 menit",
+    biayaMandiri: { min: 30000, max: 120000 },
+    alat: [],
+    bahan: [{ nama: "USB Sound Card Eksternal", estimasiHarga: "Rp 35.000" }],
     langkah: [
-      { nomor: 1, judul: "Pembongkaran Total", detail: "Cabut semua komponen yang melekat pada motherboard lama: RAM, VGA, CPU, HSF, dan kabel PSU." },
-      { nomor: 2, judul: "Lepas Motherboard", detail: "Buka semua sekrup motherboard ke standoff casing, angkat motherboard keluar secara perlahan." },
-      { nomor: 3, judul: "Pemasangan Baru", detail: "Pasang I/O shield di belakang casing, letakkan motherboard baru di atas standoff, pasang sekrup pengikat, lalu rakit kembali CPU." }
+      { nomor: 1, judul: "Pasang Alat", detail: "Tancapkan USB Sound Card eksternal ke port USB PC Anda yang masih normal." },
+      { nomor: 2, judul: "Colok Speaker", detail: "Hubungkan kabel jack 3.5mm dari speaker/headset ke lubang hijau (audio out) pada USB Sound Card tersebut." },
+      { nomor: 3, judul: "Atur Default", detail: "Buka pengaturan suara di OS Windows, ubah default playback device ke 'USB Audio Device'." }
     ],
-    peringatan: ["Perhatikan posisi pin panel depan (Front Panel Header) agar tombol power menyala dengan benar.", "Pastikan sekrup standoff casing terpasang agar tidak korsleting."]
+    peringatan: ["Gunakan port USB di bagian belakang motherboard (I/O shield) jika port USB casing depan kurang stabil.", "Pastikan volume speaker eksternal sudah diputar menyala."]
   },
   'P006': {
-    explain: "### Analisis Kerusakan\nOverheat CPU disebabkan oleh thermal paste yang mengering, sehingga tidak ada media konduksi panas antara processor dengan heatsink tembaga kipas pendingin.\n\n### Mekanisme & Dampak Teknis\nAkibatnya, suhu CPU melonjak cepat melewati batas aman (thermal throttling), memicu motherboard mematikan daya PC secara mendadak.\n\n### Rekomendasi Tindakan\nBersihkan sisa pasta kering dengan alkohol, oleskan thermal paste baru secara merata, dan pastikan kipas pendingin berputar normal.",
-    biaya: { min: 100000, max: 350000 },
-    komponen: ["Kipas Pendingin CPU (HSF/AIO)", "Thermal Paste", "Pelat Tembaga Heatsink"],
-    tips: ["Uji kinerja kipas pendingin CPU Anda di program BIOS. Pastikan kecepatan rotasi (RPM) berputar normal di atas 1500 RPM.", "Bersihkan sirip radiator heatsink menggunakan hembusan angin kompresor atau kuas."],
-    waktu: "1 jam",
-    kesulitan: "Sedang",
-    waktuMandiri: "30-45 menit",
-    biayaMandiri: { min: 50000, max: 150000 },
-    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka pengunci kipas HSF dari motherboard" }, { nama: "Kuas & Tisu Kering", fungsi: "Membersihkan sisa pasta kering" }],
-    bahan: [{ nama: "Thermal Paste Premium", estimasiHarga: "Rp 65.000" }, { nama: "Cairan Isopropil Alkohol", estimasiHarga: "Rp 15.000" }],
-    langkah: [
-      { nomor: 1, judul: "Lepas HSF", detail: "Matikan PC, buka sekrup atau klip pemutar pengunci HSF di motherboard, cabut kabel fan header, angkat kipas." },
-      { nomor: 2, judul: "Bersihkan Pasta", detail: "Teteskan alkohol pada tisu, gosok permukaan CPU dan dasar tembaga HSF hingga mengkilap tanpa sisa pasta lama." },
-      { nomor: 3, judul: "Oleskan Baru", detail: "Teteskan thermal paste baru di tengah permukaan CPU, pasang kembali HSF secara lurus agar pasta merata." }
-    ],
-    peringatan: ["Jangan menggores permukaan logam CPU saat membersihkan pasta kering.", "Pastikan kipas HSF terpasang rata dan menyentuh CPU dengan kencang."]
-  },
-  'P007': {
-    explain: "### Analisis Kerusakan\nKerusakan sistem operasi Windows terjadi karena hilangnya berkas sistem akibat pemadaman listrik tiba-tiba saat registrasi sistem diperbarui, file system32 korup oleh virus, atau bad sector pada sektor partisi bootloader.\n\n### Mekanisme & Dampak Teknis\nHal ini membuat bootloader Windows gagal memuat konfigurasi driver, memicu pesan error layar biru (BSOD) secara terus-menerus.\n\n### Rekomendasi Tindakan\nLakukan perbaikan sistem (startup repair) atau instal ulang Windows versi resmi dari media installer flashdisk bootable.",
+    explain: "### Analisis Kerusakan\nKerusakan pada sirkuit OS (Sistem Operasi) disebabkan oleh korupsi berkas inti sistem (system files) akibat infeksi virus/malware, bad sector drive penyimpanan, atau listrik mati mendadak saat update.\n\n### Mekanisme & Dampak Teknis\nHilangnya file pustaka dinamis (DLL) atau kerusakan bootloader (BCD) mencegah kernel Windows dimuat, sehingga sistem mengalami Blue Screen (BSOD) secara terus menerus.\n\n### Rekomendasi Tindakan\nLakukan perbaikan startup (Startup Repair). Jika tidak berhasil, lakukan instalasi ulang sistem operasi Windows secara bersih menggunakan media USB bootable.",
     biaya: { min: 100000, max: 250000 },
-    komponen: ["Sistem Operasi Windows (Registry)", "Tabel Partisi Bootloader", "Driver Perangkat Keras"],
-    tips: ["Mintalah instalasi Windows versi original dengan lisensi resmi, bukan versi modifikasi yang rawan malware.", "Always aktifkan Windows Defender untuk perlindungan berkala."],
+    komponen: ["Sistem Operasi Windows", "File Registry Windows", "Bootloader (BCD)"],
+    tips: ["Mintalah instalasi Windows original versi resmi Microsoft, hindari versi modifikasi bajakan yang rawan disisipi malware.", "Selalu aktifkan fitur System Restore Point untuk pemulihan darurat."],
     waktu: "1-2 jam",
     kesulitan: "Sedang",
     waktuMandiri: "60 menit",
     biayaMandiri: { min: 0, max: 50000 },
-    alat: [{ nama: "Flashdisk Minimal 8GB", fungsi: "Menjadi media installer Windows bootable" }, { nama: "PC / Laptop Lain", fungsi: "Membuat installer menggunakan Windows Media Creation Tool" }],
-    bahan: [{ nama: "Lisensi Windows Key Resmi", estimasiHarga: "Rp 250.000" }],
+    alat: [{ nama: "Flashdisk Minimal 8GB", fungsi: "Menjadi media installer Windows bootable" }, { nama: "PC Lain", fungsi: "Mengunduh file ISO resmi dan membuat bootable flashdisk" }],
+    bahan: [{ nama: "Lisensi Key Windows 10/11", estimasiHarga: "Rp 250.000" }],
     langkah: [
-      { nomor: 1, judul: "Buat Installer", detail: "Unduh file ISO Windows resmi dari Microsoft, gunakan Rufus untuk membakar file tersebut ke flashdisk." },
-      { nomor: 2, judul: "Boot ke Flashdisk", detail: "Tancapkan flashdisk ke PC, nyalakan PC, tekan tombol Boot Menu (F12/F11/F8), lalu pilih flashdisk." },
-      { nomor: 3, judul: "Instalasi", detail: "Ikuti panduan di layar, format partisi sistem lama (biasanya Drive C), pilih partisi kosong tersebut, lalu jalankan instalasi." }
+      { nomor: 1, judul: "Buat Media Boot", detail: "Gunakan Windows Media Creation Tool pada PC lain untuk membuat flashdisk bootable Windows." },
+      { nomor: 2, judul: "Pilih Boot Device", detail: "Tancapkan flashdisk ke PC bermasalah, hidupkan PC, tekan tombol Boot Menu (F12/F13), lalu pilih flashdisk." },
+      { nomor: 3, judul: "Jalankan Instalasi", detail: "Ikuti instruksi instalasi, pilih partisi Drive C lama, format partisi tersebut, lalu instal ulang Windows di sana." }
     ],
-    peringatan: ["Instalasi ulang akan menghapus semua file di Drive C. Pastikan Anda melakukan backup data.", "Jangan mencabut flashdisk saat proses instalasi sedang berjalan."]
+    peringatan: ["Proses instalasi ulang akan menghapus semua data di Drive C. Pastikan file penting di desktop/documents sudah dibackup jika memungkinkan.", "Jangan mematikan PC di tengah proses instalasi."]
+  },
+  'P007': {
+    explain: "### Analisis Kerusakan\nKerusakan file aplikasi software disebabkan oleh konflik file pustaka (conflict DLLs), kegagalan penulisan registry aplikasi, atau sisa file instalasi lama yang korup.\n\n### Mekanisme & Dampak Teknis\nSaat aplikasi dijalankan, instruksi prosesor tidak dapat diproses secara wajar karena data pustaka hilang, memicu status crash / Not Responding.\n\n### Rekomendasi Tindakan\nLakukan instalasi ulang (*reinstall*) aplikasi tersebut secara menyeluruh. Pastikan file instalasi lama dihapus bersih menggunakan Revo Uninstaller.",
+    biaya: { min: 50000, max: 150000 },
+    komponen: ["Registry Aplikasi", "File Eksekusi Software (.exe)"],
+    tips: ["Gunakan perangkat lunak Revo Uninstaller untuk membersihkan seluruh sisa file dan registry aplikasi lama secara bersih.", "Pastikan spesifikasi minimum PC Anda memenuhi syarat aplikasi tersebut."],
+    waktu: "1 jam",
+    kesulitan: "Mudah",
+    waktuMandiri: "20 menit",
+    biayaMandiri: { min: 0, max: 0 },
+    alat: [],
+    bahan: [],
+    langkah: [
+      { nomor: 1, judul: "Uninstall Bersih", detail: "Buka Control Panel, pilih uninstall program, lalu pilih aplikasi yang bermasalah untuk dihapus." },
+      { nomor: 2, judul: "Hapus File Sisa", detail: "Hapus folder instalasi aplikasi di dalam direktori C:\\Program Files atau AppData secara manual jika masih ada." },
+      { nomor: 3, judul: "Instal Kembali", detail: "Jalankan file setup installer aplikasi yang baru, ikuti panduan instalasi hingga selesai, lalu restart komputer." }
+    ],
+    peringatan: ["Pastikan Anda mengunduh aplikasi dari sumber resmi terpercaya untuk menghindari sisipan program jahat.", "Tutup aplikasi background lain saat melakukan penginstalan."]
   },
   'P008': {
-    explain: "### Analisis Kerusakan\nBaterai CMOS kehabisan tegangan akibat usia pakai baterai kimia lithium yang habis (biasanya 3-5 tahun).\n\n### Mekanisme & Dampak Teknis\nKetiadaan tegangan penyokong memori CMOS membuat chip RAM BIOS kehilangan pengaturan waktu dan konfigurasi boot drive setiap kali PC mati.\n\n### Rekomendasi Tindakan\nGantilah baterai kancing CMOS dengan tipe CR2032 yang baru. Atur ulang waktu dan urutan boot drive di menu BIOS.",
-    biaya: { min: 25000, max: 75000 },
-    komponen: ["Baterai CMOS CR2032", "Soket Baterai Motherboard", "Chip BIOS ROM"],
-    tips: ["Gunakan baterai kancing tipe CR2032 tepercaya seperti Panasonic untuk keawetan jangka panjang.", "Setelah diganti, pastikan Anda masuk ke BIOS untuk mengatur ulang jam dan urutan boot drive."],
-    waktu: "15 menit",
-    kesulitan: "Sangat Mudah",
-    waktuMandiri: "10 menit",
-    biayaMandiri: { min: 5000, max: 15000 },
-    alat: [{ nama: "Pinset / Obeng Minus Kecil", fungsi: "Menekan klip pengunci baterai CMOS di motherboard" }],
-    bahan: [{ nama: "Baterai Kancing CR2032 Baru", estimasiHarga: "Rp 7.000" }],
+    explain: "### Analisis Kerusakan\nKerusakan Power Supply Unit (PSU) disebabkan oleh matinya transistor switching utama atau kerusakan kapasitor elektrolit filter primer akibat lonjakan tegangan listrik.\n\n### Mekanisme & Dampak Teknis\nTerputusnya sekring input (fuse) atau kerusakan kapasitor primer memutus total distribusi daya listrik AC 220V ke tegangan output DC 12V/5V/3.3V, menyebabkan PC mati total dan kipas mati.\n\n### Rekomendasi Tindakan\nGantilah PSU PC dengan unit baru yang berkualitas tinggi (minimal bersertifikasi 80 Plus Bronze). Jangan mencoba membongkar casing PSU karena berisiko sengatan listrik tegangan tinggi.",
+    biaya: { min: 250000, max: 1200000 },
+    komponen: ["Power Supply Unit (PSU)", "Kapasitor Utama PSU", "Fuse Proteksi Input"],
+    tips: ["Jangan gunakan PSU bawaan casing yang murah tanpa rating keamanan bersertifikasi 80 Plus.", "Gunakan stabilizer listrik (AVR) atau UPS untuk melindungi komponen PC Anda dari fluktuasi listrik rumah."],
+    waktu: "1 jam",
+    kesulitan: "Mudah",
+    waktuMandiri: "30 menit",
+    biayaMandiri: { min: 200000, max: 950000 },
+    alat: [{ nama: "Obeng Phillips Set", fungsi: "Buka baut sasis casing PC dan PSU" }, { nama: "Cable Ties (Pengikat)", fungsi: "Merapikan kabel-kabel PSU di dalam casing" }],
+    bahan: [{ nama: "Power Supply Baru (e.g. 500W 80 Plus)", estimasiHarga: "Rp 500.000" }],
     langkah: [
-      { nomor: 1, judul: "Temukan Baterai", detail: "Buka casing samping PC, cari baterai kancing bulat perak berkilau di atas motherboard." },
-      { nomor: 2, judul: "Pelepasan", detail: "Gunakan obeng minus kecil untuk menekan klip penahan logam kecil di sisi soket baterai hingga baterai keluar." },
-      { nomor: 3, judul: "Pemasangan", detail: "Tekan baterai baru ke dalam soket hingga berbunyi klik." }
+      { nomor: 1, judul: "Cabut Kabel Daya", detail: "Matikan PC, cabut kabel stopkontak utama, buka penutup casing samping, lepaskan seluruh konektor kabel PSU dari motherboard (24-pin dan 8-pin), GPU, serta storage." },
+      { nomor: 2, judul: "Lepas PSU Lama", detail: "Buka 4 sekrup pengunci PSU di bagian belakang casing PC, lalu keluarkan PSU secara hati-hati." },
+      { nomor: 3, judul: "Pasang Baru", detail: "Masukkan PSU baru to dudukan casing, kencangkan 4 sekrup belakang, pasang kabel 24-pin ke motherboard, 8-pin ke CPU, dan daya ke komponen lainnya." }
     ],
-    peringatan: ["Matikan PC dan cabut kabel stopkontak sebelum menyentuh baterai CMOS.", "Jangan gunakan alat tajam yang dapat menusuk jalur motherboard."]
+    peringatan: ["Jangan pernah membuka penutup besi bagian dalam PSU, karena kapasitor utama di dalamnya tetap menyimpan muatan listrik tegangan tinggi yang mematikan meskipun kabel sudah dicabut.", "Pastikan arah kipas PSU menghadap ke sirkulasi udara luar yang benar."]
   },
   'P009': {
-    explain: "### Analisis Kerusakan\nKetidakstabilan kelistrikan terjadi akibat ausnya sirkuit transistor pada PSU atau terjadinya kebocoran sirkuit VRM pada motherboard.\n\n### Mekanisme & Dampak Teknis\nHal ini membuat tegangan rail 12V berfluktuasi melewati batas toleransi sasis motherboard, memaksa PC melakukan restart otomatis.\n\n### Rekomendasi Tindakan\nGunakan stabilizer tegangan (AVR) atau UPS untuk menyuplai daya PC dengan aman. Periksa kondisi kelistrikan rumah Anda.",
-    biaya: { min: 300000, max: 1500000 },
-    komponen: ["Power Supply Unit (PSU)", "Sirkuit VRM Motherboard", "Kapasitor Motherboard"],
-    tips: ["Gunakan stabilizer tegangan (AVR) atau UPS untuk melindungi PC Anda jika listrik rumah sering naik-turun.", "Minta teknisi mengukur tegangan output PSU menggunakan tester PSU khusus."],
-    waktu: "1-2 hari",
+    explain: "### Analisis Kerusakan\nKerusakan pada unit prosesor (CPU) disebabkan oleh panas tinggi (overheating) ekstrem yang konstan atau kerusakan sirkuit silikon mikro internal chip (degradasi silikon) akibat lonjakan daya.\n\n### Mekanisme & Dampak Teknis\nDegradasi silikon mengganggu pengolahan instruksi biner mikro prosesor, memicu komputer no display (kipas berputar namun tidak POST BIOS) dan alarm BIOS berbunyi.\n\n### Rekomendasi Tindakan\nBawa PC ke teknisi untuk memastikan apakah kerusakan terjadi pada motherboard atau unit prosesor. Jika prosesor rusak, diperlukan penggantian unit prosesor baru yang kompatibel dengan soket motherboard Anda.",
+    biaya: { min: 600000, max: 4000000 },
+    komponen: ["CPU Processor Chip", "Soket CPU Motherboard", "Thermal Paste", "CPU Cooler Fan"],
+    tips: ["Ganti thermal paste CPU setidaknya setahun sekali untuk menjaga suhu tetap rendah di bawah 80 derajat Celcius.", "Gunakan CPU cooler pihak ketiga yang lebih baik daripada cooler bawaan standar."],
+    waktu: "1-2 jam",
     kesulitan: "Tinggi",
-    waktuMandiri: "60 menit",
-    biayaMandiri: { min: 250000, max: 800000 },
-    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka baut penutup casing PC dan PSU" }, { nama: "Multimeter Digital", fungsi: "Menguji kestabilan arus kelistrikan" }],
-    bahan: [{ nama: "Power Supply Unit Berkualitas Baru", estimasiHarga: "Rp 600.000" }],
+    waktuMandiri: "30 menit",
+    biayaMandiri: { min: 500000, max: 3500000 },
+    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka kipas cooler CPU" }, { nama: "Tisu & Alkohol Isopropil 99%", fungsi: "Membersihkan thermal paste lama" }],
+    bahan: [{ nama: "Processor Baru", estimasiHarga: "Rp 1.500.000" }, { nama: "Thermal Paste Premium", estimasiHarga: "Rp 50.000" }],
     langkah: [
-      { nomor: 1, judul: "Deteksi Awal", detail: "Gunakan PSU cadangan yang normal untuk mencoba menyalakan PC. Jika normal, berarti masalah ada pada PSU lama." },
-      { nomor: 2, judul: "Penggantian PSU", detail: "Lepaskan semua kabel daya PSU lama, buka sekrup casing belakang, keluarkan PSU." },
-      { nomor: 3, judul: "Instalasi Baru", detail: "Masukkan PSU baru, kencangkan baut belakang, hubungkan semua kabel daya ke motherboard." }
+      { nomor: 1, judul: "Lepas Cooler CPU", detail: "Buka sekrup atau klip pengunci cooler CPU, cabut kabel kipas, lalu angkat cooler secara perlahan." },
+      { nomor: 2, judul: "Buka Pengunci Soket", detail: "Tekan tuas logam pengunci soket CPU di motherboard ke samping dan angkat ke atas, lalu angkat chip processor lama secara vertikal." },
+      { nomor: 3, judul: "Pasang Baru", detail: "Posisikan processor baru di soket dengan memperhatikan tanda segitiga di sudut processor dan soket, turunkan tuas pengunci, oleskan thermal paste, lalu pasang kembali cooler." }
     ],
-    peringatan: ["Jangan mencoba memperbaiki sirkuit bagian dalam PSU secara mandiri.", "Gunakan kabel bawaan PSU baru, jangan mencampur kabel modular PSU lain."]
+    peringatan: ["Kaki-kaki pin soket processor di motherboard sangat rapuh dan mudah bengkok. Jangan menyentuhnya dengan jari atau menjatuhkan benda di atasnya.", "Pastikan orientasi processor terpasang dengan benar."]
   },
   'P010': {
-    explain: "### Analisis Kerusakan\nKabel VGA/HDMI bermasalah karena putusnya serat tembaga halus di dalam kabel akibat ditekuk berlebihan, atau rusaknya pin konektor.\n\n### Mekanisme & Dampak Teknis\nKabel yang terputus menghentikan transmisi sinyal data piksel gambar dari GPU ke monitor, memicu pesan error 'No Signal'.\n\n### Rekomendasi Tindakan\nGantilah dengan kabel HDMI atau DisplayPort berkualitas yang memiliki pelindung nilon kepang. Hindari menekuk kabel berlebihan.",
-    biaya: { min: 50000, max: 300000 },
-    komponen: ["Kabel HDMI / VGA / DisplayPort", "Konektor Port Motherboard/GPU", "Konektor Port Monitor"],
-    tips: ["Belilah kabel HDMI dengan pelindung nilon anyam (braided cable) agar awet.", "Pastikan sekrup pengencang kabel VGA terpasang rapat pada monitor jika kabel sering goyang."],
-    waktu: "15 menit",
+    explain: "### Analisis Kerusakan\nKapasitas memori RAM fisik tidak mencukupi untuk menampung seluruh proses data aktif aplikasi dan sistem operasi, memaksa Windows menggunakan memori virtual (Pagefile) di hard disk secara berlebihan.\n\n### Mekanisme & Dampak Teknis\nKarena kecepatan baca-tulis hard disk jauh lebih lambat daripada RAM, perpindahan data ke virtual memori (thrashing) menyebabkan performa sistem melambat secara ekstrem dan respon aplikasi macet.\n\n### Rekomendasi Tindakan\nLakukan penambahan kapasitas memori RAM fisik (upgrade RAM) dengan tipe (DDR3/DDR4/DDR5) dan frekuensi kecepatan (MHz) yang cocok dengan RAM lama Anda.",
+    biaya: { min: 200000, max: 700000 },
+    komponen: ["Modul RAM", "Sistem Virtual Memory (Pagefile)"],
+    tips: ["Gunakan memori RAM berpasangan (dual channel) dengan kapasitas dan merk yang sama agar stabilitas performa sistem terjaga.", "Untuk komputasi Windows modern, kapasitas RAM minimal 8GB atau 16GB sangat direkomendasikan."],
+    waktu: "1 jam",
     kesulitan: "Sangat Mudah",
-    waktuMandiri: "5 menit",
-    biayaMandiri: { min: 35000, max: 150000 },
-    alat: [],
-    bahan: [{ nama: "Kabel HDMI / DisplayPort Baru", estimasiHarga: "Rp 50.000" }],
+    waktuMandiri: "15 menit",
+    biayaMandiri: { min: 180000, max: 600000 },
+    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka casing PC" }],
+    bahan: [{ nama: "Keping RAM Baru (e.g. DDR4 8GB)", estimasiHarga: "Rp 300.000" }],
     langkah: [
-      { nomor: 1, judul: "Pelepasan Kabel", detail: "Cabut kabel display lama dari port belakang monitor dan port belakang VGA/GPU di PC." },
-      { nomor: 2, judul: "Pemasangan", detail: "Tancapkan ujung kabel baru ke port GPU PC secara presisi, lalu colok ujung satunya ke monitor." },
-      { nomor: 3, judul: "Pengaturan", detail: "Nyalakan PC dan monitor, pastikan input source di monitor diatur ke port yang sesuai (misal HDMI 1)." }
+      { nomor: 1, judul: "Buka Slot Kosong", detail: "Buka casing PC, temukan slot memori DIMM yang masih kosong di sebelah RAM lama." },
+      { nomor: 2, judul: "Pasang Modul Baru", detail: "Posisikan lekukan pin RAM baru sejajar dengan tonjolan di slot memori motherboard." },
+      { nomor: 3, judul: "Kunci RAM", detail: "Tekan RAM baru lurus ke bawah secara merata hingga kedua tuas pengunci slot naik dan berbunyi klik." }
     ],
-    peringatan: ["Jangan mencolokkan kabel display ke port motherboard jika PC Anda menggunakan VGA/GPU diskret.", "Jangan menekuk kabel secara tajam."]
+    peringatan: ["Selalu matikan komputer dan cabut kabel power sebelum memasang modul RAM baru.", "Jangan memegang bagian kuningan emas RAM dengan tangan langsung."]
   },
   'P011': {
-    explain: "### Analisis Kerusakan\nKegagalan audio PC terjadi karena chip kode audio di motherboard mengalami kerusakan short sirkuit, rusaknya port jack audio 3.5mm akibat aus, atau korupnya berkas driver audio.\n\n### Mekanisme & Dampak Teknis\nHal ini membuat Windows tidak mendeteksi perangkat output speaker, menyebabkan ikon suara bertanda silang merah dan audio mati total.\n\n### Rekomendasi Tindakan\nInstal ulang driver audio Realtek resmi. Jika chip onboard rusak, Anda dapat menggunakan USB Sound Card eksternal yang murah.",
-    biaya: { min: 100000, max: 400000 },
-    komponen: ["Chip Audio Realtek Onboard", "Port Jack Audio 3.5mm", "Driver Audio Realtek HD", "Sound Card PCIe / USB"],
-    tips: ["Membeli Sound Card USB eksternal murah jauh lebih praktis dan murah daripada mengganti chip audio onboard.", "Pastikan driver audio diperbarui di device manager jika perangkat tidak terdeteksi."],
-    waktu: "1 jam",
-    kesulitan: "Sangat Mudah",
-    waktuMandiri: "15 menit",
-    biayaMandiri: { min: 30000, max: 120000 },
+    explain: "### Analisis Kerusakan\nKapasitas memori video (VRAM) pada kartu grafis VGA terlalu kecil untuk menampung tekstur grafis resolusi tinggi dari game modern atau aplikasi rendering 3D.\n\n### Mekanisme & Dampak Teknis\nKeterbatasan kapasitas VRAM memaksa sistem mengalokasikan sebagian RAM utama sistem untuk membantu rendering grafis, sehingga frame rate (FPS) game turun drastis dan patah-patah (stuttering).\n\n### Rekomendasi Tindakan\nTurunkan pengaturan kualitas grafis, resolusi game, dan kualitas tekstur di dalam menu opsi game Anda. Solusi jangka panjang adalah dengan melakukan upgrade kartu grafis VGA yang memiliki kapasitas VRAM lebih besar.",
+    biaya: { min: 500000, max: 3000000 },
+    komponen: ["VRAM Video Memory VGA", "Resolusi Tekstur Grafis"],
+    tips: ["Untuk kebutuhan game modern resolusi Full HD (1080p), kartu grafis dengan kapasitas VRAM minimal 4GB hingga 8GB sangat disarankan.", "Matikan fitur grafis berat seperti Ray Tracing jika VRAM Anda terbatas."],
+    waktu: "1-2 jam",
+    kesulitan: "Mudah",
+    waktuMandiri: "10 menit",
+    biayaMandiri: { min: 0, max: 0 },
     alat: [],
-    bahan: [{ nama: "Soundcard USB Eksternal", estimasiHarga: "Rp 35.000" }],
+    bahan: [],
     langkah: [
-      { nomor: 1, judul: "Pemasangan Alat", detail: "Tancapkan soundcard USB eksternal ke port USB PC yang kosong." },
-      { nomor: 2, judul: "Hubungkan Speaker", detail: "Colokkan kabel jack 3.5mm speaker ke lubang hijau (audio out) di soundcard USB tersebut." },
-      { nomor: 3, judul: "Atur Output", detail: "Ubah output audio utama ke perangkat USB Audio Device di pengaturan Windows." }
+      { nomor: 1, judul: "Buka Pengaturan Game", detail: "Masuk ke menu pengaturan display/grafis di dalam game yang sedang Anda mainkan." },
+      { nomor: 2, judul: "Turunkan Tekstur", detail: "Ubah opsi Texture Quality dari High/Ultra menjadi Medium atau Low untuk meminimalkan beban VRAM." },
+      { nomor: 3, judul: "Turunkan Resolusi", detail: "Turunkan resolusi display game (misal dari 4K ke 1080p) untuk meringankan pemrosesan grafis." }
     ],
-    peringatan: ["Pastikan volume speaker eksternal sudah dinyalakan sebelum melakukan pengetesan.", "Gunakan port USB yang stabil."]
+    peringatan: ["Melakukan overclock pada VRAM yang terbatas tanpa sistem pendinginan yang memadai justru dapat merusak chip memori VGA secara permanen."]
   },
   'P012': {
-    explain: "### Analisis Kerusakan\nPort ethernet rusak akibat sambaran petir tidak langsung melalui kabel jaringan LAN, patahnya pin tembaga di dalam port RJ-45, atau rusaknya chip kontroler LAN.\n\n### Mekanisme & Dampak Teknis\nKerusakan ini memutus sambungan sinyal ethernet fisik dari modem/router, sehingga PC tidak dapat terhubung ke internet menggunakan kabel.\n\n### Rekomendasi Tindakan\nPasang PCIe LAN Card eksternal pada motherboard atau gunakan USB to RJ-45 LAN Adapter sebagai solusi praktis yang murah.",
-    biaya: { min: 100000, max: 350000 },
-    komponen: ["Port RJ-45 Ethernet Onboard", "LAN Controller Chip", "LAN Card PCIe / USB"],
-    tips: ["Menggunakan USB to LAN Adapter atau PCIe LAN Card eksternal adalah solusi terbaik jika port bawaan motherboard rusak.", "Pastikan kabel LAN Anda dipasang dengan konektor RJ-45 yang kokoh."],
+    explain: "### Analisis Kerusakan\nFrekuensi clock rate (kecepatan kerja prosesor dalam GHz) prosesor terlalu rendah untuk memproses kalkulasi data instruksi aplikasi modern yang berat.\n\n### Mekanisme & Dampak Teknis\nKecepatan clock rate yang rendah menyebabkan antrean eksekusi instruksi di CPU menumpuk, menyebabkan utilisasi CPU (CPU Usage) melonjak cepat menjadi 100% dan kinerja sistem menjadi sangat lambat.\n\n### Rekomendasi Tindakan\nBatasi jumlah aplikasi background yang berjalan secara bersamaan dengan mematikannya lewat Task Manager. Solusi jangka panjang adalah dengan melakukan upgrade ke model prosesor yang memiliki clock rate dan jumlah core yang lebih tinggi.",
+    biaya: { min: 500000, max: 4000000 },
+    komponen: ["CPU Clock Speed (GHz)", "CPU Usage Task Manager"],
+    tips: ["Gunakan fitur Task Manager (Ctrl + Shift + Esc) untuk mematikan aplikasi startup yang tidak penting untuk meringankan beban kerja prosesor.", "Hindari membuka terlalu banyak tab di browser internet secara bersamaan."],
     waktu: "1 jam",
     kesulitan: "Sangat Mudah",
-    waktuMandiri: "15 menit",
-    biayaMandiri: { min: 50000, max: 150000 },
+    waktuMandiri: "5 menit",
+    biayaMandiri: { min: 0, max: 0 },
     alat: [],
-    bahan: [{ nama: "LAN Card USB / PCIe Baru", estimasiHarga: "Rp 75.000" }],
+    bahan: [],
     langkah: [
-      { nomor: 1, judul: "Sambungkan Alat", detail: "Pasang LAN Card USB ke port USB kosong PC Anda." },
-      { nomor: 2, judul: "Colok Kabel LAN", detail: "Tancapkan kabel internet LAN RJ-45 ke lubang port baru hingga berbunyi klik." },
-      { nomor: 3, judul: "Cek Indikator", detail: "Pastikan lampu indikator port baru berkedip menandakan adanya transfer data." }
+      { nomor: 1, judul: "Buka Task Manager", detail: "Tekan tombol Ctrl + Shift + Esc pada keyboard untuk membuka jendela Task Manager Windows." },
+      { nomor: 2, judul: "Matikan Proses Berat", detail: "Pilih tab Processes, cari aplikasi background yang menggunakan CPU tinggi, klik kanan lalu pilih End Task." },
+      { nomor: 3, judul: "Atur Startup Apps", detail: "Masuk ke tab Startup, pilih aplikasi-aplikasi yang tidak penting, lalu ubah statusnya menjadi Disabled." }
     ],
-    peringatan: ["Selalu cabut kabel LAN dari PC saat terjadi badai petir besar.", "Gunakan driver bawaan jika adapter tidak langsung terdeteksi."]
-  }
+    peringatan: ["Jangan mematikan proses sistem Windows (seperti System atau Svchost) karena dapat menyebabkan komputer crash atau BSOD mendadak."]
+  },
+  'P013': {
+    explain: "### Analisis Kerusakan\nKerusakan pada kabel data bus penyimpanan (kabel SATA/IDE) disebabkan oleh serat tembaga internal yang putus akibat ditekuk secara ekstrem atau adanya korosi pada konektor logam akibat kelembapan casing.\n\n### Mekanisme & Dampak Teknis\nTerputusnya jalur transmisi data SATA/IDE menghentikan aliran sinyal komunikasi antara pengontrol motherboard dengan hard disk/SSD, sehingga penyimpanan tidak terdeteksi oleh BIOS saat menyala.\n\n### Rekomendasi Tindakan\nGantilah kabel data SATA dengan kabel baru yang tebal dan memiliki pelindung logam pengunci (metal latch). Hindari menekuk kabel secara tajam.",
+    biaya: { min: 25000, max: 100000 },
+    komponen: ["Kabel Data SATA", "Port SATA Motherboard", "Port SATA Harddisk/SSD"],
+    tips: ["Pilihlah kabel SATA yang dilengkapi klip logam pengunci di kedua ujung konektornya agar tidak mudah longgar saat tergeser di dalam casing.", "Gunakan port SATA 1 atau 0 di motherboard untuk drive utama sistem operasi."],
+    waktu: "30 menit",
+    kesulitan: "Sangat Mudah",
+    waktuMandiri: "10 menit",
+    biayaMandiri: { min: 10000, max: 35000 },
+    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka penutup casing samping PC" }],
+    bahan: [{ nama: "Kabel Data SATA Baru", estimasiHarga: "Rp 15.000" }],
+    langkah: [
+      { nomor: 1, judul: "Lepas Kabel Lama", detail: "Buka penutup casing PC, tekan klip pengunci logam kabel SATA lama, lalu cabut kabel dari port motherboard dan hard disk." },
+      { nomor: 2, judul: "Pasang Baru", detail: "Tancapkan salah satu ujung kabel data SATA baru ke port SATA di motherboard, lalu hubungkan ujung satunya ke hard disk/SSD." },
+      { nomor: 3, judul: "Tes Booting", detail: "Pasang kembali penutup casing, nyalakan komputer, masuk ke menu BIOS (tekan Del/F2 saat menyala) untuk memastikan penyimpanan sudah terdeteksi." }
+    ],
+    peringatan: ["Pastikan kabel tidak terjepit oleh komponen kipas casing atau tertekan keras oleh kabel daya lainnya.", "Jangan mencolokkan kabel SATA saat PC sedang menyala."]
+  },
+  'P014': {
+    explain: "### Analisis Kerusakan\nPenurunan kapasitas keluaran daya maksimum (daya Watt) pada PSU disebabkan oleh ausnya kapasitor elektrolit filter sekunder. PSU tidak mampu lagi menyuplai kebutuhan daya puncak komponen komputer secara stabil.\n\n### Mekanisme & Dampak Teknis\nSaat PC membutuhkan beban daya tinggi (seperti menyalakan GPU/Prosesor secara bersamaan saat boot), regulasi tegangan DC drop di bawah batas toleransi, memicu alarm bunyi bip BIOS dan hanya sebagian kipas yang berputar.\n\n### Rekomendasi Tindakan\nGantilah Power Supply Unit (PSU) Anda dengan unit baru yang memiliki kapasitas daya (Watt) lebih besar (misal 500W-650W) untuk memberikan ruang daya yang aman bagi seluruh komponen hardware Anda.",
+    biaya: { min: 250000, max: 1200000 },
+    komponen: ["Kapasitor Filter Sekunder PSU", "Regulator Tegangan Output", "Konektor Daya 12V EPS/PCIe"],
+    tips: ["Hitung total konsumsi daya komponen PC Anda menggunakan web kalkulator daya online sebelum membeli PSU baru.", "Gunakan PSU dengan efisiensi bersertifikasi minimal 80 Plus Bronze."],
+    waktu: "1 jam",
+    kesulitan: "Mudah",
+    waktuMandiri: "30 menit",
+    biayaMandiri: { min: 250000, max: 950000 },
+    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka baut sasis casing PC dan PSU" }],
+    bahan: [{ nama: "Power Supply Baru dengan Watt Lebih Tinggi", estimasiHarga: "Rp 600.000" }],
+    langkah: [
+      { nomor: 1, judul: "Lepas Kabel Lama", detail: "Matikan PC, cabut kabel stopkontak utama, lepaskan seluruh konektor kabel PSU dari motherboard (24-pin dan 8-pin), GPU, serta storage." },
+      { nomor: 2, judul: "Lepas PSU Lama", detail: "Buka 4 sekrup pengunci PSU di bagian belakang casing PC, lalu keluarkan PSU secara hati-hati." },
+      { nomor: 3, judul: "Pasang Baru", detail: "Masukkan PSU baru to dudukan casing, kencangkan 4 sekrup belakang, pasang kabel 24-pin ke motherboard, 8-pin ke CPU, dan daya ke komponen lainnya." }
+    ],
+    peringatan: ["Jangan pernah memodifikasi komponen dalam PSU secara mandiri.", "Pastikan kabel modular PSU terpasang sesuai portnya."]
+  },
+  'P015': {
+    explain: "### Analisis Kerusakan\nKerusakan pada sirkuit port USB fisik atau kegagalan chip pengontrol USB Hub di motherboard disebabkan oleh korsleting arus mikro pada perangkat eksternal yang terhubung, atau korosi akibat kelembapan.\n\n### Mekanisme & Dampak Teknis\nKorsleting pada jalur kelistrikan data port USB memicu pengontrol motherboard menonaktifkan sirkuit USB Hub demi perlindungan sistem, menyebabkan port USB tidak mendeteksi perangkat eksternal sama sekali.\n\n### Rekomendasi Tindakan\nCoba hubungkan perangkat eksternal ke port USB di bagian belakang motherboard (I/O shield). Jika sirkuit USB onboard rusak permanen, Anda dapat memasang kartu ekspansi PCIe to USB Controller Card di slot PCIe kosong motherboard Anda.",
+    biaya: { min: 100000, max: 350000 },
+    komponen: ["Sirkuit Port USB Onboard", "Chip Pengontrol USB Hub Motherboard", "Kartu Ekspansi PCIe to USB"],
+    tips: ["Hindari menggunakan USB Hub pasif tanpa adaptor daya tambahan jika menghubungkan banyak perangkat berat seperti hard disk eksternal.", "Bersihkan debu pada lubang port USB menggunakan udara bertekanan secara berkala."],
+    waktu: "1 jam",
+    kesulitan: "Mudah",
+    waktuMandiri: "20 menit",
+    biayaMandiri: { min: 80000, max: 180000 },
+    alat: [{ nama: "Obeng Phillips Set", fungsi: "Membuka casing PC dan sekrup bracket PCIe" }],
+    bahan: [{ nama: "PCIe USB Expansion Card Baru", estimasiHarga: "Rp 120.000" }],
+    langkah: [
+      { nomor: 1, judul: "Pasang Kartu PCIe", detail: "Matikan PC, buka penutup casing samping, cari slot PCIe x1 yang kosong pada motherboard, lepaskan penutup metal casing belakang." },
+      { nomor: 2, judul: "Tancapkan Kartu", detail: "Masukkan kartu ekspansi PCIe USB ke dalam slot PCIe secara perlahan lurus ke bawah, lalu sekrup bracket logamnya ke casing." },
+      { nomor: 3, judul: "Tes Koneksi", detail: "Pasang casing kembali, hidupkan PC, pasang kabel mouse/flashdisk ke port USB baru untuk memastikan driver terpasang otomatis dan berfungsi." }
+    ],
+    peringatan: ["Jangan menyentuh bagian sirkuit emas kartu PCIe USB dengan tangan kotor/berminyak.", "Pastikan PC dalam kondisi mati total saat memasang."]
+  },
+  'P016': {
+    explain: "### Analisis Kerusakan\nKerusakan pada keyboard disebabkan oleh terputusnya jalur matriks sirkuit karbon fleksibel akibat tumpahan air korosif, penumpukan debu tebal di bawah tombol, atau kegagalan kabel konektor USB.\n\n### Mekanisme & Dampak Teknis\nPutusnya sirkuit matriks karbon menghalangi pengiriman sinyal tombol keyboard ke sistem, menyebabkan karakter tombol tidak berfungsi saat ditekan.\n\n### Rekomendasi Tindakan\nBersihkan sela-sela tombol keyboard menggunakan kuas kering. Jika sirkuit karbon di dalam keyboard terbukti putus secara fisik, disarankan untuk mengganti keyboard dengan unit baru.",
+    biaya: { min: 50000, max: 300000 },
+    komponen: ["Matriks Sirkuit Karbon Keyboard", "Kabel Konektor USB Keyboard", "Kubah Karet Tombol (Rubber Dome)"],
+    tips: ["Gunakan pelindung keyboard silikon untuk menghindari masuknya debu dan tumpahan cairan secara langsung.", "Simpan keyboard cadangan murah untuk keperluan pengetesan darurat."],
+    waktu: "30 menit",
+    kesulitan: "Sangat Mudah",
+    waktuMandiri: "5 menit",
+    biayaMandiri: { min: 45000, max: 200000 },
+    alat: [],
+    bahan: [{ nama: "Keyboard USB Baru", estimasiHarga: "Rp 50.000" }],
+    langkah: [
+      { nomor: 1, judul: "Cabut Keyboard", detail: "Cabut konektor kabel USB keyboard lama dari port USB komputer Anda." },
+      { nomor: 2, judul: "Pasang Baru", detail: "Hubungkan konektor USB keyboard baru ke port USB kosong komputer Anda secara presisi." },
+      { nomor: 3, judul: "Uji Fungsi", detail: "Buka aplikasi Notepad di Windows, coba ketikkan seluruh karakter huruf dan angka untuk memastikan respon ketikan normal." }
+    ],
+    peringatan: ["Jangan menarik kabel USB keyboard secara paksa dari port komputer.", "Hindari menumpahkan cairan apapun di atas permukaan keyboard."]
+  },
+  'P017': {
+    explain: "### Analisis Kerusakan\nKerusakan pada mouse disebabkan oleh melemahnya intensitas sensor dioda optik merah/inframerah, kerusakan mekanis sakelar klik tombol (microswitch clicker), atau kabel USB yang putus internal.\n\n### Mekanisme & Dampak Teknis\nLemahnya pemancar sensor optik mengganggu pembacaan pantulan cahaya sensor di atas permukaan pad, menyebabkan pointer kursor monitor macet atau tidak bergerak sama sekali.\n\n### Rekomendasi Tindakan\nPastikan permukaan mouse pad bersih dan tidak mengkilap. Jika sensor optik mati total atau tombol klik mengalami double-click konstan, disarankan untuk mengganti mouse dengan unit baru.",
+    biaya: { min: 30000, max: 250000 },
+    komponen: ["Sensor Optik Dioda Mouse", "Sakelar Klik (Microswitch)", "Kabel Konektor USB Mouse"],
+    tips: ["Gunakan mousepad bertekstur kain gelap untuk mengoptimalkan keakuratan pembacaan sensor optik mouse.", "Hindari membenturkan mouse ke meja secara keras saat bermain game."],
+    waktu: "30 menit",
+    kesulitan: "Sangat Mudah",
+    waktuMandiri: "5 menit",
+    biayaMandiri: { min: 25000, max: 150000 },
+    alat: [],
+    bahan: [{ nama: "Mouse USB Baru", estimasiHarga: "Rp 35.000" }],
+    langkah: [
+      { nomor: 1, judul: "Cabut Mouse Lama", detail: "Lepaskan konektor kabel USB mouse lama dari port USB komputer Anda." },
+      { nomor: 2, judul: "Hubungkan Baru", detail: "Tancapkan konektor USB mouse baru to port USB kosong yang masih normal." },
+      { nomor: 3, judul: "Uji Gerakan", detail: "Gerakkan mouse baru di atas mousepad, pastikan pointer kursor di layar merespon dengan lancar dan klik kiri/kanan normal." }
+    ],
+    peringatan: ["Jangan menekuk kabel USB mouse di dekat pangkal mouse terlalu tajam karena kawat tembaga halus di dalamnya mudah putus internal."]
+  },
 };
 
 async function main() {
@@ -672,13 +820,16 @@ async function main() {
     // 4. Buat Referensi
     if (r.referensiStatis && r.referensiStatis.length > 0) {
       for (const ref of r.referensiStatis) {
-        const urlKombinasi = ref.penerbit ? `Penerbit: ${ref.penerbit} | Relevansi: ${ref.relevansi}` : ref.url || '';
+        // Gabungkan penerbit ke penulis jika ada agar tampil di UI
+        const penulisFinal = ref.penerbit ? `${ref.penulis} - ${ref.penerbit}` : ref.penulis || null;
+        // Gabungkan url dan relevansi dengan pemisah |||
+        const urlKombinasi = ref.url && ref.relevansi ? `${ref.url}|||${ref.relevansi}` : ref.url || '';
         
         await prisma.referensi.create({
           data: {
             kerusakanId: kerusakanId,
             judul: ref.judul,
-            penulis: ref.penulis || null,
+            penulis: penulisFinal,
             tahun: ref.tahun || null,
             url: urlKombinasi,
             sumber: 'statis'
@@ -842,11 +993,16 @@ async function main() {
     }
   }
 
-  console.log(`Memasukkan ${cacheRecords.length} record AI Cache ke database...`);
-  await prisma.aICache.createMany({
-    data: cacheRecords,
-    skipDuplicates: true
-  });
+  console.log(`Memasukkan ${cacheRecords.length} record AI Cache ke database dalam beberapa batch...`);
+  const chunkSize = 500;
+  for (let i = 0; i < cacheRecords.length; i += chunkSize) {
+    const chunk = cacheRecords.slice(i, i + chunkSize);
+    console.log(`Memasukkan batch ${Math.floor(i / chunkSize) + 1} (${chunk.length} records)...`);
+    await prisma.aICache.createMany({
+      data: chunk,
+      skipDuplicates: true
+    });
+  }
 
   console.log('Seeding selesai! Database siap digunakan.');
 }

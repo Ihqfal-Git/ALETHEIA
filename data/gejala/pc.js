@@ -1,107 +1,127 @@
 export const gejalaPC = [
   {
     "id": "P01",
-    "deskripsi": "PC mati total dan kipas tidak berputar sedikitpun saat tombol power ditekan",
+    "deskripsi": "Tidak ada gambar tampil pada monitor",
     "kategori": "Daya & Boot"
   },
   {
     "id": "P02",
-    "deskripsi": "PC menyala tapi tak lama kemudian mati lagi secara berulang (restart looping)",
-    "kategori": "Daya & Boot"
+    "deskripsi": "Terdapat garis horizontal/vertikal di tengah monitor",
+    "kategori": "Layar & Tampilan"
   },
   {
     "id": "P03",
-    "deskripsi": "Terdengar bunyi beep berkali-kali dari motherboard saat komputer dinyalakan",
+    "deskripsi": "Tidak ada tampilan awal BIOS",
     "kategori": "Daya & Boot"
   },
   {
     "id": "P04",
-    "deskripsi": "PC menyala (kipas berputar) tapi tidak ada tampilan BIOS (post screen) sama sekali",
+    "deskripsi": "Muncul pesan error pada BIOS",
     "kategori": "Daya & Boot"
   },
   {
     "id": "P05",
-    "deskripsi": "Sistem sering mereset tanggal dan jam (waktu) ke pengaturan awal atau default pabrik",
+    "deskripsi": "Alarm BIOS berbunyi (beep)",
     "kategori": "Daya & Boot"
   },
   {
     "id": "P06",
-    "deskripsi": "Komputer tiba-tiba mati total (shut off) di tengah penggunaan tanpa peringatan",
-    "kategori": "Daya & Boot"
+    "deskripsi": "Terdengar suara aneh pada HDD",
+    "kategori": "Hardware & Fisik"
   },
   {
     "id": "P07",
-    "deskripsi": "Layar monitor hanya menampilkan pesan \"No Signal\" lalu sleep",
-    "kategori": "Layar & Tampilan"
+    "deskripsi": "Sering terjadi hang/crash saat menjalankan aplikasi",
+    "kategori": "Performa & Sistem"
   },
   {
     "id": "P08",
-    "deskripsi": "Terdapat artefak gambar, glitch, atau kotak-kotak aneh saat main game / rendering",
-    "kategori": "Layar & Tampilan"
+    "deskripsi": "Selalu scandisk ketika booting",
+    "kategori": "Daya & Boot"
   },
   {
     "id": "P09",
-    "deskripsi": "Resolusi layar tiba-tiba menjadi sangat rendah, pecah, dan tidak bisa ditingkatkan",
+    "deskripsi": "Muncul pesan error saat menjalankan game atau aplikasi grafis",
     "kategori": "Layar & Tampilan"
   },
   {
     "id": "P10",
-    "deskripsi": "Tampilan warna layar mengalami distorsi, berbayang, atau tidak wajar",
-    "kategori": "Layar & Tampilan"
+    "deskripsi": "Device driver tidak terdeteksi dalam device manager, meski driver telah diinstall",
+    "kategori": "Hardware & Fisik"
   },
   {
     "id": "P11",
-    "deskripsi": "Sering mengalami Blue Screen of Death (BSOD) di tengah pengoperasian Windows",
-    "kategori": "Performa & Sistem"
+    "deskripsi": "OS tiba-tiba melakukan restart secara otomatis",
+    "kategori": "Daya & Boot"
   },
   {
     "id": "P12",
-    "deskripsi": "Komputer berjalan sangat lambat, patah-patah, dan memakan waktu sangat lama untuk booting",
+    "deskripsi": "Sering muncul layar biru (Blue Screen of Death / BSOD) pada OS Windows",
     "kategori": "Performa & Sistem"
   },
   {
     "id": "P13",
-    "deskripsi": "Penggunaan disk (Disk Usage) selalu 100% di Task Manager meskipun tidak ada aplikasi berat berjalan",
-    "kategori": "Performa & Sistem"
+    "deskripsi": "Suara tetap tidak keluar meskipun driver dan setting device telah dilakukan sesuai petunjuk",
+    "kategori": "Hardware & Fisik"
   },
   {
     "id": "P14",
-    "deskripsi": "Aplikasi dan Windows Explorer sering nge-freeze (Not Responding) dalam waktu yang lama",
-    "kategori": "Performa & Sistem"
+    "deskripsi": "Muncul pesan error saat menjalankan aplikasi audio",
+    "kategori": "Hardware & Fisik"
   },
   {
     "id": "P15",
-    "deskripsi": "Komputer sangat bising karena kipas CPU / casing berjalan pada kecepatan maksimal terus menerus",
-    "kategori": "Performa & Sistem"
+    "deskripsi": "Muncul pesan error saat pertama kali OS dimuat (load) dari HDD",
+    "kategori": "Hardware & Fisik"
   },
   {
     "id": "P16",
-    "deskripsi": "Komputer hang atau langsung crash saat membuka aplikasi berat seperti game atau editing video",
-    "kategori": "Performa & Sistem"
+    "deskripsi": "Tidak ada tanda-tanda perangkat bekerja (semua kipas pendingin tidak berputar)",
+    "kategori": "Daya & Boot"
   },
   {
     "id": "P17",
-    "deskripsi": "Tidak terdengar suara apapun walau speaker menyala dan ikon volume normal",
-    "kategori": "Hardware & Fisik"
+    "deskripsi": "Sering tiba-tiba mati total tanpa sebab",
+    "kategori": "Daya & Boot"
   },
   {
     "id": "P18",
-    "deskripsi": "Terdengar suara bising klik-klik (clicking) mekanis atau decitan dari hardisk (HDD)",
-    "kategori": "Hardware & Fisik"
+    "deskripsi": "Muncul pesan pada Windows bahwa sistem kekurangan virtual memori",
+    "kategori": "Performa & Sistem"
   },
   {
     "id": "P19",
-    "deskripsi": "Port USB tidak mendeteksi perangkat seperti flashdisk, mouse, atau keyboard",
-    "kategori": "Hardware & Fisik"
+    "deskripsi": "Aplikasi berjalan lambat dan respon input terasa sangat lambat",
+    "kategori": "Performa & Sistem"
   },
   {
     "id": "P20",
-    "deskripsi": "Koneksi LAN / internet kabel tidak terdeteksi (tanda silang merah di icon network)",
-    "kategori": "Hardware & Fisik"
+    "deskripsi": "Kinerja grafis terasa sangat lambat/berat saat bermain game atau memproses gambar",
+    "kategori": "Layar & Tampilan"
   },
   {
     "id": "P21",
-    "deskripsi": "Mencium bau hangus gosong dari arah casing PC atau dari Power Supply (PSU)",
+    "deskripsi": "Device penyimpanan/HDD tidak terdeteksi di dalam BIOS",
+    "kategori": "Daya & Boot"
+  },
+  {
+    "id": "P22",
+    "deskripsi": "Informasi kapasitas/tipe penyimpanan terdeteksi salah di dalam BIOS",
+    "kategori": "Daya & Boot"
+  },
+  {
+    "id": "P23",
+    "deskripsi": "Hanya sebagian komponen perangkat keras yang menyala/bekerja",
+    "kategori": "Daya & Boot"
+  },
+  {
+    "id": "P24",
+    "deskripsi": "Sebagian atau seluruh karakter tombol inputan keyboard mati/tidak merespon",
+    "kategori": "Hardware & Fisik"
+  },
+  {
+    "id": "P25",
+    "deskripsi": "Pointer mouse tidak merespon gerakan fisik mouse",
     "kategori": "Hardware & Fisik"
   }
 ];

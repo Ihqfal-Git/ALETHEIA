@@ -1,11 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Loader2, Search, ArrowLeft, Calendar, ShieldCheck, ClipboardList, AlertCircle, Laptop, Smartphone, Monitor, Home, ChevronDown, Lock, User, CheckCircle2, Wrench, XCircle, Download } from 'lucide-react';
-import { gejalaLaptop } from '@/data/gejalaLaptop';
-import { gejalaHP } from '@/data/gejalaHP';
-import { gejalaPC } from '@/data/gejalaPC';
+import { gejalaLaptop, gejalaHP, gejalaPC } from '@/data/gejala';
 
 const deviceMapping = {
   laptop: { nama: 'Laptop', icon: Laptop },
@@ -103,7 +101,7 @@ export default function RiwayatPage() {
       setMandiriData(null);
       setCheckedSteps([]);
     }
-  }, [activeDetail?.id]);
+  }, [activeDetail]);
 
   const handleToggleStep = async (stepNum) => {
     if (!activeDetail) return;
@@ -158,11 +156,26 @@ export default function RiwayatPage() {
     }
   };
 
-  useEffect(() => {
-    checkSession();
+  const fetchRiwayat = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch('/api/riwayat');
+      const data = await response.json();
+      if (data.success) {
+        setItems(data.data || []);
+      } else {
+        throw new Error(data.error || 'Gagal memuat riwayat.');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Gagal memuat data riwayat dari database.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const checkSession = async () => {
+  const checkSession = useCallback(async () => {
     try {
       const response = await fetch('/api/auth/session');
       const data = await response.json();
@@ -187,26 +200,11 @@ export default function RiwayatPage() {
       setIsLoggedIn(false);
       setLoading(false);
     }
-  };
+  }, [fetchRiwayat]);
 
-  const fetchRiwayat = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const response = await fetch('/api/riwayat');
-      const data = await response.json();
-      if (data.success) {
-        setItems(data.data || []);
-      } else {
-        throw new Error(data.error || 'Gagal memuat riwayat.');
-      }
-    } catch (err) {
-      console.error(err);
-      setError('Gagal memuat data riwayat dari database.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    checkSession();
+  }, [checkSession]);
 
   // Helper mapping status
   const getStatusIcon = (status) => {
