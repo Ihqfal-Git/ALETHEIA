@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Laptop, Smartphone, Monitor, ClipboardList, Info, LogOut, User, Zap, ChevronLeft, Settings, Cpu, X } from 'lucide-react';
+import { Home, Laptop, Smartphone, Monitor, ClipboardList, Info, LogOut, User, Zap, ChevronLeft, Settings, Cpu, X, ChevronRight } from 'lucide-react';
 
 export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }) {
   const pathname = usePathname();
@@ -168,6 +168,9 @@ export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }
               {!isCollapsed && (
                 <div className="flex items-center justify-between w-full text-left">
                   <span>Pilih Perangkat</span>
+                  <ChevronRight className={`h-3.5 w-3.5 text-neutral-450 transition-transform duration-300 shrink-0 ${
+                    isModalOpen ? 'rotate-90 text-neutral-950' : ''
+                  }`} />
                 </div>
               )}
             </button>
