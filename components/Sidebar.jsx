@@ -158,9 +158,9 @@ export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }
             </p>
           )}
 
-          <nav className="space-y-1">
+          <nav className="space-y-1 relative">
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsModalOpen(!isModalOpen)}
               className={getLinkClass(isPerangkatActive('laptop') || isPerangkatActive('hp') || isPerangkatActive('pc'))}
               title={isCollapsed ? "Pilih Perangkat" : undefined}
             >
@@ -171,6 +171,84 @@ export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }
                 </div>
               )}
             </button>
+
+            {/* Bubble Popover (Speech Balloon) */}
+            {isModalOpen && (
+              <>
+                {/* Backdrop to close popover when clicking outside */}
+                <div 
+                  className="fixed inset-0 z-[998] cursor-default" 
+                  onClick={() => setIsModalOpen(false)}
+                />
+
+                {/* Popover Card */}
+                <div className={`absolute z-[999] bg-white rounded-2xl border border-neutral-200 shadow-xl w-64 p-4 animate-in fade-in slide-in-from-left-2 duration-200 ${
+                  isCollapsed ? 'left-14 -top-2' : 'left-full -top-2 ml-3.5'
+                }`}>
+                  {/* Arrow/Tail pointing left */}
+                  <div className="absolute top-[18px] -left-[5px] w-2.5 h-2.5 bg-white border-l border-t border-neutral-200 rotate-[-45deg] z-10" />
+
+                  {/* Header Popover */}
+                  <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-neutral-100 relative z-20">
+                    <h2 className="font-black text-xs text-neutral-950 tracking-tight flex items-center gap-1.5">
+                      <Cpu className="h-4 w-4 text-neutral-900" />
+                      Pilih Perangkat
+                    </h2>
+                    <button 
+                      onClick={() => setIsModalOpen(false)}
+                      className="p-1 hover:bg-neutral-100 rounded text-neutral-400 hover:text-neutral-950 transition cursor-pointer"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                  
+                  {/* Body Popover Options */}
+                  <div className="space-y-1.5 relative z-20">
+                    <Link
+                      href="/diagnosa/laptop?new=true"
+                      onClick={() => { setIsModalOpen(false); handleGoHome(); handleLinkClick(); }}
+                      className="flex items-center gap-2.5 p-2 rounded-xl border border-neutral-100 hover:border-neutral-950 hover:bg-neutral-50/50 transition duration-200 group cursor-pointer"
+                    >
+                      <div className="p-2 bg-neutral-50 group-hover:bg-neutral-950 rounded-lg text-neutral-900 group-hover:text-white transition duration-200">
+                        <Laptop className="h-4 w-4" />
+                      </div>
+                      <div className="text-left min-w-0">
+                        <h4 className="font-extrabold text-[11px] text-neutral-950 leading-tight">Laptop</h4>
+                        <p className="text-[9px] text-neutral-400 truncate mt-0.5">Baterai, keyboard, layar...</p>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/diagnosa/hp?new=true"
+                      onClick={() => { setIsModalOpen(false); handleGoHome(); handleLinkClick(); }}
+                      className="flex items-center gap-2.5 p-2 rounded-xl border border-neutral-100 hover:border-neutral-950 hover:bg-neutral-50/50 transition duration-200 group cursor-pointer"
+                    >
+                      <div className="p-2 bg-neutral-50 group-hover:bg-neutral-950 rounded-lg text-neutral-900 group-hover:text-white transition duration-200">
+                        <Smartphone className="h-4 w-4" />
+                      </div>
+                      <div className="text-left min-w-0">
+                        <h4 className="font-extrabold text-[11px] text-neutral-950 leading-tight">Handphone</h4>
+                        <p className="text-[9px] text-neutral-400 truncate mt-0.5">LCD, touchscreen, batre...</p>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/diagnosa/pc?new=true"
+                      onClick={() => { setIsModalOpen(false); handleGoHome(); handleLinkClick(); }}
+                      className="flex items-center gap-2.5 p-2 rounded-xl border border-neutral-100 hover:border-neutral-950 hover:bg-neutral-50/50 transition duration-200 group cursor-pointer"
+                    >
+                      <div className="p-2 bg-neutral-50 group-hover:bg-neutral-950 rounded-lg text-neutral-900 group-hover:text-white transition duration-200">
+                        <Monitor className="h-4 w-4" />
+                      </div>
+                      <div className="text-left min-w-0">
+                        <h4 className="font-extrabold text-[11px] text-neutral-950 leading-tight">PC / Desktop</h4>
+                        <p className="text-[9px] text-neutral-400 truncate mt-0.5">Motherboard, RAM, PSU...</p>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              </>
+            )}
           </nav>
         </div>
 
@@ -284,71 +362,6 @@ export default function Sidebar({ onCloseMobile, isCollapsed = false, onToggle }
         </div>
       </div>
 
-      {/* Modal / Pop-up Pilihan Perangkat */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-neutral-950/45 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl border border-neutral-200 shadow-xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 duration-200">
-            {/* Header Modal */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100">
-              <h2 className="font-black text-sm text-neutral-950 tracking-tight flex items-center gap-2">
-                <Cpu className="h-4.5 w-4.5 text-neutral-900" />
-                Pilih Perangkat
-              </h2>
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="p-1.5 hover:bg-neutral-100 rounded-lg text-neutral-400 hover:text-neutral-950 transition cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            
-            {/* Body Modal (3 Device Options) */}
-            <div className="p-5 space-y-2.5">
-              <Link
-                href="/diagnosa/laptop?new=true"
-                onClick={() => { setIsModalOpen(false); handleGoHome(); handleLinkClick(); }}
-                className="flex items-center gap-3.5 p-3 rounded-xl border border-neutral-200 hover:border-neutral-950 hover:bg-neutral-50/50 transition duration-300 group cursor-pointer"
-              >
-                <div className="p-2.5 bg-neutral-50 group-hover:bg-neutral-950 rounded-lg text-neutral-900 group-hover:text-white transition duration-300">
-                  <Laptop className="h-5 w-5" />
-                </div>
-                <div className="text-left">
-                  <h4 className="font-extrabold text-xs text-neutral-950">Laptop</h4>
-                  <p className="text-[10px] text-neutral-500 mt-0.5 leading-normal">Kelistrikan, baterai, layar, keyboard, dll.</p>
-                </div>
-              </Link>
-
-              <Link
-                href="/diagnosa/hp?new=true"
-                onClick={() => { setIsModalOpen(false); handleGoHome(); handleLinkClick(); }}
-                className="flex items-center gap-3.5 p-3 rounded-xl border border-neutral-200 hover:border-neutral-950 hover:bg-neutral-50/50 transition duration-300 group cursor-pointer"
-              >
-                <div className="p-2.5 bg-neutral-50 group-hover:bg-neutral-950 rounded-lg text-neutral-900 group-hover:text-white transition duration-300">
-                  <Smartphone className="h-5 w-5" />
-                </div>
-                <div className="text-left">
-                  <h4 className="font-extrabold text-xs text-neutral-950">Handphone</h4>
-                  <p className="text-[10px] text-neutral-500 mt-0.5 leading-normal">LCD, touchscreen, baterai kembung, dll.</p>
-                </div>
-              </Link>
-
-              <Link
-                href="/diagnosa/pc?new=true"
-                onClick={() => { setIsModalOpen(false); handleGoHome(); handleLinkClick(); }}
-                className="flex items-center gap-3.5 p-3 rounded-xl border border-neutral-200 hover:border-neutral-950 hover:bg-neutral-50/50 transition duration-300 group cursor-pointer"
-              >
-                <div className="p-2.5 bg-neutral-50 group-hover:bg-neutral-950 rounded-lg text-neutral-900 group-hover:text-white transition duration-300">
-                  <Monitor className="h-5 w-5" />
-                </div>
-                <div className="text-left">
-                  <h4 className="font-extrabold text-xs text-neutral-950">PC / Desktop</h4>
-                  <p className="text-[10px] text-neutral-500 mt-0.5 leading-normal">Motherboard, RAM, VGA, power supply, dll.</p>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
     </aside>
   );
 }
