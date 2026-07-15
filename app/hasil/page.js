@@ -195,7 +195,29 @@ export default function HasilPage() {
 
       const data = await response.json();
       if (data.success) {
-        setReferensi(data.referensi || []);
+        let refs = data.referensi || [];
+        
+        // Cek apakah ada gejala BIOS (P03 / P04) atau aturan RAM/Motherboard (P002 / P005)
+        const hasBiosSymptom = selectedIds.includes('P03') || selectedIds.includes('P04');
+        const isRamOrMotherboardRule = primaryMatch.ruleId === 'P002' || primaryMatch.ruleId === 'P005';
+        
+        if (hasBiosSymptom || isRamOrMotherboardRule) {
+          const alreadyExists = refs.some(r => r.url && r.url.includes('intel.co.id'));
+          if (!alreadyExists) {
+            refs = [
+              {
+                judul: 'Mengidentifikasi Kode Beep BIOS Komputer',
+                penulis: 'Intel Corporation',
+                tahun: 2024,
+                url: 'https://www.intel.co.id/content/www/id/id/search.html#q=Mengidentifikasi%20Kode%20Beep%20BIOS%20Komputer',
+                relevansi: 'Panduan pencarian dan penyelesaian masalah kode bunyi beep motherboard Intel'
+              },
+              ...refs
+            ];
+          }
+        }
+        
+        setReferensi(refs);
       } else {
         throw new Error(data.error || 'Gagal mengambil referensi.');
       }
@@ -205,7 +227,7 @@ export default function HasilPage() {
     } finally {
       setLoadingReferensi(false);
     }
-  }, [hasil, deviceSlug, deviceName]);
+  }, [hasil, deviceSlug, deviceName, selectedIds]);
 
   // Auto trigger fetches once variables are ready
   useEffect(() => {
