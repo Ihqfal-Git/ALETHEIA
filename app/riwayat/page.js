@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Loader2, Search, ArrowLeft, Calendar, ShieldCheck, ClipboardList, AlertCircle, Laptop, Smartphone, Monitor, Home, ChevronDown, Lock, User, CheckCircle2, Wrench, XCircle } from 'lucide-react';
+import { Loader2, Search, ArrowLeft, Calendar, ShieldCheck, ClipboardList, AlertCircle, Laptop, Smartphone, Monitor, Home, ChevronDown, Lock, User, CheckCircle2, Wrench, XCircle, Download } from 'lucide-react';
 import { gejalaLaptop } from '@/data/gejalaLaptop';
 import { gejalaHP } from '@/data/gejalaHP';
 import { gejalaPC } from '@/data/gejalaPC';
@@ -378,6 +378,178 @@ export default function RiwayatPage() {
   }
 
 
+  const handleExportToWord = (item) => {
+    const device = deviceMapping[item.perangkat?.slug];
+    const dateFormatted = new Date(item.createdAt).toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    const symptomList = getSymptomTexts(item.gejalaIds);
+
+    let solusiHTML = '';
+    if (item.solusiType === 'mandiri' && mandiriData) {
+      solusiHTML = `
+        <h3>Panduan Perbaikan Mandiri (DIY)</h3>
+        <p><strong>Tingkat Kesulitan:</strong> ${mandiriData.tingkatKesulitan || 'Menengah'}</p>
+        <p><strong>Estimasi Waktu:</strong> ${mandiriData.estimasiWaktu || '30 - 60 menit'}</p>
+        <p><strong>Estimasi Biaya Total:</strong> Rp ${mandiriData.estimasiBiayaTotal?.min?.toLocaleString('id-ID')} - Rp ${mandiriData.estimasiBiayaTotal?.max?.toLocaleString('id-ID')}</p>
+        
+        <h4>Alat yang Dibutuhkan:</h4>
+        <ul>
+          ${(mandiriData.alat || []).map(a => `<li><strong>${a.nama}</strong>: ${a.fungsi}</li>`).join('')}
+        </ul>
+        
+        <h4>Bahan yang Dibutuhkan:</h4>
+        <ul>
+          ${(mandiriData.bahan || []).map(b => `<li><strong>${b.nama}</strong> (Estimasi: ${b.estimasiHarga})</li>`).join('')}
+        </ul>
+        
+        <h4>Langkah-Langkah Perbaikan:</h4>
+        <ol>
+          ${(mandiriData.langkah || []).map((step, idx) => {
+            const stepNum = step.nomor || idx + 1;
+            const isChecked = checkedSteps.includes(stepNum);
+            return `<li>[${isChecked ? '✓' : ' '}] <strong>${step.judul}</strong>: ${step.detail}</li>`;
+          }).join('')}
+        </ol>
+      `;
+    } else if (item.hasilAI) {
+      solusiHTML = `
+        <h3>Panduan & Penjelasan AI</h3>
+        <div style="font-size: 11pt; line-height: 1.5; text-align: justify; white-space: pre-wrap;">
+          ${item.hasilAI.replace(/###/g, '<h4>').replace(/##/g, '<h3>').replace(/\n/g, '<br/>')}
+        </div>
+      `;
+    }
+
+    const htmlContent = `
+<html xmlns:o="urn:schemas-microsoft-com:office:office" 
+      xmlns:w="urn:schemas-microsoft-com:office:word" 
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta charset="utf-8">
+  <title>Laporan Diagnosa ALETHEIA</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: #111111;
+    }
+    h1 {
+      font-size: 18pt;
+      font-weight: bold;
+      color: #0b0f19;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+    }
+    h3 {
+      font-size: 13pt;
+      font-weight: bold;
+      color: #1f2937;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #f3f4f6;
+      padding-bottom: 3px;
+    }
+    h4 {
+      font-size: 11pt;
+      font-weight: bold;
+      color: #374151;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+    p {
+      margin-bottom: 8px;
+      text-align: justify;
+    }
+    ul, ol {
+      margin-bottom: 8px;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 3px;
+    }
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .info-table td {
+      padding: 8px 12px;
+      border: 1px solid #e5e7eb;
+      font-size: 10pt;
+    }
+    .info-table td.label {
+      font-weight: bold;
+      background-color: #f9fafb;
+      width: 30%;
+    }
+  </style>
+</head>
+<body>
+  <h1>LAPORAN DIAGNOSA PERANGKAT ELEKTRONIK</h1>
+  
+  <table class="info-table">
+    <tr>
+      <td class="label">ID Diagnosa</td>
+      <td>#AL-DG-${item.id}</td>
+    </tr>
+    <tr>
+      <td class="label">Tanggal Diagnosa</td>
+      <td>${dateFormatted}</td>
+    </tr>
+    <tr>
+      <td class="label">Jenis Perangkat</td>
+      <td>${item.perangkat?.nama}</td>
+    </tr>
+    <tr>
+      <td class="label">Potensi Kerusakan</td>
+      <td><strong>${item.kerusakan?.nama || 'Tidak terdeteksi'}</strong></td>
+    </tr>
+    <tr>
+      <td class="label">Tingkat Keyakinan</td>
+      <td>${item.certaintyFactor ? Math.round(item.certaintyFactor * 100) : 0}% (Certainty Factor: ${item.certaintyFactor || 0})</td>
+    </tr>
+    <tr>
+      <td class="label">Status Perbaikan</td>
+      <td>${item.status}</td>
+    </tr>
+  </table>
+
+  <h3>Gejala yang Dilaporkan</h3>
+  <ul>
+    ${symptomList.map(s => `<li>${s}</li>`).join('')}
+  </ul>
+
+  <h3>Deskripsi Kerusakan</h3>
+  <p>${item.kerusakan?.deskripsi || 'Pattern tidak mencocokkan aturan pakar statis.'}</p>
+
+  ${solusiHTML}
+
+  <hr style="border:none; border-top:1px solid #e5e7eb; margin-top:40px;" />
+  <p style="font-size:9pt; color:#9ca3af; text-align:center;">Laporan ini dibuat otomatis oleh ALETHEIA (Sistem Pakar Diagnosa Perangkat Elektronik)</p>
+</body>
+</html>
+    `;
+
+    const blob = new Blob(['\ufeff' + htmlContent], {
+      type: 'application/msword;charset=utf-8'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Laporan_Diagnosa_${item.perangkat?.nama.replace(/\s+/g, '_')}_${item.id}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   // JIKA TAMPILAN DETAIL AKTIF (REPLACE VIEW)
   if (activeDetail) {
     const item = activeDetail;
@@ -405,14 +577,23 @@ export default function RiwayatPage() {
         </div>
 
         {/* Header */}
-        <div className="space-y-1">
-          <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block">Detail Riwayat Diagnosa</span>
-          <h1 className="text-2xl md:text-3xl font-black text-neutral-950 flex items-center gap-2">
-            {device?.icon && <device.icon className="h-6 w-6 text-neutral-900" />} Diagnosa {item.perangkat?.nama}
-          </h1>
-          <p className="text-xs text-neutral-400 flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5" /> {dateFormatted}
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="space-y-1">
+            <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block">Detail Riwayat Diagnosa</span>
+            <h1 className="text-2xl md:text-3xl font-black text-neutral-950 flex items-center gap-2">
+              {device?.icon && <device.icon className="h-6 w-6 text-neutral-900" />} Diagnosa {item.perangkat?.nama}
+            </h1>
+            <p className="text-xs text-neutral-400 flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5" /> {dateFormatted}
+            </p>
+          </div>
+          <button
+            onClick={() => handleExportToWord(item)}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white font-bold rounded-xl text-xs tracking-wide shadow transition cursor-pointer shrink-0 self-start sm:self-center"
+          >
+            <Download className="h-4 w-4" />
+            Unduh Laporan (.doc)
+          </button>
         </div>
 
         <div className="space-y-6">
