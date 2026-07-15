@@ -282,8 +282,9 @@ export default function HasilPage() {
             ];
           }
         }
-        
-        setReferensi(refs);
+        // Hanya tampilkan referensi yang memiliki URL eksternal (website asli)
+        const validRefs = refs.filter(r => r.url && r.url.startsWith('http'));
+        setReferensi(validRefs);
       } else {
         throw new Error(data.error || 'Gagal mengambil referensi.');
       }
