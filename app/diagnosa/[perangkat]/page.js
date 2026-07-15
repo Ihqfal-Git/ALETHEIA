@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Loader2, ArrowLeft, Home, Laptop, Smartphone, Monitor, Battery, Tv, Cpu, Wrench, HelpCircle } from 'lucide-react';
+import { Loader2, ArrowLeft, Home, Laptop, Smartphone, Monitor, Battery, Tv, Cpu, Wrench, HelpCircle, AlertTriangle } from 'lucide-react';
 import { gejalaLaptop } from '@/data/gejalaLaptop';
 import { gejalaHP } from '@/data/gejalaHP';
 import { gejalaPC } from '@/data/gejalaPC';
@@ -51,6 +51,9 @@ export default function DiagnosaPage() {
   const [selectedGejala, setSelectedGejala] = useState({});
   const [gejalaTambahan, setGejalaTambahan] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [showLimitWarning, setShowLimitWarning] = useState(false);
+
+  const MAX_GEJALA = 4;
 
   useEffect(() => {
     if (slug && deviceMapping[slug]) {
@@ -151,9 +154,20 @@ export default function DiagnosaPage() {
     currentStart += groupedGejala[cat].length;
   });
 
-  // Toggle checkbox
+  // Toggle checkbox with max limit
   const handleCheckboxChange = (id) => {
     setSelectedGejala(prev => {
+      const isCurrentlyChecked = !!prev[id];
+      const currentCount = Object.values(prev).filter(Boolean).length;
+
+      // Block new selection if already at max limit
+      if (!isCurrentlyChecked && currentCount >= MAX_GEJALA) {
+        setShowLimitWarning(true);
+        setTimeout(() => setShowLimitWarning(false), 3000);
+        return prev; // Don't update state
+      }
+
+      setShowLimitWarning(false);
       const updated = {
         ...prev,
         [id]: !prev[id]
@@ -235,8 +249,16 @@ export default function DiagnosaPage() {
         <h1 className="text-2xl md:text-3xl font-black text-neutral-950 flex items-center gap-2">
           <DeviceIcon className="h-6 w-6 text-neutral-900" /> Diagnosa {nama}
         </h1>
-        <p className="text-sm text-neutral-500">Centang semua gejala yang sesuai</p>
+        <p className="text-sm text-neutral-500">Centang gejala yang sesuai <span className="font-bold text-neutral-700">(maks. {MAX_GEJALA} gejala)</span></p>
       </div>
+
+      {/* Limit Warning Banner */}
+      {showLimitWarning && (
+        <div className="flex items-center gap-2.5 p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 font-semibold animate-in fade-in slide-in-from-top-2 duration-200">
+          <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" />
+          <span>Maksimal <strong>{MAX_GEJALA} gejala</strong> yang boleh dipilih. Hapus salah satu gejala terlebih dahulu untuk memilih yang lain.</span>
+        </div>
+      )}
 
       {/* Form Diagnosa */}
       <form onSubmit={handleSubmit} className="space-y-8">
@@ -263,7 +285,11 @@ export default function DiagnosaPage() {
                     return (
                       <label
                         key={g.id}
-                        className="flex items-start gap-3.5 p-1 rounded-lg cursor-pointer text-xs leading-relaxed text-neutral-700 hover:text-neutral-950 select-none group"
+                        className={`flex items-start gap-3.5 p-1 rounded-lg text-xs leading-relaxed select-none group ${
+                          !isChecked && totalSelected >= MAX_GEJALA
+                            ? 'opacity-40 cursor-not-allowed'
+                            : 'cursor-pointer text-neutral-700 hover:text-neutral-950'
+                        }`}
                       >
                         <div className="relative shrink-0 mt-0.5 select-none">
                           <input
@@ -324,11 +350,11 @@ export default function DiagnosaPage() {
           <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
             <div className="text-right">
               <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider hidden sm:block">Hasil Pemilihan</p>
-              <p className="text-xs sm:text-sm font-black text-neutral-950">{totalSelected} Gejala<span className="hidden sm:inline"> dipilih</span></p>
+              <p className="text-xs sm:text-sm font-black text-neutral-950">{totalSelected}/{MAX_GEJALA} Gejala<span className="hidden sm:inline"> dipilih</span></p>
             </div>
             <button
               type="submit"
-              disabled={totalSelected === 0 || submitting}
+              disabled={totalSelected === 0 || totalSelected > MAX_GEJALA || submitting}
               className={`
                 px-4 sm:px-6 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all cursor-pointer flex items-center gap-2
                 ${totalSelected === 0
